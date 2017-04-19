@@ -8,7 +8,7 @@
     <owners>WildGums</owners>
 
 	<description>
-	  Orc.CsvTextEditor description.
+	  Csv text editor component based on AvalonEdit.
 	</description>
 	<summary>
 	</summary>
@@ -24,7 +24,9 @@
 	<!--<iconUrl>http://www.catenalogic.com/catel.png</iconUrl>-->
     
     <dependencies>
-      <!-- <dependency id="Catel.Core" version="[replaced]" /> -->
+      <dependency id="Catel.Core" version="[replaced]" />
+	  <dependency id="Catel.MVVM" version="[replaced]" />
+	  <dependency id="AvalonEdit" version="[replaced]" />
     </dependencies>
   </metadata>
 </package>

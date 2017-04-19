@@ -6,4 +6,4 @@
 ![Version](https://img.shields.io/nuget/v/[NUGET.PACKAGENAME].svg)
 ![Pre-release version](https://img.shields.io/nuget/vpre/Orc.CsvTextEditor.svg)
 
-To be described.
+Csv text editor component based on AvalonEdit.

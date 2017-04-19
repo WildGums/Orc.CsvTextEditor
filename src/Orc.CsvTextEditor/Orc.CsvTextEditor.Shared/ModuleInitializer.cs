@@ -1,6 +1,14 @@
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="ModuleInitializer.cs" company="WildGums">
+//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+// </copyright>
+// --------------------------------------------------------------------------------------------------------------------
+
+
 using Catel.IoC;
+using Catel.Logging;
+using Catel.MVVM;
 using Catel.Services;
-using Catel.Services.Models;
 using Orc.CsvTextEditor;
 
 /// <summary>
@@ -8,6 +16,9 @@ using Orc.CsvTextEditor;
 /// </summary>
 public static class ModuleInitializer
 {
+    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+
+    #region Methods
     /// <summary>
     /// Initializes the module.
     /// </summary>
@@ -15,9 +26,16 @@ public static class ModuleInitializer
     {
         var serviceLocator = ServiceLocator.Default;
 
-		// TODO: register services here
+        serviceLocator.RegisterTypeIfNotYetRegistered<ICsvTextEditorServiceInitializer, CsvTextEditorServiceInitializer>();
+        serviceLocator.RegisterType<ICsvTextEditorService, CsvTextEditorService>();
+        serviceLocator.RegisterType<ICsvTextSynchronizationService, CsvTextSynchronizationService>();
 
-        var languageService = serviceLocator.ResolveType<ILanguageService>();
-        languageService.RegisterLanguageSource(new LanguageResourceSource("Orc.CsvTextEditor", "Orc.CsvTextEditor.Properties", "Resources"));
+        var viewModelLocator = serviceLocator.ResolveType<IViewModelLocator>();
+        viewModelLocator.Register<FindReplaceDialog, FindReplaceDialogViewModel>();
+        viewModelLocator.Register<CsvTextEditorControl, CsvTextEditorControlViewModel>();
+
+        var uiVisualizerService = serviceLocator.ResolveType<IUIVisualizerService>();
+        uiVisualizerService.Register(typeof(FindReplaceDialogViewModel), typeof(FindReplaceDialog));
     }
+    #endregion
 }

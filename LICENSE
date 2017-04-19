@@ -31,6 +31,11 @@ license the code was delivered upon. Below is a list of other components / licen
 
 Note: if you feel an item is missing in this list, please let us know!
 
+* AvalonEdit
+  https://github.com/icsharpcode/AvalonEdit
+  Original license: MIT
+
 * Catel
   https://github.com/catel/catel
   Original license: MIT
+ 
