@@ -70,6 +70,11 @@ namespace Orc.CsvTextEditor
 
         private void OnTextChanged()
         {
+            UpdateInitialization();
+        }
+
+        private void UpdateInitialization()
+        {
             if (_csvTextSynchronizationService?.IsSynchronizing ?? true)
             {
                 return;
@@ -101,7 +106,9 @@ namespace Orc.CsvTextEditor
             if (_csvTextSynchronizationService == null && _serviceLocator.IsTypeRegistered<ICsvTextSynchronizationService>(scope))
             {
                 _csvTextSynchronizationService = _serviceLocator.ResolveType<ICsvTextSynchronizationService>(scope);
-            }            
+            }
+
+            UpdateInitialization();
         }
     }
 }
