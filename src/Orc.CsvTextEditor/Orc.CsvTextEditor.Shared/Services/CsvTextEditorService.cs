@@ -40,6 +40,7 @@ namespace Orc.CsvTextEditor
         private int _previousCaretColumn;
         private int _previousCaretLine;
 
+        private bool _initializing;
         #endregion
 
         #region Constructors
@@ -86,13 +87,12 @@ namespace Orc.CsvTextEditor
 
         #region Properties
         public IEnumerable<ICsvTextEditorTool> Tools => _tools;
-        public bool IsDirty { get; set; }
         public int LineCount => _textEditor?.Document?.LineCount ?? 0;
         public int ColumnCount => _elementGenerator.ColumnCount;
         public bool IsAutocompleteEnabled { get; set; } = true;
         public bool HasSelection => _textEditor.SelectionLength > 0;
-        public bool CanRedo => _textEditor.CanRedo;
-        public bool CanUndo => _textEditor.CanUndo;
+        public bool CanRedo => !_initializing && _textEditor.CanRedo;
+        public bool CanUndo => !_initializing && _textEditor.CanUndo;
         #endregion
 
         #region Methods
@@ -334,20 +334,29 @@ namespace Orc.CsvTextEditor
             }
 
             ClearSelectedText();
-        }
+        }        
 
         public void Initialize(string text)
         {
-            var document = _textEditor.Document;
-            document.Changed -= OnTextDocumentChanged;
+            _initializing = true;
 
-            text = AdjustText(text);
-            UpdateText(text);
+            try
+            {
+                var document = _textEditor.Document;
+                document.Changed -= OnTextDocumentChanged;
 
-            document.UndoStack.ClearAll();
-            document.Changed += OnTextDocumentChanged;
+                text = AdjustText(text);
+                UpdateText(text);
 
-            RefreshHighlightings();
+                document.UndoStack.ClearAll();
+                document.Changed += OnTextDocumentChanged;
+
+                RefreshHighlightings();
+            }
+            finally
+            {
+                _initializing = false;
+            }            
         }
 
         public void GotoNextColumn()

@@ -14,7 +14,6 @@ namespace Orc.CsvTextEditor
     {
         #region Properties
         IEnumerable<ICsvTextEditorTool> Tools { get; }
-        bool IsDirty { get; set; }
         int LineCount { get; }
         int ColumnCount { get; }
         bool IsAutocompleteEnabled { get; set; }
