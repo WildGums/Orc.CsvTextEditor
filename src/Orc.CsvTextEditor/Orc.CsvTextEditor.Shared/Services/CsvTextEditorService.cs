@@ -28,6 +28,7 @@ namespace Orc.CsvTextEditor
     {
         #region Fields
         private readonly ICommandManager _commandManager;
+        private readonly IDispatcherService _dispatcherService;
         private readonly TabSpaceElementGenerator _elementGenerator;
         private readonly HighlightAllOccurencesOfSelectedWordTransformer _highlightAllOccurencesOfSelectedWordTransformer;
         private readonly TextEditor _textEditor;
@@ -44,14 +45,17 @@ namespace Orc.CsvTextEditor
         #endregion
 
         #region Constructors
-        public CsvTextEditorService(TextEditor textEditor, ICommandManager commandManager, ICsvTextEditorServiceInitializer initializer)
+        public CsvTextEditorService(TextEditor textEditor, ICommandManager commandManager, ICsvTextEditorServiceInitializer initializer,
+            IDispatcherService dispatcherService)
         {
             Argument.IsNotNull(() => textEditor);
             Argument.IsNotNull(() => commandManager);
             Argument.IsNotNull(() => initializer);
+            Argument.IsNotNull(() => dispatcherService);
 
             _textEditor = textEditor;
             _commandManager = commandManager;
+            _dispatcherService = dispatcherService;
 
             _tools = new List<ICsvTextEditorTool>();
 
@@ -96,6 +100,15 @@ namespace Orc.CsvTextEditor
         #endregion
 
         #region Methods
+        public string GetText()
+        {
+            var text = string.Empty;
+
+            _dispatcherService.Invoke(() => text = _textEditor.Text, true);
+
+            return text;
+        }
+
         public event EventHandler<CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
         public event EventHandler<EventArgs> TextChanged;
 
