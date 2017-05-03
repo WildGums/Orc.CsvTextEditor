@@ -18,6 +18,7 @@ namespace Orc.CsvTextEditor.ViewModels
     {
         public MainViewModel()
         {
+            Title = "Orc.CsvTextEditor example";
         }
 
         #region Properties
