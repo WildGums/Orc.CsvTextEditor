@@ -8,6 +8,7 @@
 namespace Orc.CsvTextEditor
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using ICSharpCode.AvalonEdit.Document;
     using ICSharpCode.AvalonEdit.Rendering;
@@ -54,9 +55,63 @@ namespace Orc.CsvTextEditor
             // Some files do not respect the Environment.NewLine so we need to add "\n"
             var lines = text.Split(new[] { NewLine }, StringSplitOptions.None);
 
-            var columnWidthByLine = lines.Select(x => x.Split(Symbols.Comma))
-                .Select(x => x.Select(y => y.Length + 1).ToArray())
-                .ToArray();
+            var minFieldsCount = int.MaxValue;
+            var maxFieldsCount = int.MinValue;
+
+            var columnWidthByLine = new int[lines.Length][];
+
+            for (var index = 0; index < lines.Length; index++)
+            {
+                var line = lines[index];
+                var fieldsPreview = line.Split(Symbols.Comma);
+
+                List<int> fields = new List<int>();
+
+                var quotesCount = 0;
+                var fieldLength = 0;
+                foreach (var field in fieldsPreview)
+                {
+                    quotesCount += field.Count(x => x == Symbols.Quote);
+                    fieldLength += field.Length;
+
+                    if (quotesCount % 2 == 0)
+                    {
+                        fields.Add(fieldLength);
+                        fieldLength = 0;
+                        quotesCount = 0;
+
+                        continue;
+                    }
+                }
+
+                var fieldsCount = fields.Count;
+
+                if (minFieldsCount > fieldsCount)
+                {
+                    minFieldsCount = fieldsCount;
+                }
+
+                if (maxFieldsCount < fieldsCount)
+                {
+                    maxFieldsCount = fieldsCount;
+                }
+
+                var lengths = new int[fieldsCount];
+                for (int i = 0; i < fieldsCount; i++)
+                {
+                    lengths[i] = fields[i] + 1;
+                }
+
+                if (minFieldsCount != maxFieldsCount)
+                {
+                }
+
+                columnWidthByLine[index] = lengths;
+            }
+
+            //var columnWidthByLine = lines.Select(x => x.Split(Symbols.Comma))
+            //    .Select(x => x.Select(y => y.Length + 1).ToArray())
+            //    .ToArray();
 
             Lines = columnWidthByLine;
         }

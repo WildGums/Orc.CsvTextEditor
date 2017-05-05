@@ -13,6 +13,7 @@ namespace Orc.CsvTextEditor
     {
         #region Fields
         public const char Comma = ',';
+        public const char Quote = '"';
         public const char NewLineStart = '\r';
         public const char NewLineEnd = '\n';
         public const char HorizontalTab = '\t';
