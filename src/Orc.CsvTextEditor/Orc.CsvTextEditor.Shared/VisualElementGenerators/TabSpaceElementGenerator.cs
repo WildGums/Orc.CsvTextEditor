@@ -102,16 +102,8 @@ namespace Orc.CsvTextEditor
                     lengths[i] = fields[i] + 1;
                 }
 
-                if (minFieldsCount != maxFieldsCount)
-                {
-                }
-
                 columnWidthByLine[index] = lengths;
             }
-
-            //var columnWidthByLine = lines.Select(x => x.Split(Symbols.Comma))
-            //    .Select(x => x.Select(y => y.Length + 1).ToArray())
-            //    .ToArray();
 
             Lines = columnWidthByLine;
         }
