@@ -10,12 +10,15 @@ namespace Orc.CsvTextEditor
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Catel.Logging;
     using ICSharpCode.AvalonEdit.Document;
     using ICSharpCode.AvalonEdit.Rendering;
 
     internal class TabSpaceElementGenerator : VisualLineElementGenerator
     {
         #region Fields
+        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+
         private int[][] _lines;
         private int _tabWidth;
 
@@ -223,7 +226,15 @@ namespace Orc.CsvTextEditor
 
             _tabWidth = curCellWidth - Lines[locationLine - 1][columnNumberWithOffset.ColumnNumber];
 
-            return CurrentContext.Document.GetOffset(new TextLocation(locationLine, columnNumberWithOffset.OffsetInLine));
+            try
+            {
+                return CurrentContext.Document.GetOffset(new TextLocation(locationLine, columnNumberWithOffset.OffsetInLine));
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Failed to get first interested offset");
+                return startOffset;
+            }            
         }
 
         public ColumnNumberWithOffset GetColumn(TextLocation location)

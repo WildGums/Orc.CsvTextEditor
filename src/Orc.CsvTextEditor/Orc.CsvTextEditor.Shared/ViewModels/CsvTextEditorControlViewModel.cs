@@ -7,6 +7,7 @@
 
 namespace Orc.CsvTextEditor
 {
+    using System;
     using Catel;
     using Catel.IoC;
     using Catel.Logging;
@@ -75,15 +76,22 @@ namespace Orc.CsvTextEditor
 
         private void UpdateInitialization()
         {
-            if (_csvTextSynchronizationService?.IsSynchronizing ?? true)
+            try
             {
-                return;
-            }
+                if (_csvTextSynchronizationService?.IsSynchronizing ?? true)
+                {
+                    return;
+                }
 
-            using (_csvTextSynchronizationService.SynchronizeInScope())
-            {
-                _csvTextEditorService.Initialize(Text);
+                using (_csvTextSynchronizationService.SynchronizeInScope())
+                {
+                    _csvTextEditorService.Initialize(Text);
+                }
             }
+            catch (Exception ex)
+            {
+                Log.Error(ex, "Failed to update initialization");
+            }            
         }
 
         private void OnScopeChanged()
