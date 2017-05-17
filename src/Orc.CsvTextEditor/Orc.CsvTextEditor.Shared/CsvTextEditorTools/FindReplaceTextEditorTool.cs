@@ -53,18 +53,25 @@ namespace Orc.CsvTextEditor
 
         public override void Close()
         {
+            base.Close();
+
             if (_findReplaceViewModel == null)
             {
                 return;
             }
 
-            _findReplaceViewModel.CloseViewModelAsync(null).RunSynchronously();
             _findReplaceViewModel.ClosedAsync -= OnClosedAsync;
+
+#pragma warning disable 4014
+            _findReplaceViewModel.CloseViewModelAsync(null);            
+#pragma warning restore 4014
         }
         
         private Task OnClosedAsync(object sender, ViewModelClosedEventArgs args)
         {
-            return TaskHelper.RunAndWaitAsync(() => RaiseClosedEvent());
+            Close();
+
+            return TaskHelper.Completed;
         }
     }
 }

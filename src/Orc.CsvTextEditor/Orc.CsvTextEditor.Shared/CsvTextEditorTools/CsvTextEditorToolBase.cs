@@ -26,7 +26,7 @@ namespace Orc.CsvTextEditor
 
         #region Properties
         protected TextEditor TextEditor { get; }
-        protected ICsvTextEditorService CsvTextEditorService { get; private set; }
+        protected ICsvTextEditorService CsvTextEditorService { get; }
         #endregion
 
         #region Methods
@@ -45,14 +45,21 @@ namespace Orc.CsvTextEditor
             IsOpened = true;
             Opened?.Invoke(this, EventArgs.Empty);
         }
-        public abstract void Close();
+
+        public virtual void Close()
+        {
+            IsOpened = false;
+
+            RaiseClosedEvent();
+        }
+
         protected abstract void OnOpen();
 
         public event EventHandler<EventArgs> Closed;
         public event EventHandler<EventArgs> Opened;
         #endregion
 
-        protected void RaiseClosedEvent()
+        private void RaiseClosedEvent()
         {
             Closed?.Invoke(this, EventArgs.Empty);
         }
