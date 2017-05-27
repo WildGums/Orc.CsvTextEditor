@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="CsvTextEditorFindReplaceService.cs" company="WildGums">
+// <copyright file="FindReplaceService.cs" company="WildGums">
 //   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -11,14 +11,14 @@ namespace Orc.CsvTextEditor
     using Catel;
     using ICSharpCode.AvalonEdit;
 
-    public class CsvTextEditorFindReplaceService : ICsvTextEditorFindReplaceSerivce
+    public class FindReplaceService : IFindReplaceSerivce
     {
         #region Fields
         private readonly TextEditor _textEditor;
         #endregion
 
         #region Constructors
-        public CsvTextEditorFindReplaceService(TextEditor textEditor)
+        public FindReplaceService(TextEditor textEditor)
         {
             Argument.IsNotNull(() => textEditor);
 

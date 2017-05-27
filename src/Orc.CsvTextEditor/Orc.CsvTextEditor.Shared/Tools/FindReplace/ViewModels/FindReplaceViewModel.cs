@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="FindReplaceDialogViewModel.cs" company="WildGums">
+// <copyright file="FindReplaceViewModel.cs" company="WildGums">
 //   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -11,15 +11,15 @@ namespace Orc.CsvTextEditor
     using Catel;
     using Catel.MVVM;
 
-    internal class FindReplaceDialogViewModel : ViewModelBase
+    internal class FindReplaceViewModel : ViewModelBase
     {
         #region Fields
-        private readonly ICsvTextEditorFindReplaceSerivce _csvTextEditorFindReplaceSerivce;
+        private readonly IFindReplaceSerivce _csvTextEditorFindReplaceSerivce;
         private readonly ICsvTextEditorService _csvTextEditorService;
         #endregion
 
         #region Constructors
-        public FindReplaceDialogViewModel(ICsvTextEditorFindReplaceSerivce csvTextEditorFindReplaceSerivce, ICsvTextEditorService csvTextEditorService)
+        public FindReplaceViewModel(IFindReplaceSerivce csvTextEditorFindReplaceSerivce, ICsvTextEditorService csvTextEditorService)
         {
             Argument.IsNotNull(() => csvTextEditorFindReplaceSerivce);
             Argument.IsNotNull(() => csvTextEditorService);

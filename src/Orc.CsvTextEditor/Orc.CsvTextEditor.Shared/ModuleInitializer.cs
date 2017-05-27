@@ -31,11 +31,7 @@ public static class ModuleInitializer
         serviceLocator.RegisterType<ICsvTextSynchronizationService, CsvTextSynchronizationService>();
 
         var viewModelLocator = serviceLocator.ResolveType<IViewModelLocator>();
-        viewModelLocator.Register<FindReplaceDialog, FindReplaceDialogViewModel>();
         viewModelLocator.Register<CsvTextEditorControl, CsvTextEditorControlViewModel>();
-
-        var uiVisualizerService = serviceLocator.ResolveType<IUIVisualizerService>();
-        uiVisualizerService.Register(typeof(FindReplaceDialogViewModel), typeof(FindReplaceDialog));
     }
     #endregion
 }

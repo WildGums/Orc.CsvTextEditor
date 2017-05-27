@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="FindReplaceDialog.xaml.cs" company="WildGums">
+// <copyright file="FindReplaceWindow.xaml.cs" company="WildGums">
 //   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -10,18 +10,15 @@ namespace Orc.CsvTextEditor
     using Catel.MVVM.Views;
     using Catel.Windows;
 
-    /// <summary>
-    /// Interaction logic for FindReplaceDialog.xaml
-    /// </summary>
-    internal partial class FindReplaceDialog
+    internal partial class FindReplaceWindow
     {
         #region Constructors
-        static FindReplaceDialog()
+        static FindReplaceWindow()
         {
-            typeof(FindReplaceDialog).AutoDetectViewPropertiesToSubscribe();
+            typeof(FindReplaceWindow).AutoDetectViewPropertiesToSubscribe();
         }
 
-        public FindReplaceDialog()
+        public FindReplaceWindow()
             : base(DataWindowMode.Custom)
         {
             InitializeComponent();

@@ -18,10 +18,10 @@ namespace Orc.CsvTextEditor
     public class FindReplaceTextEditorTool : CsvTextEditorToolBase
     {
         #region Fields
-        private readonly ICsvTextEditorFindReplaceSerivce _csvTextEditorFindReplaceSerivce;
+        private readonly IFindReplaceSerivce _findReplaceSerivce;
         private readonly IUIVisualizerService _uiVisualizerService;
 
-        private FindReplaceDialogViewModel _findReplaceViewModel;
+        private FindReplaceViewModel _findReplaceViewModel;
         #endregion
 
         #region Constructors
@@ -34,7 +34,7 @@ namespace Orc.CsvTextEditor
 
             _uiVisualizerService = uiVisualizerService;
 
-            _csvTextEditorFindReplaceSerivce = typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextEditorFindReplaceService>(TextEditor);
+            _findReplaceSerivce = typeFactory.CreateInstanceWithParametersAndAutoCompletion<FindReplaceService>(TextEditor);
         }
         #endregion
 
@@ -44,7 +44,7 @@ namespace Orc.CsvTextEditor
 
         protected override void OnOpen()
         {
-            _findReplaceViewModel = new FindReplaceDialogViewModel(_csvTextEditorFindReplaceSerivce, CsvTextEditorService);
+            _findReplaceViewModel = new FindReplaceViewModel(_findReplaceSerivce, CsvTextEditorService);
 
             _uiVisualizerService.ShowAsync(_findReplaceViewModel);
 
