@@ -8,7 +8,6 @@
 namespace Orc.CsvTextEditor
 {
     using System.Text.RegularExpressions;
-    using System.Windows;
     using Catel;
     using ICSharpCode.AvalonEdit;
 
@@ -81,12 +80,6 @@ namespace Orc.CsvTextEditor
             Argument.IsNotNull(() => textToReplace);
             Argument.IsNotNull(() => settings);
 
-            if (MessageBox.Show($"Are you sure you want to Replace All occurences of \"{textToFind}\" with \"{textToReplace}\"?",
-                "Replace All", MessageBoxButton.OKCancel, MessageBoxImage.Question) != MessageBoxResult.OK)
-            {
-                return;
-            }
-
             var regex = GetRegEx(textToFind, settings, true);
             var offset = 0;
 
@@ -96,6 +89,7 @@ namespace Orc.CsvTextEditor
                 _textEditor.Document.Replace(offset + match.Index, match.Length, textToReplace);
                 offset += textToReplace.Length - match.Length;
             }
+
             _textEditor.EndChange();
         }
         #endregion
