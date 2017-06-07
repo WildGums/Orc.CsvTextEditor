@@ -19,7 +19,12 @@ namespace Orc.CsvTextEditor
         bool IsAutocompleteEnabled { get; set; }
         bool HasSelection { get; }
         bool CanRedo { get; }
-        bool CanUndo { get; }        
+        bool CanUndo { get; }
+        #endregion
+
+        #region Events
+        event EventHandler<CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
+        event EventHandler<EventArgs> TextChanged;
         #endregion
 
         void Copy();
@@ -48,7 +53,8 @@ namespace Orc.CsvTextEditor
 
         string GetText();
 
-        event EventHandler<CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
-        event EventHandler<EventArgs> TextChanged;
+        void RemoveBlankLines();
+        void TrimWhitespaces();
+        void RemoveDuplicateLines();
     }
 }

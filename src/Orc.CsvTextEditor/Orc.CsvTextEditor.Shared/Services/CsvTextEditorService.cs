@@ -10,10 +10,12 @@ namespace Orc.CsvTextEditor
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using System.Windows;
     using System.Windows.Input;
     using System.Xml;
     using Catel;
+    using Catel.Logging;
     using Catel.Collections;
     using Catel.IoC;
     using Catel.MVVM;
@@ -26,6 +28,8 @@ namespace Orc.CsvTextEditor
 
     internal class CsvTextEditorService : ICsvTextEditorService
     {
+        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+
         #region Fields
         private readonly ICommandManager _commandManager;
         private readonly IDispatcherService _dispatcherService;
@@ -99,7 +103,58 @@ namespace Orc.CsvTextEditor
         public bool CanUndo => !_initializing && _textEditor.CanUndo;
         #endregion
 
+        #region Events
+        public event EventHandler<CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
+        public event EventHandler<EventArgs> TextChanged;
+        #endregion
+
         #region Methods
+        public void RemoveBlankLines()
+        {
+            Log.Debug("Removing blank lines");
+
+            var document = _textEditor.Document;
+            var documentLines = document.Lines;
+
+            for (int i = document.LineCount - 1; i >= 0; i--)
+            {
+                var documentLine = documentLines[i];
+                var lineText = document.GetText(documentLine.Offset, documentLine.TotalLength);
+                if (lineText.Replace(Symbols.Comma, ' ').Trim() == string.Empty)
+                {
+                    document.Remove(documentLine.Offset, documentLine.TotalLength);
+                }
+            }
+
+            UpdateText(document.Text);
+        }
+
+        public void TrimWhitespaces()
+        {
+            Log.Debug("Trimming white spaces");
+
+            var builder = new StringBuilder();
+            foreach (var line in GetLinesWithoutWhitespaces())
+            {
+                builder.AppendLine(line);
+            }
+
+            UpdateText(builder.ToString().TrimEnd());
+        }
+
+        public void RemoveDuplicateLines()
+        {
+            Log.Debug("Removing duplicate lines");
+
+            var builder = new StringBuilder();
+            foreach (var line in GetLinesWithoutWhitespaces().Distinct())
+            {
+                builder.AppendLine(line);
+            }
+
+            UpdateText(builder.ToString().TrimEnd());
+        }
+
         public string GetText()
         {
             var text = string.Empty;
@@ -108,9 +163,6 @@ namespace Orc.CsvTextEditor
 
             return text;
         }
-
-        public event EventHandler<CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
-        public event EventHandler<EventArgs> TextChanged;
 
         public void AddTool(ICsvTextEditorTool tool)
         {
@@ -434,9 +486,30 @@ namespace Orc.CsvTextEditor
             _elementGenerator.Refresh(_textEditor.Text);
             _textEditor.TextArea.TextView.Redraw();
         }
-        #endregion
 
-        
+        private IEnumerable<string> GetLinesWithoutWhitespaces()
+        {
+            foreach (var documentLine in _textEditor.Document.Lines)
+            {
+                var lineText = _textEditor.Document.GetText(documentLine.Offset, documentLine.TotalLength);
+                if (lineText.Replace(Symbols.Comma, ' ').Trim() != string.Empty)
+                {
+                    string newLineText = string.Empty;
+                    foreach (var columnText in lineText.Split(Symbols.Comma))
+                    {
+                        newLineText += columnText.Trim() + Symbols.Comma;
+                    }
+
+                    yield return newLineText.TrimEnd(Symbols.Comma);
+                }
+                else
+                {
+                    yield return lineText.TrimEnd();
+                }
+            }
+        }
+
+
         private void OnTextEntering(object sender, TextCompositionEventArgs e)
         {
             if (IsAutocompleteEnabled)
@@ -652,5 +725,6 @@ namespace Orc.CsvTextEditor
             _textEditor.TextArea.TextView.ElementGenerators.Clear();
             _textEditor.TextArea.TextView.LineTransformers.Clear();
         }
+        #endregion
     }
 }
