@@ -242,6 +242,22 @@ namespace Orc.CsvTextEditor
             return text.Contains("\n") ? "\n" : "\r\n";
         }
 
+        public static bool IsEmptyCommaSeparatedLine(this string textLine)
+        {
+            Argument.IsNotNull(() => textLine);
+
+            return textLine.All(x => x == Symbols.Comma || x == Symbols.Space);
+        }
+
+        public static string TrimCommaSeparatedValues(this string textLine)
+        {
+            Argument.IsNotNull(() => textLine);
+
+            var trimmedValues = textLine.Split(new []{Symbols.Comma}, StringSplitOptions.None).Select(x => x.Trim());
+
+            return string.Join($"{Symbols.Comma}", trimmedValues);
+        }
+
         public static string TrimEnd(this string text, string trimString)
         {
             Argument.IsNotNull(nameof(text), text);

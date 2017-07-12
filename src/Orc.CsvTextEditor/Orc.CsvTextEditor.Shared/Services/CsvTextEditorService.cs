@@ -113,46 +113,27 @@ namespace Orc.CsvTextEditor
         {
             Log.Debug("Removing blank lines");
 
-            var document = _textEditor.Document;
-            var documentLines = document.Lines;
+            var lines = GetLines(out string newLineSymbol);
 
-            for (int i = document.LineCount - 1; i >= 0; i--)
-            {
-                var documentLine = documentLines[i];
-                var lineText = document.GetText(documentLine.Offset, documentLine.TotalLength);
-                if (lineText.Replace(Symbols.Comma, ' ').Trim() == string.Empty)
-                {
-                    document.Remove(documentLine.Offset, documentLine.TotalLength);
-                }
-            }
-
-            UpdateText(document.Text);
-        }
+            UpdateText(string.Join(newLineSymbol, lines.Where(x => !x.IsEmptyCommaSeparatedLine())));
+        }        
 
         public void TrimWhitespaces()
         {
             Log.Debug("Trimming white spaces");
 
-            var builder = new StringBuilder();
-            foreach (var line in GetLinesWithoutWhitespaces())
-            {
-                builder.AppendLine(line);
-            }
+            var lines = GetLines(out string newLineSymbol);
 
-            UpdateText(builder.ToString().TrimEnd());
+            UpdateText(string.Join(newLineSymbol, lines.Select(x => x.TrimCommaSeparatedValues())));
         }
 
         public void RemoveDuplicateLines()
         {
             Log.Debug("Removing duplicate lines");
 
-            var builder = new StringBuilder();
-            foreach (var line in GetLinesWithoutWhitespaces().Distinct())
-            {
-                builder.AppendLine(line);
-            }
+            var lines = GetLines(out string newLineSymbol).Distinct();
 
-            UpdateText(builder.ToString().TrimEnd());
+            UpdateText(string.Join(newLineSymbol, lines));
         }
 
         public string GetText()
@@ -487,28 +468,15 @@ namespace Orc.CsvTextEditor
             _textEditor.TextArea.TextView.Redraw();
         }
 
-        private IEnumerable<string> GetLinesWithoutWhitespaces()
+        private string[] GetLines(out string newLineSymbol)
         {
-            foreach (var documentLine in _textEditor.Document.Lines)
-            {
-                var lineText = _textEditor.Document.GetText(documentLine.Offset, documentLine.TotalLength);
-                if (lineText.Replace(Symbols.Comma, ' ').Trim() != string.Empty)
-                {
-                    string newLineText = string.Empty;
-                    foreach (var columnText in lineText.Split(Symbols.Comma))
-                    {
-                        newLineText += columnText.Trim() + Symbols.Comma;
-                    }
+            var document = _textEditor.Document;
 
-                    yield return newLineText.TrimEnd(Symbols.Comma);
-                }
-                else
-                {
-                    yield return lineText.TrimEnd();
-                }
-            }
+            var text = document.Text;
+            newLineSymbol = text.GetNewLineSymbol();
+
+            return document.Text.Split(new[] { newLineSymbol }, StringSplitOptions.None);
         }
-
 
         private void OnTextEntering(object sender, TextCompositionEventArgs e)
         {
