@@ -239,7 +239,17 @@ namespace Orc.CsvTextEditor
                 return "\r\n";
             }
 
-            return text.Contains("\n") ? "\n" : "\r\n";
+            if (text.Contains("\n"))
+            {
+                return "\n";
+            }
+
+            if (text.Contains("\r"))
+            {
+                return "\r";
+            }
+
+            return Environment.NewLine;
         }
 
         public static bool IsEmptyCommaSeparatedLine(this string textLine)
