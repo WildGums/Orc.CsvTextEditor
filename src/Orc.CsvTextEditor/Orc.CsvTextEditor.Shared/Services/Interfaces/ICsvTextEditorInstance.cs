@@ -9,17 +9,19 @@ namespace Orc.CsvTextEditor
 {
     using System;
     using System.Collections.Generic;
+    using Operations;
 
-    public interface ICsvTextEditorService : IDisposable
+    public interface ICsvTextEditorInstance : IDisposable
     {
         #region Properties
         IEnumerable<ICsvTextEditorTool> Tools { get; }
-        int LineCount { get; }
-        int ColumnCount { get; }
+        int LinesCount { get; }
+        int ColumnsCount { get; }
         bool IsAutocompleteEnabled { get; set; }
         bool HasSelection { get; }
         bool CanRedo { get; }
         bool CanUndo { get; }
+        string LineEnding { get; }
         #endregion
 
         #region Events
@@ -35,16 +37,13 @@ namespace Orc.CsvTextEditor
 
         void Initialize(string text);
 
-        void AddColumn();
-        void AddLine();
-        void RemoveColumn();
-        void DuplicateLine();
-        void RemoveLine();
+        void ExecuteOperation<TOperation>() where TOperation : IOperation;
+        Location GetLocation();
+
         void DeleteNextSelectedText();
         void DeletePreviousSelectedText();
 
-        void GotoNextColumn();
-        void GotoPreviousColumn();
+        void GotoPosition(int lineIndex, int columnIndex);
 
         void RefreshView();
 
@@ -52,9 +51,6 @@ namespace Orc.CsvTextEditor
         void RemoveTool(ICsvTextEditorTool tool);
 
         string GetText();
-
-        void RemoveBlankLines();
-        void TrimWhitespaces();
-        void RemoveDuplicateLines();
+        void SetText(string text);
     }
 }

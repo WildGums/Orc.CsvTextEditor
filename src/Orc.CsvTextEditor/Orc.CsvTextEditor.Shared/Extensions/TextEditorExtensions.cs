@@ -33,12 +33,16 @@ namespace Orc.CsvTextEditor
             }
 
             var line = textDocument.Lines[lineIndex];
+
             var offset = line.Offset;
             var columnOffset = columnWidthByLine[lineIndex].Take(columnIndex).Sum();
 
             var maxCaretOffset = textDocument.TextLength;
             var newCaretOffset = offset + columnOffset;
+
             textEditor.CaretOffset = maxCaretOffset > newCaretOffset ? newCaretOffset : maxCaretOffset;
+
+            textEditor.ScrollTo(line.LineNumber, columnOffset + 1);
         }
 
         public static IList<ICompletionData> GetCompletionDataForText(this TextEditor textEditor, string autocompletionText, int columnIndex, int[][] scheme)

@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ICsvTextEditorToolInitializer.cs" company="WildGums">
+// <copyright file="ColumnNumberWithOffset.cs" company="WildGums">
 //   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -7,10 +7,10 @@
 
 namespace Orc.CsvTextEditor
 {
-    using ICSharpCode.AvalonEdit;
-
-    public interface ICsvTextEditorServiceInitializer
+    public class Column
     {
-        void Initialize(TextEditor textEditor, ICsvTextEditorService textEditorService);
+        public int Index;
+        public int Offset;
+        public int Width;
     }
 }

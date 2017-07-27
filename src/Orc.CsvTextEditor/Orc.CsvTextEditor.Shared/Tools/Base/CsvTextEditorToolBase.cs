@@ -14,19 +14,19 @@ namespace Orc.CsvTextEditor
     public abstract class CsvTextEditorToolBase : ICsvTextEditorTool
     {
         #region Constructors
-        public CsvTextEditorToolBase(TextEditor textEditor, ICsvTextEditorService csvTextEditorService)
+        public CsvTextEditorToolBase(TextEditor textEditor, ICsvTextEditorInstance csvTextEditorInstance)
         {
             Argument.IsNotNull(() => textEditor);
-            Argument.IsNotNull(() => csvTextEditorService);
+            Argument.IsNotNull(() => csvTextEditorInstance);
 
             TextEditor = textEditor;
-            CsvTextEditorService = csvTextEditorService;
+            CsvTextEditorInstance = csvTextEditorInstance;
         }
         #endregion
 
         #region Properties
         protected TextEditor TextEditor { get; }
-        protected ICsvTextEditorService CsvTextEditorService { get; }
+        protected ICsvTextEditorInstance CsvTextEditorInstance { get; }
         #endregion
 
         #region Methods

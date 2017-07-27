@@ -12,6 +12,7 @@ namespace Orc.CsvTextEditor
     using Catel.IoC;
     using Catel.Logging;
     using Catel.MVVM;
+    using Operations;
 
     internal class CsvTextEditorControlViewModel : ViewModelBase
     {
@@ -19,7 +20,7 @@ namespace Orc.CsvTextEditor
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
         private readonly IServiceLocator _serviceLocator;
-        private ICsvTextEditorService _csvTextEditorService;
+        private ICsvTextEditorInstance _csvTextEditorInstance;
         private ICsvTextSynchronizationService _csvTextSynchronizationService;
         #endregion
 
@@ -29,22 +30,22 @@ namespace Orc.CsvTextEditor
             _serviceLocator = serviceLocator;
             Argument.IsNotNull(() => serviceLocator);
 
-            Paste = new Command(() => _csvTextEditorService.Paste());
-            Cut = new Command(() => _csvTextEditorService.Cut());
+            Paste = new Command(() => _csvTextEditorInstance.Paste());
+            Cut = new Command(() => _csvTextEditorInstance.Cut());
 
-            GotoNextColumn = new Command(() => _csvTextEditorService.GotoNextColumn());
-            GotoPreviousColumn = new Command(() => _csvTextEditorService.GotoPreviousColumn());
+            GotoNextColumn = new Command(() => _csvTextEditorInstance.ExecuteOperation<GotoNextColumnOperation>());
+            GotoPreviousColumn = new Command(() => _csvTextEditorInstance.ExecuteOperation<GotoPreviousColumnOperation>());
 
-            Undo = new Command(() => _csvTextEditorService.Undo(), () => _csvTextEditorService.CanUndo);
-            Redo = new Command(() => _csvTextEditorService.Redo(), () => _csvTextEditorService.CanRedo);
+            Undo = new Command(() => _csvTextEditorInstance.Undo(), () => _csvTextEditorInstance.CanUndo);
+            Redo = new Command(() => _csvTextEditorInstance.Redo(), () => _csvTextEditorInstance.CanRedo);
 
-            AddLine = new Command(() => _csvTextEditorService.AddLine());
-            RemoveLine = new Command(() => _csvTextEditorService.RemoveLine());
-            DuplicateLine = new Command(() => _csvTextEditorService.DuplicateLine());
-            RemoveColumn = new Command(() => _csvTextEditorService.RemoveColumn());
-            AddColumn = new Command(() => _csvTextEditorService.AddColumn());
-            DeleteNextSelectedText = new Command(() => _csvTextEditorService.DeleteNextSelectedText());
-            DeletePreviousSelectedText = new Command(() => _csvTextEditorService.DeletePreviousSelectedText());
+            AddLine = new Command(() => _csvTextEditorInstance.ExecuteOperation<AddLineOperation>());
+            RemoveLine = new Command(() => _csvTextEditorInstance.ExecuteOperation<RemoveLineOperation>());
+            DuplicateLine = new Command(() => _csvTextEditorInstance.ExecuteOperation<DuplicateLineOperation>());
+            RemoveColumn = new Command(() => _csvTextEditorInstance.ExecuteOperation<RemoveColumnOperation>());
+            AddColumn = new Command(() => _csvTextEditorInstance.ExecuteOperation<AddColumnOperation>());
+            DeleteNextSelectedText = new Command(() => _csvTextEditorInstance.DeleteNextSelectedText());
+            DeletePreviousSelectedText = new Command(() => _csvTextEditorInstance.DeletePreviousSelectedText());
         }
         #endregion
 
@@ -85,7 +86,7 @@ namespace Orc.CsvTextEditor
 
                 using (_csvTextSynchronizationService.SynchronizeInScope())
                 {
-                    _csvTextEditorService.Initialize(Text);
+                    _csvTextEditorInstance.Initialize(Text);
                 }
             }
             catch (Exception ex)
@@ -100,15 +101,15 @@ namespace Orc.CsvTextEditor
 
             if (scope == null)
             {
-                _csvTextEditorService = null;
+                _csvTextEditorInstance = null;
                 _csvTextSynchronizationService = null;
 
                 return;
             }
 
-            if (_csvTextEditorService == null && _serviceLocator.IsTypeRegistered<ICsvTextEditorService>(scope))
+            if (_csvTextEditorInstance == null && _serviceLocator.IsTypeRegistered<ICsvTextEditorInstance>(scope))
             {
-                _csvTextEditorService = _serviceLocator.ResolveType<ICsvTextEditorService>(scope);
+                _csvTextEditorInstance = _serviceLocator.ResolveType<ICsvTextEditorInstance>(scope);
             }
 
             if (_csvTextSynchronizationService == null && _serviceLocator.IsTypeRegistered<ICsvTextSynchronizationService>(scope))

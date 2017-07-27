@@ -26,8 +26,9 @@ public static class ModuleInitializer
     {
         var serviceLocator = ServiceLocator.Default;
 
-        serviceLocator.RegisterTypeIfNotYetRegistered<ICsvTextEditorServiceInitializer, CsvTextEditorServiceInitializer>();
-        serviceLocator.RegisterType<ICsvTextEditorService, CsvTextEditorService>();
+        serviceLocator.RegisterTypeIfNotYetRegistered<ICsvTextEditorInitializer, CsvTextEditorInitializer>();
+        // TODO: it should not be registered here
+        serviceLocator.RegisterType<ICsvTextEditorInstance, CsvTextEditorInstance>();
         serviceLocator.RegisterType<ICsvTextSynchronizationService, CsvTextSynchronizationService>();
 
         var viewModelLocator = serviceLocator.ResolveType<IViewModelLocator>();

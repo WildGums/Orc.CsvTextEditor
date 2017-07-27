@@ -72,9 +72,9 @@ namespace Orc.CsvTextEditor
                 return;
             }
 
-            if (!_serviceLocator.IsTypeRegistered<ICsvTextEditorService>(scope))
+            if (!_serviceLocator.IsTypeRegistered<ICsvTextEditorInstance>(scope))
             {
-                var csvTextEditorService = (ICsvTextEditorService) _typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextEditorService>(textEditor);
+                var csvTextEditorService = (ICsvTextEditorInstance) _typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextEditorInstance>(textEditor);
                 _serviceLocator.RegisterInstance(csvTextEditorService, scope);
             }
 
@@ -89,12 +89,12 @@ namespace Orc.CsvTextEditor
 
         private void RemoveServiceRegistration(object oldScope)
         {
-            if (_serviceLocator.IsTypeRegistered<ICsvTextEditorService>(oldScope))
+            if (_serviceLocator.IsTypeRegistered<ICsvTextEditorInstance>(oldScope))
             {
-                var csvTextEditorService = _serviceLocator.ResolveType<ICsvTextEditorService>(oldScope);
+                var csvTextEditorService = _serviceLocator.ResolveType<ICsvTextEditorInstance>(oldScope);
                 csvTextEditorService.Dispose();
 
-                _serviceLocator.RemoveType<ICsvTextEditorService>(oldScope);
+                _serviceLocator.RemoveType<ICsvTextEditorInstance>(oldScope);
             }
 
             if (_serviceLocator.IsTypeRegistered<ICsvTextSynchronizationService>(oldScope))

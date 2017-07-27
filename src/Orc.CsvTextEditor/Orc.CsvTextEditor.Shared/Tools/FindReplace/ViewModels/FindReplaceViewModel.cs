@@ -14,18 +14,18 @@ namespace Orc.CsvTextEditor
     internal class FindReplaceViewModel : ViewModelBase
     {
         #region Fields
+        private readonly ICsvTextEditorInstance _csvTextEditorInstance;
         private readonly IFindReplaceSerivce _csvTextEditorFindReplaceSerivce;
-        private readonly ICsvTextEditorService _csvTextEditorService;
         #endregion
 
         #region Constructors
-        public FindReplaceViewModel(IFindReplaceSerivce csvTextEditorFindReplaceSerivce, ICsvTextEditorService csvTextEditorService)
+        public FindReplaceViewModel(ICsvTextEditorInstance csvTextEditorInstance, IFindReplaceSerivce csvTextEditorFindReplaceSerivce)
         {
+            Argument.IsNotNull(() => csvTextEditorInstance);
             Argument.IsNotNull(() => csvTextEditorFindReplaceSerivce);
-            Argument.IsNotNull(() => csvTextEditorService);
 
+            _csvTextEditorInstance = csvTextEditorInstance;
             _csvTextEditorFindReplaceSerivce = csvTextEditorFindReplaceSerivce;
-            _csvTextEditorService = csvTextEditorService;
 
             FindNext = new Command<string>(OnFindNext);
             Replace = new Command<object>(OnReplace);
@@ -54,7 +54,7 @@ namespace Orc.CsvTextEditor
 
             _csvTextEditorFindReplaceSerivce.ReplaceAll(textToFind, replacementText, FindReplaceSettings);
 
-            _csvTextEditorService.RefreshView();
+            _csvTextEditorInstance.RefreshView();
         }
 
         private void OnReplace(object parameter)
@@ -68,7 +68,7 @@ namespace Orc.CsvTextEditor
                 SystemSounds.Beep.Play();
             }
 
-            _csvTextEditorService.RefreshView();
+            _csvTextEditorInstance.RefreshView();
         }
 
         private void OnFindNext(string text)

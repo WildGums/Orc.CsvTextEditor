@@ -118,7 +118,7 @@ namespace Orc.CsvTextEditor
 
             var columnNumberWithOffset = GetColumn(affectedLocation);
 
-            var affectedColumn = columnNumberWithOffset.ColumnNumber;
+            var affectedColumn = columnNumberWithOffset.Index;
             var affectedLine = affectedLocation.Line - 1;
             var oldWidth = columnWidthByLine[affectedLine][affectedColumn];
 
@@ -199,20 +199,20 @@ namespace Orc.CsvTextEditor
 
             var location = CurrentContext.Document.GetLocation(startOffset);
 
-            var columnNumberWithOffset = GetColumn(location);
+            var column = GetColumn(location);
             var locationLine = location.Line;
 
-            if (columnNumberWithOffset.ColumnNumber == ColumnWidth.Length - 1)
+            if (column.Index == ColumnWidth.Length - 1)
             {
                 if (Lines.Length == locationLine)
                 {
                     return CurrentContext.VisualLine.LastDocumentLine.EndOffset;
                 }
 
-                columnNumberWithOffset = new ColumnNumberWithOffset
+                column = new Column
                 {
-                    ColumnNumber = 0,
-                    OffsetInLine = Lines[locationLine][0]
+                    Index = 0,
+                    Offset = Lines[locationLine][0]
                 };
 
                 locationLine++;
@@ -220,15 +220,15 @@ namespace Orc.CsvTextEditor
 
             var curCellWidth = this._freezeInProgress && 
                 _activeRowIndex == locationLine - 1 && 
-                columnNumberWithOffset.ColumnNumber == _activeColumnIndex 
+                column.Index == _activeColumnIndex 
                 ?
-                _activeCellRealLength : ColumnWidth[columnNumberWithOffset.ColumnNumber]; 
+                _activeCellRealLength : ColumnWidth[column.Index]; 
 
-            _tabWidth = curCellWidth - Lines[locationLine - 1][columnNumberWithOffset.ColumnNumber];
+            _tabWidth = curCellWidth - Lines[locationLine - 1][column.Index];
 
             try
             {
-                return CurrentContext.Document.GetOffset(new TextLocation(locationLine, columnNumberWithOffset.OffsetInLine));
+                return CurrentContext.Document.GetOffset(new TextLocation(locationLine, column.Offset + column.Width));
             }
             catch (Exception ex)
             {
@@ -237,7 +237,7 @@ namespace Orc.CsvTextEditor
             }            
         }
 
-        public ColumnNumberWithOffset GetColumn(TextLocation location)
+        public Column GetColumn(TextLocation location)
         {
             var lines = Lines;
 
@@ -255,11 +255,11 @@ namespace Orc.CsvTextEditor
                 i++;
             }
 
-            var column = new ColumnNumberWithOffset
+            var column = new Column
             {
-                ColumnNumber = i - 1,
-                OffsetInLine = sum,
-                Length = currentLine[i - 1]
+                Index = i - 1,
+                Offset = sum - currentLine[i - 1],
+                Width = currentLine[i - 1]
             };
 
             return column;

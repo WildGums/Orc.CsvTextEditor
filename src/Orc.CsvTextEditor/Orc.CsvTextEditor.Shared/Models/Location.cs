@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ICsvTextSynchronizationService.cs" company="WildGums">
+// <copyright file="Location.cs" company="WildGums">
 //   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -7,14 +7,12 @@
 
 namespace Orc.CsvTextEditor
 {
-    using System;
-
-    // TODO: replace scope management
-    internal interface ICsvTextSynchronizationService
+    public class Location
     {
         #region Properties
-        bool IsSynchronizing { get; }
-        IDisposable SynchronizeInScope();
+        public Column Column { get; set; }
+        public Line Line { get; set; }
+        public int Offset { get; set; }
         #endregion
     }
 }

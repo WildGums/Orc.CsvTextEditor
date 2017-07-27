@@ -11,14 +11,14 @@ namespace Orc.CsvTextEditor
     using Catel.IoC;
     using ICSharpCode.AvalonEdit;
 
-    public class CsvTextEditorServiceInitializer : ICsvTextEditorServiceInitializer
+    public class CsvTextEditorInitializer : ICsvTextEditorInitializer
     {
         #region Fields
         private readonly ITypeFactory _typeFactory;
         #endregion
 
         #region Constructors
-        public CsvTextEditorServiceInitializer(ITypeFactory typeFactory)
+        public CsvTextEditorInitializer(ITypeFactory typeFactory)
         {
             Argument.IsNotNull(() => typeFactory);
 
@@ -27,14 +27,14 @@ namespace Orc.CsvTextEditor
         #endregion
 
         #region Methods
-        public virtual void Initialize(TextEditor textEditor, ICsvTextEditorService csvTextEditorService)
+        public virtual void Initialize(TextEditor textEditor, ICsvTextEditorInstance csvTextEditorInstance)
         {
             Argument.IsNotNull(() => textEditor);
-            Argument.IsNotNull(() => csvTextEditorService);
+            Argument.IsNotNull(() => csvTextEditorInstance);
 
-            var findReplaceTool = _typeFactory.CreateInstanceWithParametersAndAutoCompletion<FindReplaceTextEditorTool>(textEditor, csvTextEditorService);
+            var findReplaceTool = _typeFactory.CreateInstanceWithParametersAndAutoCompletion<FindReplaceTextEditorTool>(textEditor, csvTextEditorInstance);
 
-            csvTextEditorService.AddTool(findReplaceTool);
+            csvTextEditorInstance.AddTool(findReplaceTool);
         }
         #endregion
     }

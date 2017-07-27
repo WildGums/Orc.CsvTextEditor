@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ICsvTextSynchronizationService.cs" company="WildGums">
+// <copyright file="ICsvTextEditorInitializer.cs" company="WildGums">
 //   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -7,14 +7,10 @@
 
 namespace Orc.CsvTextEditor
 {
-    using System;
+    using ICSharpCode.AvalonEdit;
 
-    // TODO: replace scope management
-    internal interface ICsvTextSynchronizationService
+    public interface ICsvTextEditorInitializer
     {
-        #region Properties
-        bool IsSynchronizing { get; }
-        IDisposable SynchronizeInScope();
-        #endregion
+        void Initialize(TextEditor textEditor, ICsvTextEditorInstance textEditorInstance);
     }
 }

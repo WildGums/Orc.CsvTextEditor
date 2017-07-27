@@ -119,25 +119,32 @@ namespace Orc.CsvTextEditor
             return new string(textArray).TrimEnd(newLine);
         }
 
-        public static string InsertLineWithTextTransfer(this string text, int insertLineIndex, int offsetInLine, int columnCount, string newLine)
+        public static string[] GetLines(this string text, out string newLineSymbol)
+        {
+            newLineSymbol = text.GetNewLineSymbol();
+
+            return text.Split(new[] { newLineSymbol }, StringSplitOptions.None);
+        }
+
+        public static string InsertLineWithTextTransfer(this string text, int insertLineIndex, int offsetInLine, int columnCount, string lineEnding)
         {
             Argument.IsNotNull(nameof(text), text);
 
-            var newLineLenght = newLine.Length;
+            var lineEndingLength = lineEnding.Length;
 
-            if (offsetInLine == 0 || insertLineIndex == 0)
+            if (insertLineIndex == 0)
             {
-                return InsertLine(text, insertLineIndex, columnCount, newLine);
+                return InsertLine(text, insertLineIndex, columnCount, lineEnding);
             }
 
-            var previousLineOffset = insertLineIndex == 1 ? 0 : text.IndexOfSpecificOccurance(newLine, insertLineIndex - 1) + newLineLenght;
+            var previousLineOffset = insertLineIndex == 1 ? 0 : text.IndexOfSpecificOccurance(lineEnding, insertLineIndex - 1) + lineEndingLength;
             var leftLineChunk = text.Substring(previousLineOffset, offsetInLine);
             var splitColumnIndex = leftLineChunk.Count(x => x.Equals(Symbols.Comma));
 
-            var insetionText = $"{new string(Symbols.Comma, columnCount - splitColumnIndex - 1)}{newLine}{new string(Symbols.Comma, splitColumnIndex)}";
+            var insetionText = $"{new string(Symbols.Comma, columnCount - splitColumnIndex - 1)}{lineEnding}{new string(Symbols.Comma, splitColumnIndex)}";
 
             var insertPosition = previousLineOffset + offsetInLine;
-            return text.Insert(insertPosition, insetionText).TrimEnd(newLine);
+            return text.Insert(insertPosition, insetionText).TrimEnd(lineEnding);
         }
 
         public static string DuplicateTextInLine(this string text, int startOffset, int endOffset, string newLine)
