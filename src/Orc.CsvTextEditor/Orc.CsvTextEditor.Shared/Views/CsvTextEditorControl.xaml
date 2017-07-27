@@ -6,7 +6,7 @@
                    xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
                    xmlns:csvTextEditor="clr-namespace:Orc.CsvTextEditor"
                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-                   xmlns:catel="http://catel.codeplex.com"
+                   xmlns:catel="http://schemas.catelproject.com"
                    Focusable="True" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300">
     
     <i:Interaction.Behaviors>

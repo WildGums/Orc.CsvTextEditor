@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26403.7
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orc.CsvTextEditor.NET40", "Orc.CsvTextEditor\Orc.CsvTextEditor.NET40\Orc.CsvTextEditor.NET40.csproj", "{6FE9ED00-BFD6-4034-88F1-1334C947ACA6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orc.CsvTextEditor.NET47", "Orc.CsvTextEditor\Orc.CsvTextEditor.NET47\Orc.CsvTextEditor.NET47.csproj", "{6FE9ED00-BFD6-4034-88F1-1334C947ACA6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A8A1A4EE-E04A-43AB-90C9-41E7B82EE1E5}"
 EndProject
@@ -15,7 +15,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{1FE0D431-A
 		SolutionAssemblyInfo.cs = SolutionAssemblyInfo.cs
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orc.CsvTextEditor.Tests.NET40", "Orc.CsvTextEditor.Tests\Orc.CsvTextEditor.Tests.NET40\Orc.CsvTextEditor.Tests.NET40.csproj", "{402907C0-534A-4FFF-8CF6-29EB1D62D3AF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orc.CsvTextEditor.Tests.NET47", "Orc.CsvTextEditor.Tests\Orc.CsvTextEditor.Tests.NET47\Orc.CsvTextEditor.Tests.NET47.csproj", "{402907C0-534A-4FFF-8CF6-29EB1D62D3AF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{0787DFC6-AB24-4D00-A8A4-FF203DC7D080}"
 EndProject
@@ -31,7 +31,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orc.CsvTextEditor.Tests.NET
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Example", "Example", "{672BFA2E-9F93-496F-B188-40579FB5D301}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orc.CsvTextEditor.Example.NET40", "Orc.CsvTextEditor.Example\Orc.CsvTextEditor.Example.NET40\Orc.CsvTextEditor.Example.NET40.csproj", "{7C1E8589-9E7E-4C63-979A-E192F9F979A5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orc.CsvTextEditor.Example.NET47", "Orc.CsvTextEditor.Example\Orc.CsvTextEditor.Example.NET47\Orc.CsvTextEditor.Example.NET47.csproj", "{7C1E8589-9E7E-4C63-979A-E192F9F979A5}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Orc.CsvTextEditor.Example.Shared", "Orc.CsvTextEditor.Example\Orc.CsvTextEditor.Example.Shared\Orc.CsvTextEditor.Example.Shared.shproj", "{5FCB68E6-A529-4DC3-AE00-123EE0617B1E}"
 EndProject
