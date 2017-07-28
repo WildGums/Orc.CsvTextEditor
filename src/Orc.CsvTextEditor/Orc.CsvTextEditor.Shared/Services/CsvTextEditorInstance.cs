@@ -44,8 +44,7 @@ namespace Orc.CsvTextEditor
         private bool _isInCustomUpdate = false;
         private bool _isInRedoUndo = false;
 
-        private int _previousCaretColumn;
-        private int _previousCaretLine;
+        private Location _lastLocation;
 
         private bool _initializing;
         #endregion
@@ -201,6 +200,10 @@ namespace Orc.CsvTextEditor
             var textLocation = textDocument.GetLocation(offset);
 
             var column = _elementGenerator.GetColumn(textLocation);
+            if (column == null)
+            {
+                return null;
+            }
 
             var lineIndex = textLocation.Line-1;
             var documentLine = textDocument.Lines[lineIndex];
@@ -453,19 +456,17 @@ namespace Orc.CsvTextEditor
 
         private void OnCaretPositionChanged(object sender, EventArgs eventArgs)
         {
-            var offset = _textEditor.CaretOffset;
-            var textDocument = _textEditor.Document;
-            var currentTextLocation = textDocument.GetLocation(offset);
-            var columnNumberWithOffset = _elementGenerator.GetColumn(currentTextLocation);
-            var column = columnNumberWithOffset.Index + 1;
-            var line = currentTextLocation.Line;
-
-            if (_previousCaretColumn != column || _previousCaretLine != line)
+            var location = GetLocation();
+            if (location == null)
             {
-                CaretTextLocationChanged?.Invoke(this, new CaretTextLocationChangedEventArgs(column, line));
+                return;
+            }
 
-                _previousCaretColumn = column;
-                _previousCaretLine = line;
+            if (_lastLocation == null || _lastLocation.Offset != location.Offset)
+            {
+                CaretTextLocationChanged?.Invoke(this, new CaretTextLocationChangedEventArgs(location));
+
+                _lastLocation = location;
             }
         }
 

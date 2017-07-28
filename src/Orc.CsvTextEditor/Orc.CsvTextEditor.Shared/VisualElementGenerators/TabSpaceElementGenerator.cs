@@ -116,41 +116,41 @@ namespace Orc.CsvTextEditor
             var columnWidth = ColumnWidth;
             var columnWidthByLine = Lines;
 
-            var columnNumberWithOffset = GetColumn(affectedLocation);
+            var column = GetColumn(affectedLocation);
 
-            var affectedColumn = columnNumberWithOffset.Index;
-            var affectedLine = affectedLocation.Line - 1;
-            var oldWidth = columnWidthByLine[affectedLine][affectedColumn];
+            var columnIndex = column?.Index ?? 0;
+            var rowIndex = affectedLocation.Line - 1;
+            var oldWidth = columnWidthByLine[rowIndex][columnIndex];
 
             var newWidth = oldWidth + length;
 
-            columnWidthByLine[affectedLine][affectedColumn] = newWidth;
+            columnWidthByLine[rowIndex][columnIndex] = newWidth;
 
             int? changedWidth = null;
            
             // Increasing column
-            if (length >= 0 && columnWidth[affectedColumn] <= newWidth)
+            if (length >= 0 && columnWidth[columnIndex] <= newWidth)
             {
                 changedWidth = newWidth;
             }
 
             // Decreasing column
-            if (length <= 0 && columnWidth[affectedColumn] >= newWidth)
+            if (length <= 0 && columnWidth[columnIndex] >= newWidth)
             {
-                changedWidth = columnWidthByLine.Where(x => x.Length > affectedColumn).Select(x => x[affectedColumn]).Max();
+                changedWidth = columnWidthByLine.Where(x => x.Length > columnIndex).Select(x => x[columnIndex]).Max();
             }
 
             if (changedWidth.HasValue)
             {
-                FreezeColumnResizing(affectedLine, affectedColumn);
+                FreezeColumnResizing(rowIndex, columnIndex);
 
-                if (_freezeInProgress && affectedLine == _activeRowIndex && affectedColumn == _activeColumnIndex)
+                if (_freezeInProgress && rowIndex == _activeRowIndex && columnIndex == _activeColumnIndex)
                 {
                     _activeCellRealLength = changedWidth.Value;     
                 }
                 else
                 {
-                    columnWidth[affectedColumn] = changedWidth.Value;
+                    columnWidth[columnIndex] = changedWidth.Value;
                 }
 
                 return true;
@@ -202,7 +202,12 @@ namespace Orc.CsvTextEditor
             var column = GetColumn(location);
             var locationLine = location.Line;
 
-            if (column.Index == ColumnWidth.Length - 1)
+            if (locationLine >= Lines.Length)
+            {
+                return startOffset;
+            }
+
+            if (column == null || column.Index == ColumnWidth.Length - 1)
             {
                 if (Lines.Length == locationLine)
                 {
@@ -234,7 +239,7 @@ namespace Orc.CsvTextEditor
             {
                 Log.Error(ex, "Failed to get first interested offset");
                 return startOffset;
-            }            
+            }
         }
 
         public Column GetColumn(TextLocation location)
@@ -243,6 +248,11 @@ namespace Orc.CsvTextEditor
 
             var currentLineIndex = location.Line - 1;
             var currentColumnIndex = location.Column - 1;
+
+            if (currentLineIndex >= lines.Length)
+            {
+                return null;
+            }
 
             var currentLine = lines[currentLineIndex];
 

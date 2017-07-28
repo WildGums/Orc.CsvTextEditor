@@ -12,16 +12,14 @@ namespace Orc.CsvTextEditor
     public class CaretTextLocationChangedEventArgs : EventArgs
     {
         #region Constructors
-        public CaretTextLocationChangedEventArgs(int column, int line)
+        public CaretTextLocationChangedEventArgs(Location location)
         {
-            Column = column;
-            Line = line;
+            Location = location;
         }
         #endregion
 
         #region Properties
-        public int Column { get; }
-        public int Line { get; }
+        public Location Location { get; }
         #endregion
     }
 }
