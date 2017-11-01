@@ -12,7 +12,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)..\..\SolutionAssemblyInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)..\..\GlobalSuppressions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)..\..\MethodTimeLogger.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\DisableDropBehavior.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Behaviors\DisableTextDragDropBehavior.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\RegisterCstTextEditorControlsServicesBehavior.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\ReplaceCommandBindingBehavior.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Behaviors\ReplaceKeyInputBindingBehavior.cs" />

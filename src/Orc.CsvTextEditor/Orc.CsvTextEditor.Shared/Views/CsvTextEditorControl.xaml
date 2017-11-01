@@ -21,7 +21,7 @@
                                FontSize="10pt">
             
             <i:Interaction.Behaviors>
-                <csvTextEditor:DisableDropBehavior/>
+                <csvTextEditor:DisableTextDragDropBehavior/>
                 <csvTextEditor:ReplaceCommandBindingBehavior ReplacementCommand="ApplicationCommands.Paste" Command="{Binding Paste}"/>
                 <csvTextEditor:ReplaceCommandBindingBehavior ReplacementCommand="ApplicationCommands.Cut" Command="{Binding Cut}"/>
 
