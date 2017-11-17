@@ -213,6 +213,7 @@ namespace Orc.CsvTextEditor
         public const char NewLineStart = '\r';
         public const char Quote = '\"';
         public const char Space = ' ';
+        public const char VerticalBar = '|';
     }
     public class static TextEditorExtensions
     {
