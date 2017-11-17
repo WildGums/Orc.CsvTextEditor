@@ -19,19 +19,20 @@ namespace Orc.CsvTextEditor
         #region Fields
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
-        private int[][] _lines;
-        private int _tabWidth;
+        private readonly Dictionary<int, int> _tabWidths = new Dictionary<int, int>();
 
+        private int[][] _lines;
         private bool _freezeInProgress;
         private int _activeRowIndex;
         private int _activeColumnIndex;
         private int _activeCellRealLength;
+        
         #endregion
 
         #region Properties
         public int[][] Lines
         {
-            get { return _lines; }
+            get => _lines;
             private set
             {
                 if (Equals(value, _lines))
@@ -40,7 +41,6 @@ namespace Orc.CsvTextEditor
                 }
 
                 _lines = value;
-                ColumnWidth = CalculateColumnWidth(_lines);
             }
         }
 
@@ -82,9 +82,12 @@ namespace Orc.CsvTextEditor
                         fields.Add(fieldLength);
                         fieldLength = 0;
                         quotesCount = 0;
-
-                        continue;
                     }
+                }
+
+                if (fieldLength != 0)
+                {
+                    fields.Add(fieldLength);
                 }
 
                 var fieldsCount = fields.Count;
@@ -108,6 +111,9 @@ namespace Orc.CsvTextEditor
                 columnWidthByLine[index] = lengths;
             }
 
+            NormalizeColumnsCount(columnWidthByLine);
+
+            ColumnWidth = CalculateColumnWidth(columnWidthByLine);
             Lines = columnWidthByLine;
         }
 
@@ -187,8 +193,13 @@ namespace Orc.CsvTextEditor
                 return null;
             }
 
-            return new EmptyVisualLineElement(_tabWidth + 1, 1);
-        }
+            if (!_tabWidths.TryGetValue(offset, out var tabWidth))
+            {
+                tabWidth = 0;
+            }
+
+            return new EmptyVisualLineElement(tabWidth + 1, 1);
+        }        
 
         public override int GetFirstInterestedOffset(int startOffset)
         {
@@ -202,7 +213,7 @@ namespace Orc.CsvTextEditor
             var column = GetColumn(location);
             var locationLine = location.Line;
 
-            if (locationLine >= Lines.Length)
+            if (locationLine > Lines.Length)
             {
                 return startOffset;
             }
@@ -229,11 +240,13 @@ namespace Orc.CsvTextEditor
                 ?
                 _activeCellRealLength : ColumnWidth[column.Index]; 
 
-            _tabWidth = curCellWidth - Lines[locationLine - 1][column.Index];
+            var tabWidth = curCellWidth - Lines[locationLine - 1][column.Index];
 
             try
             {
-                return CurrentContext.Document.GetOffset(new TextLocation(locationLine, column.Offset + column.Width));
+                var offset = CurrentContext.Document.GetOffset(new TextLocation(locationLine, column.Offset + column.Width));
+                _tabWidths[offset] = tabWidth;
+                return offset;
             }
             catch (Exception ex)
             {
@@ -273,6 +286,43 @@ namespace Orc.CsvTextEditor
             };
 
             return column;
+        }
+
+        private void NormalizeColumnsCount(int[][] columnWidthByLine)
+        {
+            if (columnWidthByLine.Length == 0)
+            {
+                return;
+            }
+
+            var colCount = columnWidthByLine.Min(x => x.Length);
+
+            for (var index = 0; index < columnWidthByLine.Length; index++)
+            {
+                var line = columnWidthByLine[index];
+                if (line.Length == colCount)
+                {
+                    continue;
+                }
+
+                var normalizedLine = new int[colCount];
+                var lastIndex = colCount - 1;
+
+                for (int i = 0; i < lastIndex; i++)
+                {
+                    normalizedLine[i] = line[i];
+                }
+
+                int lastColWidth = 0;
+                for (int i = lastIndex; i < line.Length; i++)
+                {
+                    lastColWidth += line[i];
+                }
+
+                normalizedLine[lastIndex] = lastColWidth;
+
+                columnWidthByLine[index] = normalizedLine;
+            }
         }
 
         private int[] CalculateColumnWidth(int[][] columnWidthByLine)
