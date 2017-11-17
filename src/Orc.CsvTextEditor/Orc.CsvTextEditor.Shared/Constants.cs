@@ -18,6 +18,7 @@ namespace Orc.CsvTextEditor
         public const char NewLineEnd = '\n';
         public const char HorizontalTab = '\t';
         public const char Space = ' ';
+        public const char VerticalBar = '|';
         #endregion
     }
 }

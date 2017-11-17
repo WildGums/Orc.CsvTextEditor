@@ -31,10 +31,10 @@ namespace Orc.CsvTextEditor
             var spaces = string.Empty;
             for (var i = 0; i < VisualLength - 1; i++)
             {
-                spaces += ' ';  
+                spaces += Symbols.Space;  
             }
 
-            spaces += "|";
+            spaces += Symbols.VerticalBar;
 
             return new TextCharacters(spaces, TextRunProperties);
         }
