@@ -482,8 +482,6 @@ namespace Orc.CsvTextEditor
             // Disable this line if the user is using the "Find Replace" dialog box
             _highlightAllOccurencesOfSelectedWordTransformer.SelectedWord = _textEditor.SelectedText;
             _highlightAllOccurencesOfSelectedWordTransformer.Selection = _textEditor.TextArea.Selection;
-
-            RefreshView();
         }
 
         public void Dispose()
