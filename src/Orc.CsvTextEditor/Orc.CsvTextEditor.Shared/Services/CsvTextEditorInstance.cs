@@ -10,14 +10,13 @@ namespace Orc.CsvTextEditor
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Windows;
     using System.Windows.Input;
     using System.Xml;
     using Catel;
-    using Catel.Logging;
     using Catel.Collections;
     using Catel.IoC;
+    using Catel.Logging;
     using Catel.MVVM;
     using Catel.Services;
     using ICSharpCode.AvalonEdit;
@@ -29,24 +28,26 @@ namespace Orc.CsvTextEditor
 
     internal class CsvTextEditorInstance : ICsvTextEditorInstance
     {
+        #region Constants
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+        #endregion
 
         #region Fields
         private readonly ICommandManager _commandManager;
         private readonly IDispatcherService _dispatcherService;
-        private readonly ITypeFactory _typeFactory;
         private readonly TabSpaceElementGenerator _elementGenerator;
         private readonly HighlightAllOccurencesOfSelectedWordTransformer _highlightAllOccurencesOfSelectedWordTransformer;
         private readonly TextEditor _textEditor;
         private readonly List<ICsvTextEditorTool> _tools;
+        private readonly ITypeFactory _typeFactory;
+
         private CompletionWindow _completionWindow;
-        
-        private bool _isInCustomUpdate = false;
-        private bool _isInRedoUndo = false;
-
-        private Location _lastLocation;
-
+        private EditingState _editingState = EditingState.None;
         private bool _initializing;
+        private bool _isInCustomUpdate;
+        private bool _isInRedoUndo;
+        private Location _lastLocation;
+        private int _textChangingIterator;
         #endregion
 
         #region Constructors
@@ -91,7 +92,6 @@ namespace Orc.CsvTextEditor
 
             initializer.Initialize(textEditor, this);
         }
-
         #endregion
 
         #region Properties
@@ -103,14 +103,10 @@ namespace Orc.CsvTextEditor
         public bool CanRedo => !_initializing && _textEditor.CanRedo;
         public bool CanUndo => !_initializing && _textEditor.CanUndo;
         public string LineEnding => _elementGenerator.NewLine;
+        public bool IsDirty => _textChangingIterator != 0;
         #endregion
 
-        #region Events
-        public event EventHandler<CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
-        public event EventHandler<EventArgs> TextChanged;
-        #endregion
-
-        #region Methods
+        #region ICsvTextEditorInstance Members
         public string GetText()
         {
             var text = string.Empty;
@@ -130,9 +126,7 @@ namespace Orc.CsvTextEditor
             Argument.IsNotNull(() => tool);
 
             if (_tools.Contains(tool))
-            {
                 return;
-            }
 
             _tools.Add(tool);
         }
@@ -143,6 +137,15 @@ namespace Orc.CsvTextEditor
 
             _tools.Remove(tool);
             tool.Close();
+        }
+
+        public void Save(string fileName)
+        {
+            Argument.IsNotNullOrEmpty(() => fileName);
+
+            _textEditor.Save(fileName);
+
+            _textChangingIterator = 0;
         }
 
         public void Copy()
@@ -168,7 +171,7 @@ namespace Orc.CsvTextEditor
                 x.Instance._isInRedoUndo = false;
             }))
             {
-                _textEditor.Redo();
+                TextEditorRedo();
             }
         }
 
@@ -180,7 +183,7 @@ namespace Orc.CsvTextEditor
                 x.Instance._isInRedoUndo = false;
             }))
             {
-                _textEditor.Undo();
+                TextEditorUndo();
             }
         }
 
@@ -201,11 +204,9 @@ namespace Orc.CsvTextEditor
 
             var column = _elementGenerator.GetColumn(textLocation);
             if (column == null)
-            {
                 return null;
-            }
 
-            var lineIndex = textLocation.Line-1;
+            var lineIndex = textLocation.Line - 1;
             var documentLine = textDocument.Lines[lineIndex];
 
             var location = new Location
@@ -226,8 +227,7 @@ namespace Orc.CsvTextEditor
 
         public void ExecuteOperation<TOperation>() where TOperation : IOperation
         {
-            var operation = (TOperation)_typeFactory.CreateInstanceWithParametersAndAutoCompletion(typeof(TOperation), this);
-
+            var operation = (TOperation) _typeFactory.CreateInstanceWithParametersAndAutoCompletion(typeof(TOperation), this);
             operation.Execute();
         }
 
@@ -255,7 +255,7 @@ namespace Orc.CsvTextEditor
             }
 
             ClearSelectedText();
-        }        
+        }
 
         public void Initialize(string text)
         {
@@ -266,8 +266,10 @@ namespace Orc.CsvTextEditor
                 var document = _textEditor.Document;
                 document.Changed -= OnTextDocumentChanged;
 
+                _editingState = EditingState.None;
                 text = AdjustText(text);
                 UpdateText(text);
+                _editingState = EditingState.Editing;
 
                 document.UndoStack.ClearAll();
                 document.Changed += OnTextDocumentChanged;
@@ -277,21 +279,68 @@ namespace Orc.CsvTextEditor
             finally
             {
                 _initializing = false;
-            }            
+            }
         }
 
         public void RefreshView()
         {
             _elementGenerator.Refresh(_textEditor.Text);
             _textEditor.TextArea.TextView.Redraw();
-        }        
+        }
+
+        public void GotoPosition(int lineIndex, int columnIndex)
+        {
+            _textEditor.SetCaretToSpecificLineAndColumn(lineIndex, columnIndex, _elementGenerator.Lines);
+        }
+
+        public void Dispose()
+        {
+            _textEditor.TextArea.SelectionChanged -= OnTextAreaSelectionChanged;
+            _textEditor.TextArea.Caret.PositionChanged -= OnCaretPositionChanged;
+            _textEditor.TextArea.PreviewMouseLeftButtonDown -= OnPreviewMouseLeftButtonDown;
+            _textEditor.TextChanged -= OnTextChanged;
+            _textEditor.PreviewKeyDown -= OnPreviewKeyDown;
+
+            _textEditor.TextArea.TextEntering -= OnTextEntering;
+
+            _textEditor.TextArea.TextView.ElementGenerators.Clear();
+            _textEditor.TextArea.TextView.LineTransformers.Clear();
+        }
+        #endregion
+
+        #region Methods
+        private void TextEditorRedo()
+        {
+            _editingState = EditingState.Redoing;
+
+            try
+            {
+                _textEditor.Redo();
+            }
+            finally
+            {
+                _editingState = EditingState.Editing;
+            }
+        }
+
+        private void TextEditorUndo()
+        {
+            _editingState = EditingState.Undoing;
+
+            try
+            {
+                _textEditor.Undo();
+            }
+            finally
+            {
+                _editingState = EditingState.Editing;
+            }
+        }
 
         private void OnTextEntering(object sender, TextCompositionEventArgs e)
         {
             if (IsAutocompleteEnabled)
-            {
                 PerformAutoComplete(e.Text);
-            }
         }
 
         private void PerformAutoComplete(string inputText)
@@ -303,17 +352,13 @@ namespace Orc.CsvTextEditor
             }
 
             if (_completionWindow != null)
-            {
                 return;
-            }
 
             var columnIndex = GetCurrentColumnIndex();
             var data = _textEditor.GetCompletionDataForText(inputText, columnIndex, _elementGenerator.Lines);
 
             if (!data.Any())
-            {
                 return;
-            }
 
             _completionWindow = new CompletionWindow(_textEditor.TextArea);
             _completionWindow.CompletionList.CompletionData.AddRange(data);
@@ -335,9 +380,7 @@ namespace Orc.CsvTextEditor
             using (var s = GetType().Assembly.GetManifestResourceStream("Orc.CsvTextEditor.Resources.Highlightings.CustomHighlighting.xshd"))
             {
                 if (s == null)
-                {
                     throw new InvalidOperationException("Could not find embedded resource");
-                }
 
                 using (var reader = new XmlTextReader(s))
                 {
@@ -349,9 +392,7 @@ namespace Orc.CsvTextEditor
         private void RefreshLocation(int offset, int length)
         {
             if (_isInCustomUpdate || _isInRedoUndo)
-            {
                 return;
-            }
 
             var textDocument = _textEditor.Document;
             var affectedLocation = textDocument.GetLocation(offset);
@@ -366,20 +407,14 @@ namespace Orc.CsvTextEditor
         private void OnPreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs mouseButtonEventArgs)
         {
             if (_elementGenerator.UnfreezeColumnResizing())
-            {
                 RefreshView();
-            }
         }
 
         private void OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Tab)
-            {
                 if (_elementGenerator.UnfreezeColumnResizing())
-                {
                     RefreshView();
-                }
-            }
         }
 
         private void OnTextDocumentChanged(object sender, DocumentChangeEventArgs e)
@@ -395,9 +430,7 @@ namespace Orc.CsvTextEditor
             var selectionLenght = _textEditor.SelectionLength;
 
             if (selectionLenght == 0)
-            {
                 return;
-            }
 
             var newLine = _elementGenerator.NewLine;
 
@@ -414,15 +447,11 @@ namespace Orc.CsvTextEditor
             var textDocument = _textEditor.Document;
 
             if (deletePosition < 0 || deletePosition >= textDocument.TextLength)
-            {
                 return;
-            }
 
             var deletingChar = textDocument.Text[deletePosition];
             if (deletingChar == Symbols.NewLineStart || deletingChar == Symbols.Comma || deletingChar == Symbols.NewLineEnd)
-            {
                 return;
-            }
 
             textDocument.Remove(deletePosition, 1);
         }
@@ -451,6 +480,33 @@ namespace Orc.CsvTextEditor
 
         private void OnTextChanged(object sender, EventArgs eventArgs)
         {
+            UpdateTextChangingIterator();
+
+            RaiseTextChanged();
+        }
+
+        private void UpdateTextChangingIterator()
+        {
+            switch (_editingState)
+            {
+                case EditingState.Undoing:
+                    _textChangingIterator--;
+                    break;
+
+                case EditingState.Redoing:
+                    _textChangingIterator++;
+                    break;
+
+                case EditingState.Editing:
+                    _textChangingIterator++;
+                    break;
+            }
+
+            _textEditor.SetCurrentValue(TextEditor.IsModifiedProperty, _textChangingIterator == 0);
+        }
+
+        private void RaiseTextChanged()
+        {
             TextChanged?.Invoke(this, EventArgs.Empty);
         }
 
@@ -458,9 +514,7 @@ namespace Orc.CsvTextEditor
         {
             var location = GetLocation();
             if (location == null)
-            {
                 return;
-            }
 
             if (_lastLocation == null || _lastLocation.Offset != location.Offset)
             {
@@ -468,11 +522,6 @@ namespace Orc.CsvTextEditor
 
                 _lastLocation = location;
             }
-        }
-
-        public void GotoPosition(int lineIndex, int columnIndex)
-        {
-            _textEditor.SetCaretToSpecificLineAndColumn(lineIndex, columnIndex, _elementGenerator.Lines);
         }
 
         private void OnTextAreaSelectionChanged(object sender, EventArgs e)
@@ -483,20 +532,21 @@ namespace Orc.CsvTextEditor
             _highlightAllOccurencesOfSelectedWordTransformer.SelectedWord = _textEditor.SelectedText;
             _highlightAllOccurencesOfSelectedWordTransformer.Selection = _textEditor.TextArea.Selection;
         }
+        #endregion
 
-        public void Dispose()
+        #region Nested type: EditingState
+        private enum EditingState
         {
-            _textEditor.TextArea.SelectionChanged -= OnTextAreaSelectionChanged;
-            _textEditor.TextArea.Caret.PositionChanged -= OnCaretPositionChanged;
-            _textEditor.TextArea.PreviewMouseLeftButtonDown -= OnPreviewMouseLeftButtonDown;
-            _textEditor.TextChanged -= OnTextChanged;
-            _textEditor.PreviewKeyDown -= OnPreviewKeyDown;
-
-            _textEditor.TextArea.TextEntering -= OnTextEntering;
-
-            _textEditor.TextArea.TextView.ElementGenerators.Clear();
-            _textEditor.TextArea.TextView.LineTransformers.Clear();
+            None,
+            Undoing,
+            Redoing,
+            Editing
         }
+        #endregion
+
+        #region Events
+        public event EventHandler<CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
+        public event EventHandler<EventArgs> TextChanged;
         #endregion
     }
 }

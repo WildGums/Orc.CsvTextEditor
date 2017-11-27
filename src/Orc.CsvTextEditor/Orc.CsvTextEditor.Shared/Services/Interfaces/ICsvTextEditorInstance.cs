@@ -22,6 +22,7 @@ namespace Orc.CsvTextEditor
         bool CanRedo { get; }
         bool CanUndo { get; }
         string LineEnding { get; }
+        bool IsDirty { get; }
         #endregion
 
         #region Events
@@ -29,6 +30,7 @@ namespace Orc.CsvTextEditor
         event EventHandler<EventArgs> TextChanged;
         #endregion
 
+        void Save(string fileName);
         void Copy();
         void Cut();
         void Paste();

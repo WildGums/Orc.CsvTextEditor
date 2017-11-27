@@ -123,6 +123,7 @@ namespace Orc.CsvTextEditor
         int ColumnsCount { get; }
         bool HasSelection { get; }
         bool IsAutocompleteEnabled { get; set; }
+        bool IsDirty { get; }
         string LineEnding { get; }
         int LinesCount { get; }
         System.Collections.Generic.IEnumerable<Orc.CsvTextEditor.ICsvTextEditorTool> Tools { get; }
@@ -143,6 +144,7 @@ namespace Orc.CsvTextEditor
         void Redo();
         void RefreshView();
         void RemoveTool(Orc.CsvTextEditor.ICsvTextEditorTool tool);
+        void Save(string fileName);
         void SetText(string text);
         void Undo();
     }
