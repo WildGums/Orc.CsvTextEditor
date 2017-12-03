@@ -139,12 +139,8 @@ namespace Orc.CsvTextEditor
             tool.Close();
         }
 
-        public void Save(string fileName)
+        public void ResetIsDirty()
         {
-            Argument.IsNotNullOrEmpty(() => fileName);
-
-            _textEditor.Save(fileName);
-
             _textChangingIterator = 0;
         }
 

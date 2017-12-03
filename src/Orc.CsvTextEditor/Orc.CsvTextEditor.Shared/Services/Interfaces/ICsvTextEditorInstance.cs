@@ -30,7 +30,7 @@ namespace Orc.CsvTextEditor
         event EventHandler<EventArgs> TextChanged;
         #endregion
 
-        void Save(string fileName);
+        void ResetIsDirty();
         void Copy();
         void Cut();
         void Paste();

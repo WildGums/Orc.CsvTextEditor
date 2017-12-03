@@ -144,7 +144,7 @@ namespace Orc.CsvTextEditor
         void Redo();
         void RefreshView();
         void RemoveTool(Orc.CsvTextEditor.ICsvTextEditorTool tool);
-        void Save(string fileName);
+        void ResetIsDirty();
         void SetText(string text);
         void Undo();
     }
