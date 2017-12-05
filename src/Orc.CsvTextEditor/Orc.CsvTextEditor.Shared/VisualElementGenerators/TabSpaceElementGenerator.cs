@@ -83,6 +83,10 @@ namespace Orc.CsvTextEditor
                         fieldLength = 0;
                         quotesCount = 0;
                     }
+                    else
+                    {
+                        fieldLength++;
+                    }
                 }
 
                 if (fieldLength != 0)
