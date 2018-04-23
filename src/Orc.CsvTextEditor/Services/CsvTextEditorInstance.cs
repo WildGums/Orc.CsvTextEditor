@@ -446,7 +446,8 @@ namespace Orc.CsvTextEditor
                 return;
 
             var deletingChar = textDocument.Text[deletePosition];
-            if (deletingChar == Symbols.NewLineStart || deletingChar == Symbols.Comma || deletingChar == Symbols.NewLineEnd)
+            //if (deletingChar == Symbols.NewLineStart || deletingChar == Symbols.Comma || deletingChar == Symbols.NewLineEnd)
+            if (deletingChar == Symbols.NewLineStart || deletingChar == Symbols.NewLineEnd)
                 return;
 
             textDocument.Remove(deletePosition, 1);
