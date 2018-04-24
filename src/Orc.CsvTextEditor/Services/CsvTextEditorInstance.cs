@@ -423,14 +423,14 @@ namespace Orc.CsvTextEditor
             var textDocument = _textEditor.Document;
 
             var selectionStart = _textEditor.SelectionStart;
-            var selectionLenght = _textEditor.SelectionLength;
+            var selectionLength = _textEditor.SelectionLength;
 
-            if (selectionLenght == 0)
+            if (selectionLength == 0)
                 return;
 
             var newLine = _elementGenerator.NewLine;
 
-            var text = textDocument.Text.RemoveCommaSeparatedText(selectionStart, selectionLenght, newLine);
+            var text = textDocument.Text.RemoveCommaSeparatedText(selectionStart, selectionLength, newLine);
 
             _textEditor.SelectionLength = 0;
 
