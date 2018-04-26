@@ -451,9 +451,13 @@ namespace Orc.CsvTextEditor
             var column = _elementGenerator.GetColumn(textLocation);
 
             if ((column.Offset == textLocation.Column - 1) && deletingChar == Symbols.Quote)
+            {
                 return;
+            }
             else if ((column.Offset == textLocation.Column - 2) && deletingChar == Symbols.Comma)
+            {
                 return;
+            }
             
 
             if (deletingChar == Symbols.NewLineStart || deletingChar == Symbols.NewLineEnd)
