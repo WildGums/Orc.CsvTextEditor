@@ -181,21 +181,28 @@ namespace Orc.CsvTextEditor
                 return string.Empty;
             }
 
-            var newLineLenght = newLine.Length;
+            var newLineLength = newLine.Length;
 
             var newCount = text.Length;
             var textArray = new char[newCount];
-            var indexer = 0;
+            var indexer = 0; 
 
             var separatorCounter = 0;
             var isLastColumn = columnsCount - 1 == column;
+
+            var withinQuotes = false;
 
             for (var i = 0; i < text.Length; i++)
             {
                 var c = text[i];
                 var isSeparator = false;
 
-                if (c == Symbols.Comma)
+                if (c == Symbols.Quote)
+                {
+                    withinQuotes = !withinQuotes;
+                }
+
+                if (c == Symbols.Comma && !withinQuotes)
                 {
                     isSeparator = true;
 
@@ -218,7 +225,7 @@ namespace Orc.CsvTextEditor
                     {
                         separatorCounter = 0;
 
-                        i += newLineLenght - 1;
+                        i += newLineLength - 1;
                         indexer = WriteStringToCharArray(textArray, newLine, indexer);
 
                         continue;

@@ -423,14 +423,14 @@ namespace Orc.CsvTextEditor
             var textDocument = _textEditor.Document;
 
             var selectionStart = _textEditor.SelectionStart;
-            var selectionLenght = _textEditor.SelectionLength;
+            var selectionLength = _textEditor.SelectionLength;
 
-            if (selectionLenght == 0)
+            if (selectionLength == 0)
                 return;
 
             var newLine = _elementGenerator.NewLine;
 
-            var text = textDocument.Text.RemoveCommaSeparatedText(selectionStart, selectionLenght, newLine);
+            var text = textDocument.Text.RemoveCommaSeparatedText(selectionStart, selectionLength, newLine);
 
             _textEditor.SelectionLength = 0;
 
@@ -446,7 +446,21 @@ namespace Orc.CsvTextEditor
                 return;
 
             var deletingChar = textDocument.Text[deletePosition];
-            if (deletingChar == Symbols.NewLineStart || deletingChar == Symbols.Comma || deletingChar == Symbols.NewLineEnd)
+
+            var textLocation = textDocument.GetLocation(deletePosition);
+            var column = _elementGenerator.GetColumn(textLocation);
+
+            if ((column.Offset == textLocation.Column - 1) && deletingChar == Symbols.Quote)
+            {
+                return;
+            }
+            else if ((column.Offset == textLocation.Column - 2) && deletingChar == Symbols.Comma)
+            {
+                return;
+            }
+            
+
+            if (deletingChar == Symbols.NewLineStart || deletingChar == Symbols.NewLineEnd)
                 return;
 
             textDocument.Remove(deletePosition, 1);
