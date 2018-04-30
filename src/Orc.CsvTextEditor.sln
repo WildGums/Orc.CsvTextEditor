@@ -30,15 +30,11 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Orc.CsvTextEditor.Example.S
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orc.CsvTextEditor.Example.NET", "Orc.CsvTextEditor.Example.NET\Orc.CsvTextEditor.Example.NET.csproj", "{464218E7-84DC-4CAC-83CD-771FC697718A}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Orc.CsvTextEditor.Tests.Shared", "Orc.CsvTextEditor.Tests.Shared\Orc.CsvTextEditor.Tests.Shared.shproj", "{71007EFF-DA58-4B85-92FD-A05AABFB260F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orc.CsvTextEditor.Tests.NET", "Orc.CsvTextEditor.Tests.NET\Orc.CsvTextEditor.Tests.NET.csproj", "{48D06003-8BEC-4045-9143-6B44D92EC1A7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orc.CsvTextEditor.Tests", "Orc.CsvTextEditor.Tests\Orc.CsvTextEditor.Tests.csproj", "{BB8A1916-5345-4E65-AA73-9EDB0B7B4FE4}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Orc.CsvTextEditor.Tests.Shared\Orc.CsvTextEditor.Tests.Shared.projitems*{48d06003-8bec-4045-9143-6b44d92ec1a7}*SharedItemsImports = 4
 		Orc.CsvTextEditor.Example.Shared\Orc.CsvTextEditor.Example.Shared.projitems*{5fcb68e6-a529-4dc3-ae00-123ee0617b1e}*SharedItemsImports = 13
-		Orc.CsvTextEditor.Tests.Shared\Orc.CsvTextEditor.Tests.Shared.projitems*{71007eff-da58-4b85-92fd-a05aabfb260f}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,10 +49,10 @@ Global
 		{464218E7-84DC-4CAC-83CD-771FC697718A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{464218E7-84DC-4CAC-83CD-771FC697718A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{464218E7-84DC-4CAC-83CD-771FC697718A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{48D06003-8BEC-4045-9143-6B44D92EC1A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{48D06003-8BEC-4045-9143-6B44D92EC1A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{48D06003-8BEC-4045-9143-6B44D92EC1A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{48D06003-8BEC-4045-9143-6B44D92EC1A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB8A1916-5345-4E65-AA73-9EDB0B7B4FE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB8A1916-5345-4E65-AA73-9EDB0B7B4FE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB8A1916-5345-4E65-AA73-9EDB0B7B4FE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB8A1916-5345-4E65-AA73-9EDB0B7B4FE4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -68,8 +64,7 @@ Global
 		{1CF65AEE-4711-4179-9AF5-45669085C308} = {0787DFC6-AB24-4D00-A8A4-FF203DC7D080}
 		{5FCB68E6-A529-4DC3-AE00-123EE0617B1E} = {672BFA2E-9F93-496F-B188-40579FB5D301}
 		{464218E7-84DC-4CAC-83CD-771FC697718A} = {672BFA2E-9F93-496F-B188-40579FB5D301}
-		{71007EFF-DA58-4B85-92FD-A05AABFB260F} = {D3EA1078-BF3D-4709-871C-AAFF70B95045}
-		{48D06003-8BEC-4045-9143-6B44D92EC1A7} = {D3EA1078-BF3D-4709-871C-AAFF70B95045}
+		{BB8A1916-5345-4E65-AA73-9EDB0B7B4FE4} = {D3EA1078-BF3D-4709-871C-AAFF70B95045}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D623BD92-EA73-45EE-BBDA-D67C44EC59DC}
