@@ -32,6 +32,9 @@ namespace Orc.CsvTextEditor
             ReplaceAll = new Command<object>(OnReplaceAll);
 
             FindReplaceSettings = new FindReplaceSettings();
+
+            TextToFind = _csvTextEditorInstance.GetSelectedText();
+            TextToFindForReplace = _csvTextEditorInstance.GetSelectedText();
         }
         #endregion
 
@@ -40,7 +43,8 @@ namespace Orc.CsvTextEditor
 
         [Model]
         public FindReplaceSettings FindReplaceSettings { get; set; }
-
+        public string TextToFind { get; set; }
+        public string TextToFindForReplace { get; set; }
         public Command<string> FindNext { get; private set; }
         public Command<object> Replace { get; private set; }
         public Command<object> ReplaceAll { get; private set; }

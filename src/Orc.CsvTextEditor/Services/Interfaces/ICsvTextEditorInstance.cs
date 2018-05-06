@@ -51,7 +51,7 @@ namespace Orc.CsvTextEditor
 
         void AddTool(ICsvTextEditorTool tool);
         void RemoveTool(ICsvTextEditorTool tool);
-
+        string GetSelectedText();
         string GetText();
         void SetText(string text);
     }
