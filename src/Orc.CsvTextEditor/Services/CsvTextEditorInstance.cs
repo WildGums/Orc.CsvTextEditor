@@ -10,8 +10,10 @@ namespace Orc.CsvTextEditor
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Input;
+    using System.Windows.Threading;
     using System.Xml;
     using Catel;
     using Catel.Collections;
@@ -48,6 +50,7 @@ namespace Orc.CsvTextEditor
         private bool _isInRedoUndo;
         private Location _lastLocation;
         private int _textChangingIterator;
+        private DispatcherTimer _refreshViewTimer;
         #endregion
 
         #region Constructors
@@ -223,7 +226,7 @@ namespace Orc.CsvTextEditor
 
         public void ExecuteOperation<TOperation>() where TOperation : IOperation
         {
-            var operation = (TOperation) _typeFactory.CreateInstanceWithParametersAndAutoCompletion(typeof(TOperation), this);
+            var operation = (TOperation)_typeFactory.CreateInstanceWithParametersAndAutoCompletion(typeof(TOperation), this);
             operation.Execute();
         }
 
@@ -458,7 +461,7 @@ namespace Orc.CsvTextEditor
             {
                 return;
             }
-            
+
 
             if (deletingChar == Symbols.NewLineStart || deletingChar == Symbols.NewLineEnd)
                 return;
@@ -495,7 +498,16 @@ namespace Orc.CsvTextEditor
             RaiseTextChanged();
 
             if (_elementGenerator.UnfreezeColumnResizing())
-                RefreshView();
+            {
+                if (_refreshViewTimer != null)
+                {
+                    _refreshViewTimer.Stop();
+                }
+                _refreshViewTimer = new DispatcherTimer();
+                _refreshViewTimer.Tick += (timerSender, e) => { RefreshView(); };
+                _refreshViewTimer.Interval = new TimeSpan(0, 0, 0, 0, 50);
+                _refreshViewTimer.Start();
+            }
         }
 
         private void UpdateTextChangingIterator()
