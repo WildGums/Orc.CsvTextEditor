@@ -493,6 +493,9 @@ namespace Orc.CsvTextEditor
             UpdateTextChangingIterator();
 
             RaiseTextChanged();
+
+            if (_elementGenerator.UnfreezeColumnResizing())
+                RefreshView();
         }
 
         private void UpdateTextChangingIterator()
