@@ -33,8 +33,8 @@ namespace Orc.CsvTextEditor
 
             FindReplaceSettings = new FindReplaceSettings();
 
-            TextToFind = _csvTextEditorInstance.GetSelectedText();
-            TextToFindForReplace = _csvTextEditorInstance.GetSelectedText();
+            TextToFind = _csvTextEditorInstance.GetSelectedText().Truncate(20);
+            TextToFindForReplace = _csvTextEditorInstance.GetSelectedText().Truncate(20);
         }
         #endregion
 

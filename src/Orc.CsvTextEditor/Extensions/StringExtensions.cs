@@ -119,6 +119,14 @@ namespace Orc.CsvTextEditor
             return new string(textArray).TrimEnd(newLine);
         }
 
+        public static string Truncate(this string value, int maxLength)
+        {
+            if (string.IsNullOrEmpty(value))
+                return value;
+
+            return value.Length <= maxLength ? value : value.Substring(0, maxLength);
+        }
+
         public static string[] GetLines(this string text, out string newLineSymbol)
         {
             newLineSymbol = text.GetNewLineSymbol();
