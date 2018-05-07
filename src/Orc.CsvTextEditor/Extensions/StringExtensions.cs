@@ -9,6 +9,7 @@ namespace Orc.CsvTextEditor
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using Catel;
 
@@ -92,11 +93,18 @@ namespace Orc.CsvTextEditor
             var newCount = text.Length + linesCount;
             var textArray = new char[newCount];
             var indexer = 0;
+            var withinQuotes = false;
 
             var commaCounter = 1;
             foreach (var c in text)
             {
-                if (c == Symbols.Comma)
+
+                if (c == Symbols.Quote)
+                {
+                    withinQuotes = !withinQuotes;
+                }
+
+                if (c == Symbols.Comma && !withinQuotes)
                 {
                     if (commaCounter == column)
                     {
