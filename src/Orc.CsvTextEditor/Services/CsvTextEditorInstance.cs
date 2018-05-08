@@ -9,7 +9,6 @@ namespace Orc.CsvTextEditor
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Windows;
@@ -99,8 +98,7 @@ namespace Orc.CsvTextEditor
             _refreshViewTimer = new DispatcherTimer();
             _refreshViewTimer.Tick += (sender, e) => {
                 RefreshView();
-                Debug.WriteLine("Refresh views");
-                (sender as DispatcherTimer).Stop();
+                ((DispatcherTimer)sender).Stop();
             };
             _refreshViewTimer.Interval = new TimeSpan(0, 0, 0, 0, 50);
         }
