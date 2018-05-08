@@ -9,6 +9,7 @@ namespace Orc.CsvTextEditor
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Windows;
@@ -94,6 +95,14 @@ namespace Orc.CsvTextEditor
             _textEditor.TextArea.TextView.LineTransformers.Add(new FirstLineAlwaysBoldTransformer());
 
             initializer.Initialize(textEditor, this);
+
+            _refreshViewTimer = new DispatcherTimer();
+            _refreshViewTimer.Tick += (sender, e) => {
+                RefreshView();
+                Debug.WriteLine("Refresh views");
+                (sender as DispatcherTimer).Stop();
+            };
+            _refreshViewTimer.Interval = new TimeSpan(0, 0, 0, 0, 50);
         }
         #endregion
 
@@ -232,8 +241,8 @@ namespace Orc.CsvTextEditor
 
         public void DeleteNextSelectedText()
         {
-            var selectionLenght = _textEditor.SelectionLength;
-            if (selectionLenght == 0)
+            var selectionLength = _textEditor.SelectionLength;
+            if (selectionLength == 0)
             {
                 var deletePosition = _textEditor.SelectionStart;
                 DeleteFromPosition(deletePosition);
@@ -304,6 +313,8 @@ namespace Orc.CsvTextEditor
 
             _textEditor.TextArea.TextView.ElementGenerators.Clear();
             _textEditor.TextArea.TextView.LineTransformers.Clear();
+
+            _refreshViewTimer.Stop();
         }
         #endregion
 
@@ -499,13 +510,8 @@ namespace Orc.CsvTextEditor
 
             if (_elementGenerator.UnfreezeColumnResizing())
             {
-                if (_refreshViewTimer != null)
-                {
-                    _refreshViewTimer.Stop();
-                }
-                _refreshViewTimer = new DispatcherTimer();
-                _refreshViewTimer.Tick += (timerSender, e) => { RefreshView(); };
-                _refreshViewTimer.Interval = new TimeSpan(0, 0, 0, 0, 50);
+ 
+                _refreshViewTimer.Stop();
                 _refreshViewTimer.Start();
             }
         }
