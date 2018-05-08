@@ -10,8 +10,10 @@ namespace Orc.CsvTextEditor
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Input;
+    using System.Windows.Threading;
     using System.Xml;
     using Catel;
     using Catel.Collections;
@@ -48,6 +50,7 @@ namespace Orc.CsvTextEditor
         private bool _isInRedoUndo;
         private Location _lastLocation;
         private int _textChangingIterator;
+        private DispatcherTimer _refreshViewTimer;
         #endregion
 
         #region Constructors
@@ -91,6 +94,13 @@ namespace Orc.CsvTextEditor
             _textEditor.TextArea.TextView.LineTransformers.Add(new FirstLineAlwaysBoldTransformer());
 
             initializer.Initialize(textEditor, this);
+
+            _refreshViewTimer = new DispatcherTimer();
+            _refreshViewTimer.Tick += (sender, e) => {
+                RefreshView();
+                ((DispatcherTimer)sender).Stop();
+            };
+            _refreshViewTimer.Interval = new TimeSpan(0, 0, 0, 0, 50);
         }
         #endregion
 
@@ -223,14 +233,14 @@ namespace Orc.CsvTextEditor
 
         public void ExecuteOperation<TOperation>() where TOperation : IOperation
         {
-            var operation = (TOperation) _typeFactory.CreateInstanceWithParametersAndAutoCompletion(typeof(TOperation), this);
+            var operation = (TOperation)_typeFactory.CreateInstanceWithParametersAndAutoCompletion(typeof(TOperation), this);
             operation.Execute();
         }
 
         public void DeleteNextSelectedText()
         {
-            var selectionLenght = _textEditor.SelectionLength;
-            if (selectionLenght == 0)
+            var selectionLength = _textEditor.SelectionLength;
+            if (selectionLength == 0)
             {
                 var deletePosition = _textEditor.SelectionStart;
                 DeleteFromPosition(deletePosition);
@@ -301,6 +311,8 @@ namespace Orc.CsvTextEditor
 
             _textEditor.TextArea.TextView.ElementGenerators.Clear();
             _textEditor.TextArea.TextView.LineTransformers.Clear();
+
+            _refreshViewTimer.Stop();
         }
         #endregion
 
@@ -458,7 +470,7 @@ namespace Orc.CsvTextEditor
             {
                 return;
             }
-            
+
 
             if (deletingChar == Symbols.NewLineStart || deletingChar == Symbols.NewLineEnd)
                 return;
@@ -493,6 +505,13 @@ namespace Orc.CsvTextEditor
             UpdateTextChangingIterator();
 
             RaiseTextChanged();
+
+            if (_elementGenerator.UnfreezeColumnResizing())
+            {
+ 
+                _refreshViewTimer.Stop();
+                _refreshViewTimer.Start();
+            }
         }
 
         private void UpdateTextChangingIterator()
@@ -541,6 +560,13 @@ namespace Orc.CsvTextEditor
             // Disable this line if the user is using the "Find Replace" dialog box
             _highlightAllOccurencesOfSelectedWordTransformer.SelectedWord = _textEditor.SelectedText;
             _highlightAllOccurencesOfSelectedWordTransformer.Selection = _textEditor.TextArea.Selection;
+
+            _textEditor.TextArea.TextView.Redraw();
+        }
+
+        public string GetSelectedText()
+        {
+            return _textEditor.TextArea.Selection.GetText();
         }
         #endregion
 
