@@ -136,6 +136,7 @@ namespace Orc.CsvTextEditor
         void ExecuteOperation<TOperation>()
             where TOperation : Orc.CsvTextEditor.Operations.IOperation;
         Orc.CsvTextEditor.Location GetLocation();
+        string GetSelectedText();
         string GetText();
         void GotoPosition(int lineIndex, int columnIndex);
         void Initialize(string text);
@@ -205,6 +206,7 @@ namespace Orc.CsvTextEditor
         public static string RemoveText(this string text, int startOffset, int endOffset, string newLine) { }
         public static string TrimCommaSeparatedValues(this string textLine) { }
         public static string TrimEnd(this string text, string trimString) { }
+        public static string Truncate(this string value, int maxLength) { }
     }
     public class static Symbols
     {
