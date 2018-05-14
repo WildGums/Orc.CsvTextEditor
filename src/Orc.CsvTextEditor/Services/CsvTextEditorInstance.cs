@@ -250,8 +250,8 @@ namespace Orc.CsvTextEditor
 
         public void DeletePreviousSelectedText()
         {
-            var selectionLenght = _textEditor.SelectionLength;
-            if (selectionLenght == 0)
+            var selectionLength = _textEditor.SelectionLength;
+            if (selectionLength == 0)
             {
                 var deletePosition = _textEditor.SelectionStart - 1;
                 DeleteFromPosition(deletePosition);
