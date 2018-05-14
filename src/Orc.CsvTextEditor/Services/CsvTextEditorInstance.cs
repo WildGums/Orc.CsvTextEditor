@@ -9,6 +9,7 @@ namespace Orc.CsvTextEditor
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Windows;
@@ -457,18 +458,18 @@ namespace Orc.CsvTextEditor
 
             var deletingChar = textDocument.Text[deletePosition];
 
-            var textLocation = textDocument.GetLocation(deletePosition);
+            var textLocation = textDocument.GetLocation(deletePosition + 1);
+            _elementGenerator.Refresh(textDocument.Text);
             var column = _elementGenerator.GetColumn(textLocation);
 
-            if ((column.Offset == textLocation.Column - 1) && deletingChar == Symbols.Quote)
+            if (deletingChar == Symbols.Quote)
             {
                 return;
             }
-            else if ((column.Offset == textLocation.Column - 2) && deletingChar == Symbols.Comma)
+            else if (column.Offset == textLocation.Column - 1)
             {
                 return;
             }
-
 
             if (deletingChar == Symbols.NewLineStart || deletingChar == Symbols.NewLineEnd)
                 return;
