@@ -164,9 +164,7 @@ namespace Orc.CsvTextEditor
             var text = Clipboard.GetText();
             text = text.Replace(Symbols.Comma.ToString(), string.Empty)
                 .Replace(_elementGenerator.NewLine, string.Empty);
-
-            var offset = _textEditor.CaretOffset;
-            _textEditor.Document.Insert(offset, text);
+            _textEditor.Document.Replace(_textEditor.SelectionStart, _textEditor.SelectionLength, text);
         }
 
         public void Redo()
