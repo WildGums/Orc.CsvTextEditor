@@ -101,7 +101,7 @@ namespace Orc.CsvTextEditor
                 RefreshView();
                 ((DispatcherTimer)sender).Stop();
             };
-            _refreshViewTimer.Interval = new TimeSpan(0, 0, 0, 0, 50);
+            _refreshViewTimer.Interval = TimeSpan.FromMilliseconds(50);
         }
         #endregion
 
