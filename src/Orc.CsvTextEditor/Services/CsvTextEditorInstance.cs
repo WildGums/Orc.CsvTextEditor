@@ -432,19 +432,17 @@ namespace Orc.CsvTextEditor
         private void ClearSelectedText()
         {
             var textDocument = _textEditor.Document;
-
             var selectionStart = _textEditor.SelectionStart;
             var selectionLength = _textEditor.SelectionLength;
 
             if (selectionLength == 0)
                 return;
 
-            var newLine = _elementGenerator.NewLine;
+            var text = textDocument.Text.Remove(selectionStart, selectionLength);
 
-            var text = textDocument.Text.RemoveCommaSeparatedText(selectionStart, selectionLength, newLine);
+            text = text.RemoveEmptyLines();
 
             _textEditor.SelectionLength = 0;
-
             UpdateText(text);
             _textEditor.CaretOffset = selectionStart;
         }

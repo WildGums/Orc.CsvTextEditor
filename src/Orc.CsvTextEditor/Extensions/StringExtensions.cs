@@ -11,6 +11,7 @@ namespace Orc.CsvTextEditor
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using Catel;
 
     public static class StringExtensions
@@ -125,6 +126,14 @@ namespace Orc.CsvTextEditor
             }
 
             return new string(textArray).TrimEnd(newLine);
+        }
+
+        public static string RemoveEmptyLines(this string text)
+        {
+            var newLineSymbol = text.GetNewLineSymbol();
+            var lines = text.Split(new string[] { newLineSymbol }, StringSplitOptions.None).ToList();
+            lines.RemoveAll(x => x == "");
+            return String.Join(newLineSymbol,lines);
         }
 
         public static string Truncate(this string value, int maxLength)
