@@ -15,11 +15,11 @@ namespace Orc.CsvTextEditor
 
     public static class StringExtensions
     {
-        public static string RemoveCommaSeparatedText(this string text, int positionStart, int lenght, string newLine)
+        public static string RemoveCommaSeparatedText(this string text, int positionStart, int length, string newLine)
         {
             Argument.IsNotNull(nameof(text), text);
 
-            var endPosition = positionStart + lenght;
+            var endPosition = positionStart + length;
 
             var replacementText = string.Empty;
 
@@ -39,7 +39,7 @@ namespace Orc.CsvTextEditor
                 }
             }
 
-            text = text.Remove(positionStart, lenght)
+            text = text.Remove(positionStart, length)
                 .Insert(positionStart, replacementText);
 
             return text;
