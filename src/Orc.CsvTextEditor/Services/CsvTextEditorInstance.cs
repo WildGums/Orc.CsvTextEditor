@@ -457,12 +457,27 @@ namespace Orc.CsvTextEditor
             var deletingChar = textDocument.Text[deletePosition];
 
             var textLocation = textDocument.GetLocation(deletePosition + 1);
-            _elementGenerator.Refresh(textDocument.Text);
+        
             var column = _elementGenerator.GetColumn(textLocation);
 
             if (deletingChar == Symbols.Quote)
             {
-                return;
+                char? charBefore = null;
+                if (deletePosition > 0)
+                {
+                    charBefore = textDocument.Text[deletePosition - 1];
+                }
+
+                char? charAfter = null;
+                if (deletePosition < textDocument.Text.Length - 2)
+                {
+                    charAfter = textDocument.Text[deletePosition + 1];
+                }
+
+                if (charAfter == Symbols.Comma || charBefore == Symbols.Comma)
+                {
+                    return;
+                }           
             }
             else if (column.Offset == textLocation.Column - 1)
             {
