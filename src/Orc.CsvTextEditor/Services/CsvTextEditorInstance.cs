@@ -9,6 +9,7 @@ namespace Orc.CsvTextEditor
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Windows;
@@ -100,7 +101,7 @@ namespace Orc.CsvTextEditor
                 RefreshView();
                 ((DispatcherTimer)sender).Stop();
             };
-            _refreshViewTimer.Interval = new TimeSpan(0, 0, 0, 0, 50);
+            _refreshViewTimer.Interval = TimeSpan.FromMilliseconds(50);
         }
         #endregion
 
@@ -164,9 +165,7 @@ namespace Orc.CsvTextEditor
             var text = Clipboard.GetText();
             text = text.Replace(Symbols.Comma.ToString(), string.Empty)
                 .Replace(_elementGenerator.NewLine, string.Empty);
-
-            var offset = _textEditor.CaretOffset;
-            _textEditor.Document.Insert(offset, text);
+            _textEditor.Document.Replace(_textEditor.SelectionStart, _textEditor.SelectionLength, text);
         }
 
         public void Redo()
@@ -252,8 +251,8 @@ namespace Orc.CsvTextEditor
 
         public void DeletePreviousSelectedText()
         {
-            var selectionLenght = _textEditor.SelectionLength;
-            if (selectionLenght == 0)
+            var selectionLength = _textEditor.SelectionLength;
+            if (selectionLength == 0)
             {
                 var deletePosition = _textEditor.SelectionStart - 1;
                 DeleteFromPosition(deletePosition);
@@ -433,19 +432,17 @@ namespace Orc.CsvTextEditor
         private void ClearSelectedText()
         {
             var textDocument = _textEditor.Document;
-
             var selectionStart = _textEditor.SelectionStart;
             var selectionLength = _textEditor.SelectionLength;
 
             if (selectionLength == 0)
                 return;
 
-            var newLine = _elementGenerator.NewLine;
+            var text = textDocument.Text.Remove(selectionStart, selectionLength);
 
-            var text = textDocument.Text.RemoveCommaSeparatedText(selectionStart, selectionLength, newLine);
+            text = text.RemoveEmptyLines();
 
             _textEditor.SelectionLength = 0;
-
             UpdateText(text);
             _textEditor.CaretOffset = selectionStart;
         }
@@ -459,18 +456,33 @@ namespace Orc.CsvTextEditor
 
             var deletingChar = textDocument.Text[deletePosition];
 
-            var textLocation = textDocument.GetLocation(deletePosition);
+            var textLocation = textDocument.GetLocation(deletePosition + 1);
+        
             var column = _elementGenerator.GetColumn(textLocation);
 
-            if ((column.Offset == textLocation.Column - 1) && deletingChar == Symbols.Quote)
+            if (deletingChar == Symbols.Quote)
             {
-                return;
-            }
-            else if ((column.Offset == textLocation.Column - 2) && deletingChar == Symbols.Comma)
-            {
-                return;
-            }
+                char? charBefore = null;
+                if (deletePosition > 0)
+                {
+                    charBefore = textDocument.Text[deletePosition - 1];
+                }
 
+                char? charAfter = null;
+                if (deletePosition < textDocument.Text.Length - 2)
+                {
+                    charAfter = textDocument.Text[deletePosition + 1];
+                }
+
+                if (charAfter == Symbols.Comma || charBefore == Symbols.Comma)
+                {
+                    return;
+                }           
+            }
+            else if (column.Offset == textLocation.Column - 1)
+            {
+                return;
+            }
 
             if (deletingChar == Symbols.NewLineStart || deletingChar == Symbols.NewLineEnd)
                 return;

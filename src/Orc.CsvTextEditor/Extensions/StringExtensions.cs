@@ -11,15 +11,16 @@ namespace Orc.CsvTextEditor
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using Catel;
 
     public static class StringExtensions
     {
-        public static string RemoveCommaSeparatedText(this string text, int positionStart, int lenght, string newLine)
+        public static string RemoveCommaSeparatedText(this string text, int positionStart, int length, string newLine)
         {
             Argument.IsNotNull(nameof(text), text);
 
-            var endPosition = positionStart + lenght;
+            var endPosition = positionStart + length;
 
             var replacementText = string.Empty;
 
@@ -39,7 +40,7 @@ namespace Orc.CsvTextEditor
                 }
             }
 
-            text = text.Remove(positionStart, lenght)
+            text = text.Remove(positionStart, length)
                 .Insert(positionStart, replacementText);
 
             return text;
@@ -125,6 +126,15 @@ namespace Orc.CsvTextEditor
             }
 
             return new string(textArray).TrimEnd(newLine);
+        }
+
+        public static string RemoveEmptyLines(this string text)
+        {
+            Argument.IsNotNull(() => text);
+            var newLineSymbol = text.GetNewLineSymbol();
+            var lines = text.Split(new string[] { newLineSymbol }, StringSplitOptions.None).ToList();
+            lines.RemoveAll(x => x == String.Empty);
+            return String.Join(newLineSymbol,lines);
         }
 
         public static string Truncate(this string value, int maxLength)

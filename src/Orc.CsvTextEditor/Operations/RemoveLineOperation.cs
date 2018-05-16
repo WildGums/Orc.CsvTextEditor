@@ -22,7 +22,15 @@ namespace Orc.CsvTextEditor.Operations
             var location = _csvTextEditorInstance.GetLocation();
 
             var text = _csvTextEditorInstance.GetText();
-            text = text.Remove(location.Line.Offset, location.Line.Length + _csvTextEditorInstance.LineEnding.Length);
+
+            if (location.Line.Index == _csvTextEditorInstance.LinesCount - 1)
+            {
+                text = text.Remove(location.Line.Offset);
+                text = text.TrimEnd();
+            } else
+            {
+                text = text.Remove(location.Line.Offset, location.Line.Length + _csvTextEditorInstance.LineEnding.Length);
+            }
 
             _csvTextEditorInstance.SetText(text);
 

@@ -5,6 +5,8 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
+using System.Diagnostics;
+
 namespace Orc.CsvTextEditor.Operations
 {
     public class AddLineOperation : OperationBase
@@ -25,7 +27,7 @@ namespace Orc.CsvTextEditor.Operations
             var text = oldText.InsertLineWithTextTransfer(location.Line.Index + 1, location.GetOffsetInLine(), _csvTextEditorInstance.ColumnsCount, _csvTextEditorInstance.LineEnding);
 
             _csvTextEditorInstance.SetText(text);
-            _csvTextEditorInstance.GotoPosition(location.Line.Index + 1, location.Column.Index);
+            _csvTextEditorInstance.GotoPosition(location.Line.Index + 1, 0);
         }
         #endregion
     }
