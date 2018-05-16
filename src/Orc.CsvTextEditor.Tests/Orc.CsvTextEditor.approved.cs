@@ -202,7 +202,8 @@ namespace Orc.CsvTextEditor
         public static string InsertLineWithTextTransfer(this string text, int insertLineIndex, int offsetInLine, int columnCount, string lineEnding) { }
         public static bool IsEmptyCommaSeparatedLine(this string textLine) { }
         public static string RemoveCommaSeparatedColumn(this string text, int column, int linesCount, int columnsCount, string newLine) { }
-        public static string RemoveCommaSeparatedText(this string text, int positionStart, int lenght, string newLine) { }
+        public static string RemoveCommaSeparatedText(this string text, int positionStart, int length, string newLine) { }
+        public static string RemoveEmptyLines(this string text) { }
         public static string RemoveText(this string text, int startOffset, int endOffset, string newLine) { }
         public static string TrimCommaSeparatedValues(this string textLine) { }
         public static string TrimEnd(this string text, string trimString) { }
