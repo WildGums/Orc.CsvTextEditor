@@ -130,9 +130,10 @@ namespace Orc.CsvTextEditor
 
         public static string RemoveEmptyLines(this string text)
         {
+            Argument.IsNotNull(() => text);
             var newLineSymbol = text.GetNewLineSymbol();
             var lines = text.Split(new string[] { newLineSymbol }, StringSplitOptions.None).ToList();
-            lines.RemoveAll(x => x == "");
+            lines.RemoveAll(x => x == String.Empty);
             return String.Join(newLineSymbol,lines);
         }
 
