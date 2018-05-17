@@ -19,6 +19,13 @@ namespace Orc.CsvTextEditor.Operations
         #region Methods
         public override void Execute()
         {
+
+            if (_csvTextEditorInstance.IsCaretWithinQuotedField())
+            {
+                _csvTextEditorInstance.InsertAtCaret(Symbols.Comma);
+                return;
+            }
+
             var oldText = _csvTextEditorInstance.GetText();
 
             var location = _csvTextEditorInstance.GetLocation();

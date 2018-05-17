@@ -19,7 +19,13 @@ namespace Orc.CsvTextEditor
         int ColumnsCount { get; }
         bool IsAutocompleteEnabled { get; set; }
         bool HasSelection { get; }
+
+        bool IsCaretWithinQuotedField();
+
         bool CanRedo { get; }
+
+        void InsertAtCaret(char comma);
+
         bool CanUndo { get; }
         string LineEnding { get; }
         bool IsDirty { get; }
