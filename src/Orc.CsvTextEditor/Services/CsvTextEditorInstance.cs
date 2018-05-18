@@ -448,7 +448,8 @@ namespace Orc.CsvTextEditor
             if (text.Length < selectionStart)
             {
                 _textEditor.CaretOffset = text.Length;
-            } else
+            }
+            else
             {
                 _textEditor.CaretOffset = selectionStart;
             }
