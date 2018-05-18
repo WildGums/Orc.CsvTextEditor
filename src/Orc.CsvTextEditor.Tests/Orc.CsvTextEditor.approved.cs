@@ -140,6 +140,8 @@ namespace Orc.CsvTextEditor
         string GetText();
         void GotoPosition(int lineIndex, int columnIndex);
         void Initialize(string text);
+        void InsertAtCaret(char comma);
+        bool IsCaretWithinQuotedField();
         void Paste();
         void Redo();
         void RefreshView();
