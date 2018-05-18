@@ -444,7 +444,16 @@ namespace Orc.CsvTextEditor
 
             _textEditor.SelectionLength = 0;
             UpdateText(text);
-            _textEditor.CaretOffset = selectionStart;
+
+            if (text.Length < selectionStart)
+            {
+                _textEditor.CaretOffset = text.Length;
+            }
+            else
+            {
+                _textEditor.CaretOffset = selectionStart;
+            }
+            
         }
 
         private void DeleteFromPosition(int deletePosition)
@@ -579,6 +588,28 @@ namespace Orc.CsvTextEditor
         public string GetSelectedText()
         {
             return _textEditor.TextArea.Selection.GetText();
+        }
+
+        public bool IsCaretWithinQuotedField()
+        {
+            var caretPosition = _textEditor.CaretOffset;
+            var textDocument = _textEditor.Document;
+            var caretLocation = textDocument.GetLocation(caretPosition);
+            var column = _elementGenerator.GetColumn(caretLocation);
+            var text = textDocument.Text;
+            var currentLine = textDocument.GetLineByNumber(caretLocation.Line);
+
+            if (text[currentLine.Offset + column.Offset] == Symbols.Quote)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public void InsertAtCaret(char c)
+        {
+            _textEditor.Document.Insert(_textEditor.CaretOffset, c.ToString());
         }
         #endregion
 
