@@ -192,6 +192,12 @@ namespace Orc.CsvTextEditor
 
         public override VisualLineElement ConstructElement(int offset)
         {
+
+            if (offset < 0)
+            {
+                return null; 
+            }
+
             if (CurrentContext.VisualLine.LastDocumentLine.EndOffset == offset)
             {
                 return null;
@@ -200,6 +206,11 @@ namespace Orc.CsvTextEditor
             if (!_tabWidths.TryGetValue(offset, out var tabWidth))
             {
                 tabWidth = 0;
+            }
+
+            if (tabWidth < 0)
+            {
+                return null;
             }
 
             return new EmptyVisualLineElement(tabWidth + 1, 1);
