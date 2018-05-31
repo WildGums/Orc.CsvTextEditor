@@ -9,7 +9,6 @@ namespace Orc.CsvTextEditor
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Windows;
@@ -97,7 +96,9 @@ namespace Orc.CsvTextEditor
             initializer.Initialize(textEditor, this);
 
             _refreshViewTimer = new DispatcherTimer();
-            _refreshViewTimer.Tick += (sender, e) => {
+
+            _refreshViewTimer.Tick += (sender, e) =>
+            {
                 RefreshView();
                 ((DispatcherTimer)sender).Stop();
             };
@@ -420,8 +421,12 @@ namespace Orc.CsvTextEditor
         private void OnPreviewKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Tab)
+            {
                 if (_elementGenerator.UnfreezeColumnResizing())
+                {
                     RefreshView();
+                }
+            }
         }
 
         private void OnTextDocumentChanged(object sender, DocumentChangeEventArgs e)
@@ -453,7 +458,7 @@ namespace Orc.CsvTextEditor
             {
                 _textEditor.CaretOffset = selectionStart;
             }
-            
+
         }
 
         private void DeleteFromPosition(int deletePosition)
@@ -466,7 +471,7 @@ namespace Orc.CsvTextEditor
             var deletingChar = textDocument.Text[deletePosition];
 
             var textLocation = textDocument.GetLocation(deletePosition + 1);
-        
+
             var column = _elementGenerator.GetColumn(textLocation);
 
             if (deletingChar == Symbols.Quote)
@@ -486,7 +491,7 @@ namespace Orc.CsvTextEditor
                 if (charAfter == Symbols.Comma || charBefore == Symbols.Comma)
                 {
                     return;
-                }           
+                }
             }
             else if (column.Offset == textLocation.Column - 1)
             {
@@ -527,12 +532,8 @@ namespace Orc.CsvTextEditor
 
             RaiseTextChanged();
 
-            if (_elementGenerator.UnfreezeColumnResizing())
-            {
- 
-                _refreshViewTimer.Stop();
-                _refreshViewTimer.Start();
-            }
+            _refreshViewTimer.Stop();
+            _refreshViewTimer.Start();
         }
 
         private void UpdateTextChangingIterator()
@@ -571,6 +572,7 @@ namespace Orc.CsvTextEditor
                 CaretTextLocationChanged?.Invoke(this, new CaretTextLocationChangedEventArgs(location));
 
                 _lastLocation = location;
+
             }
         }
 
