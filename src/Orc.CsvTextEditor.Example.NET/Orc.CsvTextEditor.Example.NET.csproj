@@ -4,6 +4,7 @@
     <AssemblyName>Orc.CsvTextEditor.Example.NET</AssemblyName>
     <RootNamespace>Orc.CsvTextEditor.Example</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
+    <SonarQubeExclude>true</SonarQubeExclude>
   </PropertyGroup>
 
   <PropertyGroup>
