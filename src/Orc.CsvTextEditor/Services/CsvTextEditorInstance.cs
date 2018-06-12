@@ -385,12 +385,14 @@ namespace Orc.CsvTextEditor
 
         private void RefreshHighlightings()
         {
-            using (var s = GetType().Assembly.GetManifestResourceStream("Orc.CsvTextEditor.Resources.Highlightings.CustomHighlighting.xshd"))
+            using (var customHighlightings = GetType().Assembly.GetManifestResourceStream("Orc.CsvTextEditor.Resources.Highlightings.CustomHighlighting.xshd"))
             {
-                if (s == null)
-                    throw new InvalidOperationException("Could not find embedded resource");
+                if (customHighlightings == null)
+                {
+                    throw Log.ErrorAndCreateException<InvalidOperationException>("Could not find embedded resource");
+                }
 
-                using (var reader = new XmlTextReader(s))
+                using (var reader = new XmlTextReader(customHighlightings))
                 {
                     _textEditor.SetCurrentValue(TextEditor.SyntaxHighlightingProperty, HighlightingLoader.Load(reader, HighlightingManager.Instance));
                 }
