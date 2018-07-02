@@ -10,6 +10,11 @@
     <PackageTags>orc;csv;text;editor</PackageTags>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <!-- SonarQube requires a project guid -->
+    <ProjectGuid>A97B1B48-88B2-47DC-BC78-9AF835DCF2A0</ProjectGuid>
+  </PropertyGroup>
+  
   <ItemGroup>
     <PackageReference Include="AvalonEdit" Version="5.0.4" />
     <PackageReference Include="MethodTimer.Fody" Version="2.1.0" PrivateAssets="all" />
