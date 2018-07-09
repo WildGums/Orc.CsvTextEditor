@@ -10,9 +10,9 @@ namespace Orc.CsvTextEditor
     public class Line
     {
         #region Fields
-        public int Index;
-        public int Length;
-        public int Offset;
+        public int Index { get; set; }
+        public int Length { get; set; }
+        public int Offset { get; set; }
         #endregion
     }
 }

@@ -13,10 +13,6 @@ namespace Orc.CsvTextEditor
 
     public partial class CsvTextEditorControl
     {
-        #region Constants
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
-        #endregion
-
         #region Constructors
         static CsvTextEditorControl()
         {
@@ -40,10 +36,11 @@ namespace Orc.CsvTextEditor
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
             "Text", typeof(string), typeof(CsvTextEditorControl), new PropertyMetadata(default(string)));
 
+
         [ViewToViewModel(MappingType = ViewToViewModelMappingType.ViewToViewModel)]
         public object Scope
         {
-            get { return (object) GetValue(ScopeProperty); }
+            get { return GetValue(ScopeProperty); }
             set { SetValue(ScopeProperty, value); }
         }
 

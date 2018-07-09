@@ -11,6 +11,7 @@ namespace Orc.CsvTextEditor
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using System.Text;
     using System.Text.RegularExpressions;
     using Catel;
 
@@ -22,26 +23,25 @@ namespace Orc.CsvTextEditor
 
             var endPosition = positionStart + length;
 
-            var replacementText = string.Empty;
+            var replacementText = new StringBuilder();
 
             for (var i = positionStart; i < endPosition; i++)
             {
                 var c = text[i];
                 if (c == Symbols.Comma)
                 {
-                    replacementText += Symbols.Comma;
+                    replacementText.Append(Symbols.Comma);
                     continue;
                 }
 
                 if (IsLookupMatch(text, i, newLine))
                 {
-                    replacementText += newLine;
-                    continue;
+                    replacementText.Append(newLine);
                 }
             }
 
             text = text.Remove(positionStart, length)
-                .Insert(positionStart, replacementText);
+                .Insert(positionStart, replacementText.ToString());
 
             return text;
         }

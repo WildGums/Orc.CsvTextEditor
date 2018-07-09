@@ -7,6 +7,7 @@
 
 namespace Orc.CsvTextEditor
 {
+    using System.Text;
     using System.Windows;
     using System.Windows.Media.TextFormatting;
     using ICSharpCode.AvalonEdit.Rendering;
@@ -28,15 +29,17 @@ namespace Orc.CsvTextEditor
                 TextRunProperties.SetBackgroundBrush(SystemColors.ControlLightLightBrush);
             }
 
+            var spacesBuilder = new StringBuilder();
+
             var spaces = string.Empty;
             for (var i = 0; i < VisualLength - 1; i++)
             {
-                spaces += Symbols.Space;  
+                spacesBuilder.Append(Symbols.Space);
             }
 
-            spaces += Symbols.VerticalBar;
+            spacesBuilder.Append(Symbols.VerticalBar);
 
-            return new TextCharacters(spaces, TextRunProperties);
+            return new TextCharacters(spacesBuilder.ToString(), TextRunProperties);
         }
 
         public override bool IsWhitespace(int visualColumn)

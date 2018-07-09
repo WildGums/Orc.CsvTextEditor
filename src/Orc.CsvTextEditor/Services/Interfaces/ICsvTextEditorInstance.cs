@@ -24,7 +24,7 @@ namespace Orc.CsvTextEditor
 
         bool CanRedo { get; }
 
-        void InsertAtCaret(char comma);
+        void InsertAtCaret(char character);
 
         bool CanUndo { get; }
         string LineEnding { get; }

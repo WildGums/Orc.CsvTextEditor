@@ -11,6 +11,6 @@ namespace Orc.CsvTextEditor
 
     public interface ICsvTextEditorInitializer
     {
-        void Initialize(TextEditor textEditor, ICsvTextEditorInstance textEditorInstance);
+        void Initialize(TextEditor textEditor, ICsvTextEditorInstance csvTextEditorInstance);
     }
 }

@@ -9,8 +9,8 @@ namespace Orc.CsvTextEditor
 {
     public class Column
     {
-        public int Index;
-        public int Offset;
-        public int Width;
+        public int Index { get; set; }
+        public int Offset { get; set; }
+        public int Width { get; set; }
     }
 }

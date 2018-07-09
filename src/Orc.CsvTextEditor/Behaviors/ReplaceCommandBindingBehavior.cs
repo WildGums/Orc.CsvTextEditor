@@ -34,9 +34,9 @@ namespace Orc.CsvTextEditor
         }
 
         public static readonly DependencyProperty CommandProperty = DependencyProperty.Register("Command", typeof(ICommand),
-            typeof(ReplaceCommandBindingBehavior), new PropertyMetadata(default(ICommand), (o, args) => ((ReplaceCommandBindingBehavior)o).OnCommandPropertyChanged(args)));
+            typeof(ReplaceCommandBindingBehavior), new PropertyMetadata(default(ICommand), (o, args) => ((ReplaceCommandBindingBehavior)o).OnCommandPropertyChanged()));
 
-        private void OnCommandPropertyChanged(DependencyPropertyChangedEventArgs args)
+        private void OnCommandPropertyChanged()
         {
             var textArea = AssociatedObject?.TextArea;
             if (textArea == null)

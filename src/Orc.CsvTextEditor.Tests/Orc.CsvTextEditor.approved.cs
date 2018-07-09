@@ -16,10 +16,10 @@ namespace Orc.CsvTextEditor
     }
     public class Column
     {
-        public int Index;
-        public int Offset;
-        public int Width;
         public Column() { }
+        public int Index { get; set; }
+        public int Offset { get; set; }
+        public int Width { get; set; }
     }
     public class CsvColumnCompletionData : ICSharpCode.AvalonEdit.CodeCompletion.ICompletionData
     {
@@ -49,7 +49,7 @@ namespace Orc.CsvTextEditor
     }
     public abstract class CsvTextEditorToolBase : Orc.CsvTextEditor.ICsvTextEditorTool
     {
-        public CsvTextEditorToolBase(ICSharpCode.AvalonEdit.TextEditor textEditor, Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance) { }
+        protected CsvTextEditorToolBase(ICSharpCode.AvalonEdit.TextEditor textEditor, Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance) { }
         protected Orc.CsvTextEditor.ICsvTextEditorInstance CsvTextEditorInstance { get; }
         public bool IsOpened { get; }
         public abstract string Name { get; }
@@ -60,10 +60,10 @@ namespace Orc.CsvTextEditor
         protected abstract void OnOpen();
         public void Open() { }
     }
-    public class CsvTextSynchronizationScope : System.IDisposable
+    public class CsvTextSynchronizationScope : Catel.Disposable
     {
         public CsvTextSynchronizationScope(Orc.CsvTextEditor.CsvTextSynchronizationService csvTextSynchronizationService) { }
-        public void Dispose() { }
+        protected override void DisposeManaged() { }
     }
     public class CsvTextSynchronizationService
     {
@@ -113,7 +113,7 @@ namespace Orc.CsvTextEditor
     }
     public interface ICsvTextEditorInitializer
     {
-        void Initialize(ICSharpCode.AvalonEdit.TextEditor textEditor, Orc.CsvTextEditor.ICsvTextEditorInstance textEditorInstance);
+        void Initialize(ICSharpCode.AvalonEdit.TextEditor textEditor, Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance);
     }
     public interface ICsvTextEditorInstance : System.IDisposable
     {
@@ -140,7 +140,7 @@ namespace Orc.CsvTextEditor
         string GetText();
         void GotoPosition(int lineIndex, int columnIndex);
         void Initialize(string text);
-        void InsertAtCaret(char comma);
+        void InsertAtCaret(char character);
         bool IsCaretWithinQuotedField();
         void Paste();
         void Redo();
@@ -178,10 +178,10 @@ namespace Orc.CsvTextEditor
     }
     public class Line
     {
-        public int Index;
-        public int Length;
-        public int Offset;
         public Line() { }
+        public int Index { get; set; }
+        public int Length { get; set; }
+        public int Offset { get; set; }
     }
     public class Location
     {

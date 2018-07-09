@@ -14,7 +14,7 @@ namespace Orc.CsvTextEditor
     public abstract class CsvTextEditorToolBase : ICsvTextEditorTool
     {
         #region Constructors
-        public CsvTextEditorToolBase(TextEditor textEditor, ICsvTextEditorInstance csvTextEditorInstance)
+        protected CsvTextEditorToolBase(TextEditor textEditor, ICsvTextEditorInstance csvTextEditorInstance)
         {
             Argument.IsNotNull(() => textEditor);
             Argument.IsNotNull(() => csvTextEditorInstance);

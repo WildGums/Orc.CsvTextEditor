@@ -10,7 +10,7 @@ namespace Orc.CsvTextEditor
     using System;
     using Catel;
 
-    public class CsvTextSynchronizationScope : IDisposable
+    public class CsvTextSynchronizationScope : Disposable
     {
         #region Fields
         private readonly CsvTextSynchronizationService _csvTextSynchronizationService;
@@ -27,8 +27,10 @@ namespace Orc.CsvTextEditor
         #endregion
 
         #region Methods
-        public void Dispose()
+        protected override void DisposeManaged()
         {
+            base.DisposeManaged();
+
             _csvTextSynchronizationService.IsSynchronizing = false;
         }
         #endregion
