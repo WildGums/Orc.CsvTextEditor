@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="CsvTextEditorControlViewModel.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -16,9 +16,11 @@ namespace Orc.CsvTextEditor
 
     internal class CsvTextEditorControlViewModel : ViewModelBase
     {
-        #region Fields
+        #region Constants
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+        #endregion
 
+        #region Fields
         private readonly IServiceLocator _serviceLocator;
         private ICsvTextEditorInstance _csvTextEditorInstance;
         private ICsvTextSynchronizationService _csvTextSynchronizationService;
@@ -70,6 +72,7 @@ namespace Orc.CsvTextEditor
         public Command AddLine { get; }
         #endregion
 
+        #region Methods
         private void OnTextChanged()
         {
             UpdateInitialization();
@@ -92,7 +95,7 @@ namespace Orc.CsvTextEditor
             catch (Exception ex)
             {
                 Log.Error(ex, "Failed to update initialization");
-            }            
+            }
         }
 
         private void OnScopeChanged()
@@ -119,5 +122,6 @@ namespace Orc.CsvTextEditor
 
             UpdateInitialization();
         }
+        #endregion
     }
 }

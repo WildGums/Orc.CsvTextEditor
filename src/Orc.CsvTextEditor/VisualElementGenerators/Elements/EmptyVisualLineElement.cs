@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="EmptyVisualLineElement.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -30,8 +30,6 @@ namespace Orc.CsvTextEditor
             }
 
             var spacesBuilder = new StringBuilder();
-
-            var spaces = string.Empty;
             for (var i = 0; i < VisualLength - 1; i++)
             {
                 spacesBuilder.Append(Symbols.Space);

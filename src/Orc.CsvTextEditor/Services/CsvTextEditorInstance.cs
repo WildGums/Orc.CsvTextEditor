@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="CsvTextEditorInstance.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -38,6 +38,7 @@ namespace Orc.CsvTextEditor
         private readonly IDispatcherService _dispatcherService;
         private readonly TabSpaceElementGenerator _elementGenerator;
         private readonly HighlightAllOccurencesOfSelectedWordTransformer _highlightAllOccurencesOfSelectedWordTransformer;
+        private readonly DispatcherTimer _refreshViewTimer;
         private readonly TextEditor _textEditor;
         private readonly List<ICsvTextEditorTool> _tools;
         private readonly ITypeFactory _typeFactory;
@@ -49,7 +50,6 @@ namespace Orc.CsvTextEditor
         private bool _isInRedoUndo;
         private Location _lastLocation;
         private int _textChangingIterator;
-        private readonly DispatcherTimer _refreshViewTimer;
         #endregion
 
         #region Constructors
@@ -122,14 +122,14 @@ namespace Orc.CsvTextEditor
         {
             var text = string.Empty;
 
-            _dispatcherService.Invoke(() => text = _textEditor.Text, true);
+            _dispatcherService.Invoke(() => text = _textEditor.Text);
 
             return text;
         }
 
         public void SetText(string text)
         {
-            _dispatcherService.Invoke(() => UpdateText(text), true);
+            _dispatcherService.Invoke(() => UpdateText(text));
         }
 
         public void AddTool(ICsvTextEditorTool tool)
@@ -302,6 +302,35 @@ namespace Orc.CsvTextEditor
             _textEditor.SetCaretToSpecificLineAndColumn(lineIndex, columnIndex, _elementGenerator.Lines);
         }
 
+        public string GetSelectedText()
+        {
+            return _textEditor.TextArea.Selection.GetText();
+        }
+
+        public bool IsCaretWithinQuotedField()
+        {
+            var caretPosition = _textEditor.CaretOffset;
+            var textDocument = _textEditor.Document;
+            var caretLocation = textDocument.GetLocation(caretPosition);
+            var column = _elementGenerator.GetColumn(caretLocation);
+            var text = textDocument.Text;
+            var currentLine = textDocument.GetLineByNumber(caretLocation.Line);
+
+            if (text[currentLine.Offset + column.Offset] == Symbols.Quote)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public void InsertAtCaret(char character)
+        {
+            _textEditor.Document.Insert(_textEditor.CaretOffset, character.ToString());
+        }
+        #endregion
+
+        #region Methods
         protected override void DisposeManaged()
         {
             base.DisposeManaged();
@@ -319,9 +348,7 @@ namespace Orc.CsvTextEditor
 
             _refreshViewTimer.Stop();
         }
-        #endregion
 
-        #region Methods
         private void TextEditorRedo()
         {
             _editingState = EditingState.Redoing;
@@ -465,15 +492,9 @@ namespace Orc.CsvTextEditor
             _textEditor.SelectionLength = 0;
             UpdateText(text);
 
-            if (text.Length < selectionStart)
-            {
-                _textEditor.CaretOffset = text.Length;
-            }
-            else
-            {
-                _textEditor.CaretOffset = selectionStart;
-            }
-
+            _textEditor.CaretOffset = text.Length < selectionStart
+                ? text.Length
+                : selectionStart;
         }
 
         private void DeleteFromPosition(int deletePosition)
@@ -593,7 +614,6 @@ namespace Orc.CsvTextEditor
                 CaretTextLocationChanged?.Invoke(this, new CaretTextLocationChangedEventArgs(location));
 
                 _lastLocation = location;
-
             }
         }
 
@@ -606,33 +626,6 @@ namespace Orc.CsvTextEditor
             _highlightAllOccurencesOfSelectedWordTransformer.Selection = _textEditor.TextArea.Selection;
 
             _textEditor.TextArea.TextView.Redraw();
-        }
-
-        public string GetSelectedText()
-        {
-            return _textEditor.TextArea.Selection.GetText();
-        }
-
-        public bool IsCaretWithinQuotedField()
-        {
-            var caretPosition = _textEditor.CaretOffset;
-            var textDocument = _textEditor.Document;
-            var caretLocation = textDocument.GetLocation(caretPosition);
-            var column = _elementGenerator.GetColumn(caretLocation);
-            var text = textDocument.Text;
-            var currentLine = textDocument.GetLineByNumber(caretLocation.Line);
-
-            if (text[currentLine.Offset + column.Offset] == Symbols.Quote)
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        public void InsertAtCaret(char character)
-        {
-            _textEditor.Document.Insert(_textEditor.CaretOffset, character.ToString());
         }
         #endregion
 

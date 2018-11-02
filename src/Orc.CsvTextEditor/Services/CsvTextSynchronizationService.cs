@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="CsvTextSynchronizationService.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -15,7 +15,7 @@ namespace Orc.CsvTextEditor
         public bool IsSynchronizing { get; set; }
         #endregion
 
-        #region Methods
+        #region ICsvTextSynchronizationService Members
         public IDisposable SynchronizeInScope()
         {
             return new CsvTextSynchronizationScope(this);

@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="FindReplaceService.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -11,7 +11,7 @@ namespace Orc.CsvTextEditor
     using Catel;
     using ICSharpCode.AvalonEdit;
 
-    public class FindReplaceService : IFindReplaceSerivce
+    public class FindReplaceService : IFindReplaceService
     {
         #region Fields
         private readonly TextEditor _textEditor;
@@ -26,15 +26,14 @@ namespace Orc.CsvTextEditor
         }
         #endregion
 
-        #region Methods
+        #region IFindReplaceSerivce Members
         public bool FindNext(string textToFind, FindReplaceSettings settings)
         {
             Argument.IsNotNull(() => textToFind);
             Argument.IsNotNull(() => settings);
 
             var regex = GetRegEx(textToFind, settings);
-            var start = regex.Options.HasFlag(RegexOptions.RightToLeft) ?
-                _textEditor.SelectionStart : _textEditor.SelectionStart + _textEditor.SelectionLength;
+            var start = regex.Options.HasFlag(RegexOptions.RightToLeft) ? _textEditor.SelectionStart : _textEditor.SelectionStart + _textEditor.SelectionLength;
             var match = regex.Match(_textEditor.Text, start);
 
             if (!match.Success) // start again from beginning or end
@@ -94,6 +93,7 @@ namespace Orc.CsvTextEditor
         }
         #endregion
 
+        #region Methods
         private Regex GetRegEx(string textToFind, FindReplaceSettings settings, bool isLeftToRight = false)
         {
             Argument.IsNotNull(() => textToFind);
@@ -128,5 +128,6 @@ namespace Orc.CsvTextEditor
 
             return new Regex(pattern, options);
         }
+        #endregion
     }
 }

@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="CsvTextEditorToolBase.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -27,12 +27,11 @@ namespace Orc.CsvTextEditor
         #region Properties
         protected TextEditor TextEditor { get; }
         protected ICsvTextEditorInstance CsvTextEditorInstance { get; }
-        #endregion
-
-        #region Methods
         public abstract string Name { get; }
         public bool IsOpened { get; private set; }
+        #endregion
 
+        #region ICsvTextEditorTool Members
         public void Open()
         {
             if (IsOpened)
@@ -53,15 +52,17 @@ namespace Orc.CsvTextEditor
             RaiseClosedEvent();
         }
 
-        protected abstract void OnOpen();
-
         public event EventHandler<EventArgs> Closed;
         public event EventHandler<EventArgs> Opened;
         #endregion
+
+        #region Methods
+        protected abstract void OnOpen();
 
         private void RaiseClosedEvent()
         {
             Closed?.Invoke(this, EventArgs.Empty);
         }
+        #endregion
     }
 }

@@ -1,17 +1,15 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Constants.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
 
 namespace Orc.CsvTextEditor
 {
-    using System.Collections.Generic;
-
     public static class Symbols
     {
-        #region Fields
+        #region Constants
         public const char Comma = ',';
         public const char Quote = '"';
         public const char NewLineStart = '\r';

@@ -1,33 +1,24 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="MainViewModel.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
 
 namespace Orc.CsvTextEditor.ViewModels
 {
-    using System;
-    using System.Threading.Tasks;
-    using Catel;
-    using Catel.Data;
     using Catel.MVVM;
-    using Catel.Reflection;
 
     public class MainViewModel : ViewModelBase
     {
+        #region Constructors
         public MainViewModel()
         {
             Title = "Orc.CsvTextEditor example";
         }
-
-        #region Properties
         #endregion
 
         #region Commands
-        #endregion
-
-        #region Methods
         #endregion
     }
 }
