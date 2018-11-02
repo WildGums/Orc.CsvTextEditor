@@ -162,7 +162,7 @@ namespace Orc.CsvTextEditor
                 return InsertLine(text, insertLineIndex, columnCount, lineEnding);
             }
 
-            var previousLineOffset = insertLineIndex == 1 ? 0 : text.IndexOfSpecificOccurance(lineEnding, insertLineIndex - 1) + lineEndingLength;
+            var previousLineOffset = insertLineIndex == 1 ? 0 : text.IndexOfSpecificOccurrence(lineEnding, insertLineIndex - 1) + lineEndingLength;
             var leftLineChunk = text.Substring(previousLineOffset, offsetInLine);
             var splitColumnIndex = leftLineChunk.Count(x => x.Equals(Symbols.Comma));
 
@@ -224,7 +224,7 @@ namespace Orc.CsvTextEditor
                     isSeparator = true;
                     separatorCounter++;
 
-                    if (separatorCounter == column + 1 || isLastColumn && separatorCounter == column)
+                    if (SkipSeparator(column, separatorCounter, isLastColumn))
                     {
                         continue;
                     }
@@ -252,6 +252,11 @@ namespace Orc.CsvTextEditor
             }
 
             return new string(textArray, 0, indexer).TrimEnd(newLine);
+        }
+
+        private static bool SkipSeparator(int column, int separatorCounter, bool isLastColumn)
+        {
+            return separatorCounter == column + 1 || isLastColumn && separatorCounter == column;
         }
 
         public static string GetNewLineSymbol(this string text)
@@ -309,10 +314,10 @@ namespace Orc.CsvTextEditor
         {
             Argument.IsNotNull(nameof(text), text);
 
-            var newLineLenght = newLine.Length;
+            var newLineLength = newLine.Length;
 
             var insertLineText = $"{new string(Symbols.Comma, columnsCount - 1)}{newLine}";
-            var insertionPosition = insertLineIndex != 0 ? text.IndexOfSpecificOccurance(newLine, insertLineIndex) + newLineLenght : 0;
+            var insertionPosition = insertLineIndex != 0 ? text.IndexOfSpecificOccurrence(newLine, insertLineIndex) + newLineLength : 0;
 
             return text.Insert(insertionPosition, insertLineText).TrimEnd(newLine);
         }
@@ -329,7 +334,7 @@ namespace Orc.CsvTextEditor
             return string.Equals(lookupNewLine, lookup);
         }
 
-        private static int IndexOfSpecificOccurance(this string source, string value, int occuranceNumber)
+        private static int IndexOfSpecificOccurrence(this string source, string value, int occuranceNumber)
         {
             var index = -1;
             for (var i = 0; i < occuranceNumber; i++)
