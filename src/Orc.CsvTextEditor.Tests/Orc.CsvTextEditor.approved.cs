@@ -167,7 +167,7 @@ namespace Orc.CsvTextEditor
         void Open();
     }
     [System.ObsoleteAttribute("Use `Orc.CsvTextEditor.IFindReplaceService` instead. Will be removed in version 3" +
-        ".2.0. Will be treated as an error from version 3.1.0.", false)]
+        ".2.0.", true)]
     public interface IFindReplaceSerivce : Orc.CsvTextEditor.IFindReplaceService { }
     public interface IFindReplaceService
     {
