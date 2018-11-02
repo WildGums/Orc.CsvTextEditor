@@ -71,7 +71,7 @@ namespace Orc.CsvTextEditor
         public bool IsSynchronizing { get; set; }
         public System.IDisposable SynchronizeInScope() { }
     }
-    public class FindReplaceService : Orc.CsvTextEditor.IFindReplaceSerivce
+    public class FindReplaceService : Orc.CsvTextEditor.IFindReplaceService
     {
         public FindReplaceService(ICSharpCode.AvalonEdit.TextEditor textEditor) { }
         public bool FindNext(string textToFind, Orc.CsvTextEditor.FindReplaceSettings settings) { }
@@ -166,7 +166,10 @@ namespace Orc.CsvTextEditor
         void Close();
         void Open();
     }
-    public interface IFindReplaceSerivce
+    [System.ObsoleteAttribute("Use `Orc.CsvTextEditor.IFindReplaceService` instead. Will be treated as an error " +
+        "from version 3.1.0. Will be removed in version 3.2.0.", false)]
+    public interface IFindReplaceSerivce : Orc.CsvTextEditor.IFindReplaceService { }
+    public interface IFindReplaceService
     {
         bool FindNext(string textToFind, Orc.CsvTextEditor.FindReplaceSettings settings);
         bool Replace(string textToFind, string textToReplace, Orc.CsvTextEditor.FindReplaceSettings settings);
@@ -221,11 +224,6 @@ namespace Orc.CsvTextEditor
         public const char Space = ' ';
         public const char VerticalBar = '|';
     }
-    public class static TextEditorExtensions
-    {
-        public static System.Collections.Generic.IList<ICSharpCode.AvalonEdit.CodeCompletion.ICompletionData> GetCompletionDataForText(this ICSharpCode.AvalonEdit.TextEditor textEditor, string autocompletionText, int columnIndex, int[][] scheme) { }
-        public static void SetCaretToSpecificLineAndColumn(this ICSharpCode.AvalonEdit.TextEditor textEditor, int lineIndex, int columnIndex, int[][] columnWidthByLine) { }
-    }
     public class TextToTextArrayMultiValueConverter : System.Windows.Data.IMultiValueConverter
     {
         public TextToTextArrayMultiValueConverter() { }
@@ -261,7 +259,7 @@ namespace Orc.CsvTextEditor.Operations
     }
     public abstract class OperationBase : Orc.CsvTextEditor.Operations.IOperation
     {
-        protected readonly Orc.CsvTextEditor.ICsvTextEditorInstance _csvTextEditorInstance;
+        protected readonly Orc.CsvTextEditor.ICsvTextEditorInstance CsvTextEditorInstance;
         protected OperationBase(Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance) { }
         public abstract void Execute();
     }
