@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="ReplaceCommandBindingBehavior.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -18,13 +18,14 @@ namespace Orc.CsvTextEditor
         private CommandBinding _replacedCommandBinding;
         #endregion
 
+        #region Dependency properties
         public RoutedCommand ReplacementCommand
         {
             get { return (RoutedCommand)GetValue(ReplacementCommandProperty); }
             set { SetValue(ReplacementCommandProperty, value); }
         }
 
-        public static readonly DependencyProperty ReplacementCommandProperty = DependencyProperty.Register("ReplacementCommand", typeof(RoutedCommand),
+        public static readonly DependencyProperty ReplacementCommandProperty = DependencyProperty.Register(nameof(ReplacementCommand), typeof(RoutedCommand),
             typeof(ReplaceCommandBindingBehavior), new PropertyMetadata(default(RoutedCommand)));
 
         public ICommand Command
@@ -33,9 +34,11 @@ namespace Orc.CsvTextEditor
             set { SetValue(CommandProperty, value); }
         }
 
-        public static readonly DependencyProperty CommandProperty = DependencyProperty.Register("Command", typeof(ICommand),
+        public static readonly DependencyProperty CommandProperty = DependencyProperty.Register(nameof(Command), typeof(ICommand),
             typeof(ReplaceCommandBindingBehavior), new PropertyMetadata(default(ICommand), (o, args) => ((ReplaceCommandBindingBehavior)o).OnCommandPropertyChanged()));
+        #endregion
 
+        #region Methods
         private void OnCommandPropertyChanged()
         {
             var textArea = AssociatedObject?.TextArea;
@@ -68,5 +71,6 @@ namespace Orc.CsvTextEditor
 
             _replacedCommandBinding = null;
         }
+        #endregion
     }
 }

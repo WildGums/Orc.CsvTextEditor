@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="StringExtensions.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -8,15 +8,13 @@
 namespace Orc.CsvTextEditor
 {
     using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
     using System.Text;
-    using System.Text.RegularExpressions;
     using Catel;
 
     public static class StringExtensions
     {
+        #region Methods
         public static string RemoveCommaSeparatedText(this string text, int positionStart, int length, string newLine)
         {
             Argument.IsNotNull(nameof(text), text);
@@ -99,7 +97,6 @@ namespace Orc.CsvTextEditor
             var commaCounter = 1;
             foreach (var c in text)
             {
-
                 if (c == Symbols.Quote)
                 {
                     withinQuotes = !withinQuotes;
@@ -132,9 +129,9 @@ namespace Orc.CsvTextEditor
         {
             Argument.IsNotNull(() => text);
             var newLineSymbol = text.GetNewLineSymbol();
-            var lines = text.Split(new string[] { newLineSymbol }, StringSplitOptions.None).ToList();
-            lines.RemoveAll(x => x == String.Empty);
-            return String.Join(newLineSymbol,lines);
+            var lines = text.Split(new[] {newLineSymbol}, StringSplitOptions.None).ToList();
+            lines.RemoveAll(x => x == string.Empty);
+            return string.Join(newLineSymbol, lines);
         }
 
         public static string Truncate(this string value, int maxLength)
@@ -143,7 +140,7 @@ namespace Orc.CsvTextEditor
             {
                 return value;
             }
-                
+
             return value.Length <= maxLength ? value : value.Substring(0, maxLength);
         }
 
@@ -151,7 +148,7 @@ namespace Orc.CsvTextEditor
         {
             newLineSymbol = text.GetNewLineSymbol();
 
-            return text.Split(new[] { newLineSymbol }, StringSplitOptions.None);
+            return text.Split(new[] {newLineSymbol}, StringSplitOptions.None);
         }
 
         public static string InsertLineWithTextTransfer(this string text, int insertLineIndex, int offsetInLine, int columnCount, string lineEnding)
@@ -165,14 +162,14 @@ namespace Orc.CsvTextEditor
                 return InsertLine(text, insertLineIndex, columnCount, lineEnding);
             }
 
-            var previousLineOffset = insertLineIndex == 1 ? 0 : text.IndexOfSpecificOccurance(lineEnding, insertLineIndex - 1) + lineEndingLength;
+            var previousLineOffset = insertLineIndex == 1 ? 0 : text.IndexOfSpecificOccurrence(lineEnding, insertLineIndex - 1) + lineEndingLength;
             var leftLineChunk = text.Substring(previousLineOffset, offsetInLine);
             var splitColumnIndex = leftLineChunk.Count(x => x.Equals(Symbols.Comma));
 
-            var insetionText = $"{new string(Symbols.Comma, columnCount - splitColumnIndex - 1)}{lineEnding}{new string(Symbols.Comma, splitColumnIndex)}";
+            var insertionText = $"{new string(Symbols.Comma, columnCount - splitColumnIndex - 1)}{lineEnding}{new string(Symbols.Comma, splitColumnIndex)}";
 
             var insertPosition = previousLineOffset + offsetInLine;
-            return text.Insert(insertPosition, insetionText).TrimEnd(lineEnding);
+            return text.Insert(insertPosition, insertionText).TrimEnd(lineEnding);
         }
 
         public static string DuplicateTextInLine(this string text, int startOffset, int endOffset, string newLine)
@@ -199,25 +196,17 @@ namespace Orc.CsvTextEditor
         {
             Argument.IsNotNull(nameof(text), text);
 
-            if (columnsCount == 0 || linesCount == 0)
-            {
-                return string.Empty;
-            }
-
-            if (columnsCount == 1)
+            if (columnsCount <= 1 || linesCount == 0)
             {
                 return string.Empty;
             }
 
             var newLineLength = newLine.Length;
-
             var newCount = text.Length;
             var textArray = new char[newCount];
-            var indexer = 0; 
-
+            var indexer = 0;
             var separatorCounter = 0;
             var isLastColumn = columnsCount - 1 == column;
-
             var withinQuotes = false;
 
             for (var i = 0; i < text.Length; i++)
@@ -233,16 +222,9 @@ namespace Orc.CsvTextEditor
                 if (c == Symbols.Comma && !withinQuotes)
                 {
                     isSeparator = true;
-
-                    if (separatorCounter == column)
-                    {
-                        separatorCounter++;
-                        continue;
-                    }
-
                     separatorCounter++;
 
-                    if (isLastColumn && separatorCounter == column)
+                    if (SkipSeparator(column, separatorCounter, isLastColumn))
                     {
                         continue;
                     }
@@ -270,6 +252,11 @@ namespace Orc.CsvTextEditor
             }
 
             return new string(textArray, 0, indexer).TrimEnd(newLine);
+        }
+
+        private static bool SkipSeparator(int column, int separatorCounter, bool isLastColumn)
+        {
+            return separatorCounter == column + 1 || isLastColumn && separatorCounter == column;
         }
 
         public static string GetNewLineSymbol(this string text)
@@ -305,7 +292,7 @@ namespace Orc.CsvTextEditor
         {
             Argument.IsNotNull(() => textLine);
 
-            var trimmedValues = textLine.Split(new []{Symbols.Comma}, StringSplitOptions.None).Select(x => x.Trim());
+            var trimmedValues = textLine.Split(new[] {Symbols.Comma}, StringSplitOptions.None).Select(x => x.Trim());
 
             return string.Join($"{Symbols.Comma}", trimmedValues);
         }
@@ -327,10 +314,10 @@ namespace Orc.CsvTextEditor
         {
             Argument.IsNotNull(nameof(text), text);
 
-            var newLineLenght = newLine.Length;
+            var newLineLength = newLine.Length;
 
             var insertLineText = $"{new string(Symbols.Comma, columnsCount - 1)}{newLine}";
-            var insertionPosition = insertLineIndex != 0 ? text.IndexOfSpecificOccurance(newLine, insertLineIndex) + newLineLenght : 0;
+            var insertionPosition = insertLineIndex != 0 ? text.IndexOfSpecificOccurrence(newLine, insertLineIndex) + newLineLength : 0;
 
             return text.Insert(insertionPosition, insertLineText).TrimEnd(newLine);
         }
@@ -347,7 +334,7 @@ namespace Orc.CsvTextEditor
             return string.Equals(lookupNewLine, lookup);
         }
 
-        private static int IndexOfSpecificOccurance(this string source, string value, int occuranceNumber)
+        private static int IndexOfSpecificOccurrence(this string source, string value, int occuranceNumber)
         {
             var index = -1;
             for (var i = 0; i < occuranceNumber; i++)
@@ -375,5 +362,6 @@ namespace Orc.CsvTextEditor
 
             return indexer;
         }
+        #endregion
     }
 }

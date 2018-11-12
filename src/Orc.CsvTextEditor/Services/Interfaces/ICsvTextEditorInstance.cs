@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ICsvTextEditorService.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+// <copyright file="ICsvTextEditorInstance.cs" company="WildGums">
+//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -19,22 +19,16 @@ namespace Orc.CsvTextEditor
         int ColumnsCount { get; }
         bool IsAutocompleteEnabled { get; set; }
         bool HasSelection { get; }
-
-        bool IsCaretWithinQuotedField();
-
         bool CanRedo { get; }
-
-        void InsertAtCaret(char character);
-
         bool CanUndo { get; }
         string LineEnding { get; }
         bool IsDirty { get; }
         #endregion
 
-        #region Events
-        event EventHandler<CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
-        event EventHandler<EventArgs> TextChanged;
-        #endregion
+        #region Methods
+        bool IsCaretWithinQuotedField();
+
+        void InsertAtCaret(char character);
 
         void ResetIsDirty();
         void Copy();
@@ -60,5 +54,11 @@ namespace Orc.CsvTextEditor
         string GetSelectedText();
         string GetText();
         void SetText(string text);
+        #endregion
+
+        #region Events
+        event EventHandler<CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
+        event EventHandler<EventArgs> TextChanged;
+        #endregion
     }
 }

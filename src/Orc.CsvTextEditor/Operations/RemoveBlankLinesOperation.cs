@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="RemoveBlankLinesOperation.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -28,10 +28,10 @@ namespace Orc.CsvTextEditor.Operations
         {
             Log.Debug("Removing blank lines");
 
-            var text = _csvTextEditorInstance.GetText();
+            var text = CsvTextEditorInstance.GetText();
             var lines = text.GetLines(out string newLineSymbol);
 
-            _csvTextEditorInstance.SetText(string.Join(newLineSymbol, lines.Where(x => !x.IsEmptyCommaSeparatedLine())));
+            CsvTextEditorInstance.SetText(string.Join(newLineSymbol, lines.Where(x => !x.IsEmptyCommaSeparatedLine())));
         }
         #endregion
     }

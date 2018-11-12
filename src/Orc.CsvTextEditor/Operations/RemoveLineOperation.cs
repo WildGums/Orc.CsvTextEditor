@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="RemoveLineOperation.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -19,22 +19,23 @@ namespace Orc.CsvTextEditor.Operations
         #region Methods
         public override void Execute()
         {
-            var location = _csvTextEditorInstance.GetLocation();
+            var location = CsvTextEditorInstance.GetLocation();
 
-            var text = _csvTextEditorInstance.GetText();
+            var text = CsvTextEditorInstance.GetText();
 
-            if (location.Line.Index == _csvTextEditorInstance.LinesCount - 1)
+            if (location.Line.Index == CsvTextEditorInstance.LinesCount - 1)
             {
                 text = text.Remove(location.Line.Offset);
                 text = text.TrimEnd();
-            } else
+            }
+            else
             {
-                text = text.Remove(location.Line.Offset, location.Line.Length + _csvTextEditorInstance.LineEnding.Length);
+                text = text.Remove(location.Line.Offset, location.Line.Length + CsvTextEditorInstance.LineEnding.Length);
             }
 
-            _csvTextEditorInstance.SetText(text);
+            CsvTextEditorInstance.SetText(text);
 
-            _csvTextEditorInstance.GotoPosition(location.Line.Index - 1, location.Column.Index);
+            CsvTextEditorInstance.GotoPosition(location.Line.Index - 1, location.Column.Index);
         }
         #endregion
     }

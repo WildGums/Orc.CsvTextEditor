@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="RemoveColumnOperation.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -19,13 +19,13 @@ namespace Orc.CsvTextEditor.Operations
         #region Methods
         public override void Execute()
         {
-            var location = _csvTextEditorInstance.GetLocation();
+            var location = CsvTextEditorInstance.GetLocation();
 
-            var text = _csvTextEditorInstance.GetText();
-            text = text.RemoveCommaSeparatedColumn(location.Column.Index, _csvTextEditorInstance.LinesCount, _csvTextEditorInstance.ColumnsCount, _csvTextEditorInstance.LineEnding);
+            var text = CsvTextEditorInstance.GetText();
+            text = text.RemoveCommaSeparatedColumn(location.Column.Index, CsvTextEditorInstance.LinesCount, CsvTextEditorInstance.ColumnsCount, CsvTextEditorInstance.LineEnding);
 
-            _csvTextEditorInstance.SetText(text);
-            _csvTextEditorInstance.GotoPosition(location.Line.Index, location.Column.Index);
+            CsvTextEditorInstance.SetText(text);
+            CsvTextEditorInstance.GotoPosition(location.Line.Index, location.Column.Index);
         }
         #endregion
     }

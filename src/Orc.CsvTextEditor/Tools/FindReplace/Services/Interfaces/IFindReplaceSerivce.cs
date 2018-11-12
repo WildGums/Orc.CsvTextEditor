@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Location.cs" company="WildGums">
+// <copyright file="IFindReplaceSerivce.cs" company="WildGums">
 //   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -7,12 +7,8 @@
 
 namespace Orc.CsvTextEditor
 {
-    public class Location
+    [ObsoleteEx(TreatAsErrorFromVersion = "3.1.0", RemoveInVersion = "3.2.0", ReplacementTypeOrMember = "Orc.CsvTextEditor.IFindReplaceService")]
+    public interface IFindReplaceSerivce : IFindReplaceService
     {
-        #region Properties
-        public Column Column { get; set; }
-        public Line Line { get; set; }
-        public int Offset { get; set; }
-        #endregion
     }
 }

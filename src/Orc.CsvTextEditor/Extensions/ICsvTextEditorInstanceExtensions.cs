@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="ICsvTextEditorInstanceExtensions.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -12,6 +12,7 @@ namespace Orc.CsvTextEditor
 
     public static class ICsvTextEditorInstanceExtensions
     {
+        #region Methods
         public static void ShowTool<T>(this ICsvTextEditorInstance csvTextEditorInstance)
             where T : ICsvTextEditorTool
         {
@@ -37,5 +38,6 @@ namespace Orc.CsvTextEditor
             var tools = csvTextEditorInstance.Tools;
             return tools.FirstOrDefault(x => x.Name == toolName);
         }
+        #endregion
     }
 }

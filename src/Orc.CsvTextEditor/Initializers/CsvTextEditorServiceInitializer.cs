@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="CsvTextEditorServiceInitializer.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -26,7 +26,7 @@ namespace Orc.CsvTextEditor
         }
         #endregion
 
-        #region Methods
+        #region ICsvTextEditorInitializer Members
         public virtual void Initialize(TextEditor textEditor, ICsvTextEditorInstance csvTextEditorInstance)
         {
             Argument.IsNotNull(() => textEditor);

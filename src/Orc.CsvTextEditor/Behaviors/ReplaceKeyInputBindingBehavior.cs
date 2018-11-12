@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="ReplaceKeyInputBindingBehavior.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -15,29 +15,33 @@ namespace Orc.CsvTextEditor
 
     internal class ReplaceKeyInputBindingBehavior : Behavior<TextEditor>
     {
-        private RoutedCommand _removedRoutedCommand;
-        private KeyGesture _removedKeyGesture;
+        #region Fields
         private InputBinding _removedInputBinding;
+        private KeyGesture _removedKeyGesture;
+        private RoutedCommand _removedRoutedCommand;
+        #endregion
 
+        #region Depenendcy properties
         public KeyGesture Gesture
         {
-            get { return (KeyGesture) GetValue(GestureProperty); }
+            get { return (KeyGesture)GetValue(GestureProperty); }
             set { SetValue(GestureProperty, value); }
         }
 
-        public static readonly DependencyProperty GestureProperty = DependencyProperty.Register(
-            "Gesture", typeof(KeyGesture), typeof(ReplaceKeyInputBindingBehavior), new PropertyMetadata(default(KeyGesture)));
+        public static readonly DependencyProperty GestureProperty = DependencyProperty.Register(nameof(Gesture), typeof(KeyGesture),
+            typeof(ReplaceKeyInputBindingBehavior), new PropertyMetadata(default(KeyGesture)));
 
         public ICommand Command
         {
-            get { return (ICommand) GetValue(CommandProperty); }
+            get { return (ICommand)GetValue(CommandProperty); }
             set { SetValue(CommandProperty, value); }
         }
 
-        public static readonly DependencyProperty CommandProperty = DependencyProperty.Register(
-            "Command", typeof(ICommand), typeof(ReplaceKeyInputBindingBehavior), new PropertyMetadata(default(ICommand), (o, args) => ((ReplaceKeyInputBindingBehavior)o).OnCommandPropertyChanged(args)));
+        public static readonly DependencyProperty CommandProperty = DependencyProperty.Register(nameof(Command), typeof(ICommand), typeof(ReplaceKeyInputBindingBehavior),
+            new PropertyMetadata(default(ICommand), (o, args) => ((ReplaceKeyInputBindingBehavior)o).OnCommandPropertyChanged(args)));
+        #endregion
 
-
+        #region Methods
         private void OnCommandPropertyChanged(DependencyPropertyChangedEventArgs args)
         {
             var textArea = AssociatedObject?.TextArea;
@@ -101,5 +105,6 @@ namespace Orc.CsvTextEditor
 
             inputBindings.Add(new InputBinding(command, Gesture));
         }
+        #endregion
     }
 }

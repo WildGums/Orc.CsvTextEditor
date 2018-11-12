@@ -1,6 +1,6 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="App.xaml.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -19,13 +19,16 @@ namespace Orc.CsvTextEditor.Example
     /// </summary>
     public partial class App : Application
     {
+        #region Constructors
         public App()
         {
 #if DEBUG
-            LogManager.AddDebugListener(false);
+            LogManager.AddDebugListener();
 #endif
         }
+        #endregion
 
+        #region Methods
         protected override void OnStartup(StartupEventArgs e)
         {
             var languageService = ServiceLocator.Default.ResolveType<ILanguageService>();
@@ -40,5 +43,6 @@ namespace Orc.CsvTextEditor.Example
 
             this.ApplyTheme();
         }
+        #endregion
     }
 }
