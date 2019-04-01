@@ -9,12 +9,13 @@ namespace Orc.CsvTextEditor
 {
     using System;
     using System.Collections.Generic;
+    using Controls;
     using Operations;
 
     public interface ICsvTextEditorInstance : IDisposable
     {
         #region Properties
-        IEnumerable<ICsvTextEditorTool> Tools { get; }
+        IEnumerable<IControlTool> Tools { get; }
         int LinesCount { get; }
         int ColumnsCount { get; }
         bool IsAutocompleteEnabled { get; set; }
@@ -49,8 +50,8 @@ namespace Orc.CsvTextEditor
 
         void RefreshView();
 
-        void AddTool(ICsvTextEditorTool tool);
-        void RemoveTool(ICsvTextEditorTool tool);
+        void AddTool(IControlTool tool);
+        void RemoveTool(IControlTool tool);
         string GetSelectedText();
         string GetText();
         void SetText(string text);

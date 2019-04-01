@@ -20,6 +20,7 @@ namespace Orc.CsvTextEditor
     using Catel.Logging;
     using Catel.MVVM;
     using Catel.Services;
+    using Controls;
     using ICSharpCode.AvalonEdit;
     using ICSharpCode.AvalonEdit.CodeCompletion;
     using ICSharpCode.AvalonEdit.Document;
@@ -40,7 +41,7 @@ namespace Orc.CsvTextEditor
         private readonly HighlightAllOccurencesOfSelectedWordTransformer _highlightAllOccurencesOfSelectedWordTransformer;
         private readonly DispatcherTimer _refreshViewTimer;
         private readonly TextEditor _textEditor;
-        private readonly List<ICsvTextEditorTool> _tools;
+        private readonly List<IControlTool> _tools;
         private readonly ITypeFactory _typeFactory;
 
         private CompletionWindow _completionWindow;
@@ -67,7 +68,7 @@ namespace Orc.CsvTextEditor
             _dispatcherService = dispatcherService;
             _typeFactory = typeFactory;
 
-            _tools = new List<ICsvTextEditorTool>();
+            _tools = new List<IControlTool>();
 
             // Need to make these options accessible to the user in the settings window
             _textEditor.ShowLineNumbers = true;
@@ -105,7 +106,7 @@ namespace Orc.CsvTextEditor
         #endregion
 
         #region Properties
-        public IEnumerable<ICsvTextEditorTool> Tools => _tools;
+        public IEnumerable<IControlTool> Tools => _tools;
         public int LinesCount => _textEditor?.Document?.LineCount ?? 0;
         public int ColumnsCount => _elementGenerator.ColumnCount;
         public bool IsAutocompleteEnabled { get; set; } = true;
@@ -131,7 +132,7 @@ namespace Orc.CsvTextEditor
             _dispatcherService.Invoke(() => UpdateText(text));
         }
 
-        public void AddTool(ICsvTextEditorTool tool)
+        public void AddTool(IControlTool tool)
         {
             Argument.IsNotNull(() => tool);
 
@@ -143,7 +144,7 @@ namespace Orc.CsvTextEditor
             _tools.Add(tool);
         }
 
-        public void RemoveTool(ICsvTextEditorTool tool)
+        public void RemoveTool(IControlTool tool)
         {
             Argument.IsNotNull(() => tool);
 

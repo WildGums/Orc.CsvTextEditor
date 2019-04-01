@@ -29,17 +29,15 @@ namespace Orc.CsvTextEditor.ViewModels
         #endregion
 
         #region Properties
-        #region Commands
         public Command FindAndReplace { get; }
         public object Scope => "Test_CsvTextEditor";
-        #endregion
         #endregion
 
         #region Methods
         private void OnFindAndReplace()
         {
             var csvTextEditorInstance = _serviceLocator.TryResolveType<ICsvTextEditorInstance>(Scope);
-            csvTextEditorInstance?.ShowTool<FindReplaceTextEditorTool>();
+            csvTextEditorInstance?.ShowTool<FindReplaceTool>();
         }
         #endregion
     }

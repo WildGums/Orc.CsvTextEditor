@@ -7,21 +7,11 @@
 
 namespace Orc.CsvTextEditor
 {
-    using System;
+    using Controls;
 
-    public interface ICsvTextEditorTool
+    [ObsoleteEx(TreatAsErrorFromVersion = "3.1.0", RemoveInVersion = "3.2.0", Message = "Use IControlTool instead")]
+    public interface ICsvTextEditorTool : IControlTool
     {
-        #region Properties
-        string Name { get; }
-        bool IsOpened { get; }
-        #endregion
 
-        #region Methods
-        void Open();
-        void Close();
-        #endregion
-
-        event EventHandler<EventArgs> Opened;
-        event EventHandler<EventArgs> Closed;
     }
 }

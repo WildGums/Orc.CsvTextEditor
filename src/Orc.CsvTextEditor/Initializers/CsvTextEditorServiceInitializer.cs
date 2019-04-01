@@ -32,9 +32,7 @@ namespace Orc.CsvTextEditor
             Argument.IsNotNull(() => textEditor);
             Argument.IsNotNull(() => csvTextEditorInstance);
 
-            var findReplaceTool = _typeFactory.CreateInstanceWithParametersAndAutoCompletion<FindReplaceTextEditorTool>(textEditor, csvTextEditorInstance);
-
-            csvTextEditorInstance.AddTool(findReplaceTool);
+            //this place are reserved for CsvTextEditor initialization
         }
         #endregion
     }

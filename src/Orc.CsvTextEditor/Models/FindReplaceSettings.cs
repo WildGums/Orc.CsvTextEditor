@@ -7,16 +7,9 @@
 
 namespace Orc.CsvTextEditor
 {
-    using Catel.Data;
-
-    public class FindReplaceSettings : ModelBase
+    [ObsoleteEx(TreatAsErrorFromVersion = "3.1.0", RemoveInVersion = "3.2.0", ReplacementTypeOrMember = "Orc.Controls.FindReplaceSettings")]
+    public class FindReplaceSettings : Controls.FindReplaceSettings
     {
-        #region Properties
-        public bool CaseSensitive { get; set; } = true;
-        public bool WholeWord { get; set; } = true;
-        public bool UseRegex { get; set; } = false;
-        public bool UseWildcards { get; set; } = false;
-        public bool IsSearchUp { get; set; } = false;
-        #endregion
+
     }
 }

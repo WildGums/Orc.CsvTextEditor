@@ -32,7 +32,22 @@ namespace Orc.CsvTextEditor
         #endregion
 
         #region ICsvTextEditorTool Members
+        public virtual void Attach(object target)
+        {
+            //Do nothing
+        }
+
+        public virtual void Detach()
+        {
+            //Do nothing
+        }
+
         public void Open()
+        {
+            Open(null);
+        }
+
+        public virtual void Open(object parameter)
         {
             if (IsOpened)
             {

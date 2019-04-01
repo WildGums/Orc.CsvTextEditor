@@ -1,14 +1,16 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="CsvTextEditorControl.xaml.cs" company="WildGums">
-//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
 
 namespace Orc.CsvTextEditor
 {
+    using System;
     using System.Windows;
     using Catel.MVVM.Views;
+    using Controls;
 
     public partial class CsvTextEditorControl
     {
@@ -34,7 +36,6 @@ namespace Orc.CsvTextEditor
 
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(nameof(Text), typeof(string), typeof(CsvTextEditorControl), new PropertyMetadata(default(string)));
 
-
         [ViewToViewModel(MappingType = ViewToViewModelMappingType.ViewToViewModel)]
         public object Scope
         {
@@ -42,7 +43,8 @@ namespace Orc.CsvTextEditor
             set { SetValue(ScopeProperty, value); }
         }
 
-        public static readonly DependencyProperty ScopeProperty = DependencyProperty.Register(nameof(Scope), typeof(object), typeof(CsvTextEditorControl), new PropertyMetadata(default(object)));
+        public static readonly DependencyProperty ScopeProperty = DependencyProperty.Register(nameof(Scope), typeof(object), typeof(CsvTextEditorControl),
+            new PropertyMetadata(default(object)));
         #endregion
     }
 }
