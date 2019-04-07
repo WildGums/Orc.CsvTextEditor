@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="TabSpaceElementGenerator.cs" company="WildGums">
-//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -298,7 +298,7 @@ namespace Orc.CsvTextEditor
             return column;
         }
 
-        private void NormalizeColumnsCount(IList<int[]> columnWidthByLine)
+        private static void NormalizeColumnsCount(IList<int[]> columnWidthByLine)
         {
             if (columnWidthByLine.Count == 0)
             {
@@ -335,9 +335,9 @@ namespace Orc.CsvTextEditor
             }
         }
 
-        private int[] CalculateColumnWidth(int[][] columnWidthByLine)
+        private static int[] CalculateColumnWidth(IReadOnlyList<int[]> columnWidthByLine)
         {
-            if (columnWidthByLine.Length == 0)
+            if (columnWidthByLine.Count == 0)
             {
                 return new int[0];
             }
