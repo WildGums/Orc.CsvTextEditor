@@ -56,7 +56,6 @@ namespace Orc.CsvTextEditor
 
         public Command Paste { get; }
         public Command Cut { get; }
-
         public Command GotoNextColumn { get; }
         public Command GotoPreviousColumn { get; }
         public Command Redo { get; }
