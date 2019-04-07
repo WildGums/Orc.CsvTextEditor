@@ -30,11 +30,9 @@ namespace Orc.CsvTextEditor
 
     internal class CsvTextEditorInstance : Disposable, ICsvTextEditorInstance
     {
-        #region Constants
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
-        #endregion
-
         #region Fields
+        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+
         private readonly ICommandManager _commandManager;
         private readonly IDispatcherService _dispatcherService;
         private readonly TabSpaceElementGenerator _elementGenerator;

@@ -12,7 +12,7 @@ namespace Orc.CsvTextEditor.Operations
 
     public class TrimWhitespacesOperation : OperationBase
     {
-        #region Constants
+        #region Fields
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
         #endregion
 

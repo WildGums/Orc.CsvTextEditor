@@ -8,7 +8,6 @@
 using Catel.IoC;
 using Catel.Logging;
 using Catel.MVVM;
-using Catel.Services;
 using Orc.CsvTextEditor;
 
 /// <summary>
@@ -16,7 +15,9 @@ using Orc.CsvTextEditor;
 /// </summary>
 public static class ModuleInitializer
 {
+    #region Fields
     private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+    #endregion
 
     #region Methods
     /// <summary>
