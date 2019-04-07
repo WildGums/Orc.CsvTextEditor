@@ -16,12 +16,11 @@ namespace Orc.CsvTextEditor
 
     internal class CsvTextEditorControlViewModel : ViewModelBase
     {
-        #region Constants
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
-        #endregion
-
         #region Fields
+        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+
         private readonly IServiceLocator _serviceLocator;
+
         private ICsvTextEditorInstance _csvTextEditorInstance;
         private ICsvTextSynchronizationService _csvTextSynchronizationService;
         #endregion
@@ -55,8 +54,8 @@ namespace Orc.CsvTextEditor
         public object Scope { get; set; }
         public string Text { get; set; }
 
-        public Command Paste { get; set; }
-        public Command Cut { get; set; }
+        public Command Paste { get; }
+        public Command Cut { get; }
 
         public Command GotoNextColumn { get; }
         public Command GotoPreviousColumn { get; }
