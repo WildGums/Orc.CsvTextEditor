@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="StringExtensions.cs" company="WildGums">
-//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -8,6 +8,7 @@
 namespace Orc.CsvTextEditor
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using Catel;
@@ -97,24 +98,28 @@ namespace Orc.CsvTextEditor
             var commaCounter = 1;
             foreach (var c in text)
             {
-                if (c == Symbols.Quote)
+                switch (c)
                 {
-                    withinQuotes = !withinQuotes;
-                }
+                    case Symbols.Quote:
+                        withinQuotes = !withinQuotes;
+                        break;
 
-                if (c == Symbols.Comma && !withinQuotes)
-                {
-                    if (commaCounter == column)
+                    case Symbols.Comma when !withinQuotes:
                     {
-                        textArray[indexer] = Symbols.Comma;
-                        indexer++;
-                    }
+                        if (commaCounter == column)
+                        {
+                            textArray[indexer] = Symbols.Comma;
+                            indexer++;
+                        }
 
-                    commaCounter++;
+                        commaCounter++;
 
-                    if (commaCounter == columnsCount)
-                    {
-                        commaCounter = 1;
+                        if (commaCounter == columnsCount)
+                        {
+                            commaCounter = 1;
+                        }
+
+                        break;
                     }
                 }
 
@@ -273,12 +278,7 @@ namespace Orc.CsvTextEditor
                 return "\n";
             }
 
-            if (text.Contains("\r"))
-            {
-                return "\r";
-            }
-
-            return Environment.NewLine;
+            return text.Contains("\r") ? "\r" : Environment.NewLine;
         }
 
         public static bool IsEmptyCommaSeparatedLine(this string textLine)
@@ -334,10 +334,10 @@ namespace Orc.CsvTextEditor
             return string.Equals(lookupNewLine, lookup);
         }
 
-        private static int IndexOfSpecificOccurrence(this string source, string value, int occuranceNumber)
+        private static int IndexOfSpecificOccurrence(this string source, string value, int occurrenceNumber)
         {
             var index = -1;
-            for (var i = 0; i < occuranceNumber; i++)
+            for (var i = 0; i < occurrenceNumber; i++)
             {
                 index = source.IndexOf(value, index + 1, StringComparison.Ordinal);
 
@@ -350,7 +350,7 @@ namespace Orc.CsvTextEditor
             return index;
         }
 
-        private static int WriteStringToCharArray(char[] array, string text, int startPosition)
+        private static int WriteStringToCharArray(IList<char> array, string text, int startPosition)
         {
             var indexer = startPosition;
 

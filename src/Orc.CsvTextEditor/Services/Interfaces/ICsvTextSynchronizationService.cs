@@ -9,7 +9,6 @@ namespace Orc.CsvTextEditor
 {
     using System;
 
-    // TODO: replace scope management
     internal interface ICsvTextSynchronizationService
     {
         #region Properties

@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="FindReplaceService.cs" company="WildGums">
-//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -9,7 +9,6 @@ namespace Orc.CsvTextEditor
 {
     using System.Text.RegularExpressions;
     using Catel;
-    using Catel.IoC;
     using Controls.Extensions;
     using ICSharpCode.AvalonEdit;
 
@@ -31,7 +30,7 @@ namespace Orc.CsvTextEditor
         }
         #endregion
 
-        #region IFindReplaceSerivce Members
+        #region IFindReplaceService Members
         [ObsoleteEx(TreatAsErrorFromVersion = "3.1.0", RemoveInVersion = "3.2.0", Message = "Use FindNext with Orc.Controls.FindReplaceSettings parameter instead")]
         public bool FindNext(string textToFind, FindReplaceSettings settings)
         {
@@ -49,7 +48,6 @@ namespace Orc.CsvTextEditor
         {
             ReplaceAll(textToFind, textToReplace, (Controls.FindReplaceSettings)settings);
         }
-        #endregion
 
         public string GetInitialFindText()
         {
@@ -120,5 +118,6 @@ namespace Orc.CsvTextEditor
 
             _textEditor.EndChange();
         }
+        #endregion
     }
 }

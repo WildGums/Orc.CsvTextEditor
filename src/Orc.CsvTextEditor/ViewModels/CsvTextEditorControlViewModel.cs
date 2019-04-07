@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="CsvTextEditorControlViewModel.cs" company="WildGums">
-//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -101,7 +101,6 @@ namespace Orc.CsvTextEditor
         private void OnScopeChanged()
         {
             var scope = Scope;
-
             if (scope == null)
             {
                 _csvTextEditorInstance = null;

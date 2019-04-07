@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="TrimWhitespacesOperation.cs" company="WildGums">
-//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -29,7 +29,7 @@ namespace Orc.CsvTextEditor.Operations
             Log.Debug("Trimming white spaces");
 
             var text = CsvTextEditorInstance.GetText();
-            var lines = text.GetLines(out string newLineSymbol);
+            var lines = text.GetLines(out var newLineSymbol);
 
             CsvTextEditorInstance.SetText(string.Join(newLineSymbol, lines.Select(x => x.TrimCommaSeparatedValues())));
         }

@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="TextEditorExtensions.cs" company="WildGums">
-//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -76,7 +76,7 @@ namespace Orc.CsvTextEditor
                 var columnOffset = lineOffset + columnStart;
 
                 var columnChunk = text.Substring(columnOffset, columnWidth);
-                var words = columnChunk.Split(null);
+                var words = columnChunk.Split();
                 var currentWord = text.GetWordFromOffset(offset - 1);
 
                 foreach (var word in words)

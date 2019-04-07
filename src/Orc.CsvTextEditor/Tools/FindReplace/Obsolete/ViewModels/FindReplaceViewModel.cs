@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="FindReplaceViewModel.cs" company="WildGums">
-//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -46,9 +46,9 @@ namespace Orc.CsvTextEditor
 
         public string TextToFind { get; set; }
         public string TextToFindForReplace { get; set; }
-        public Command<string> FindNext { get; private set; }
-        public Command<object> Replace { get; private set; }
-        public Command<object> ReplaceAll { get; private set; }
+        public Command<string> FindNext { get; }
+        public Command<object> Replace { get; }
+        public Command<object> ReplaceAll { get; }
         #endregion
 
         #region Methods

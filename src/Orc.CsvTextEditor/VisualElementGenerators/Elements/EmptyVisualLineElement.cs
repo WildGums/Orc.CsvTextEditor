@@ -40,10 +40,7 @@ namespace Orc.CsvTextEditor
             return new TextCharacters(spacesBuilder.ToString(), TextRunProperties);
         }
 
-        public override bool IsWhitespace(int visualColumn)
-        {
-            return true;
-        }
+        public override bool IsWhitespace(int visualColumn) => true;
         #endregion
     }
 }

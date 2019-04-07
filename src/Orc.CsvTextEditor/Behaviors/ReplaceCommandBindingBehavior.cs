@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="ReplaceCommandBindingBehavior.cs" company="WildGums">
-//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -21,8 +21,8 @@ namespace Orc.CsvTextEditor
         #region Dependency properties
         public RoutedCommand ReplacementCommand
         {
-            get { return (RoutedCommand)GetValue(ReplacementCommandProperty); }
-            set { SetValue(ReplacementCommandProperty, value); }
+            get => (RoutedCommand)GetValue(ReplacementCommandProperty);
+            set => SetValue(ReplacementCommandProperty, value);
         }
 
         public static readonly DependencyProperty ReplacementCommandProperty = DependencyProperty.Register(nameof(ReplacementCommand), typeof(RoutedCommand),
@@ -30,8 +30,8 @@ namespace Orc.CsvTextEditor
 
         public ICommand Command
         {
-            get { return (ICommand)GetValue(CommandProperty); }
-            set { SetValue(CommandProperty, value); }
+            get => (ICommand)GetValue(CommandProperty);
+            set => SetValue(CommandProperty, value);
         }
 
         public static readonly DependencyProperty CommandProperty = DependencyProperty.Register(nameof(Command), typeof(ICommand),

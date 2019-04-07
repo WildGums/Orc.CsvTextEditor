@@ -38,7 +38,7 @@ namespace Orc.CsvTextEditor
         private readonly ICommandManager _commandManager;
         private readonly IDispatcherService _dispatcherService;
         private readonly TabSpaceElementGenerator _elementGenerator;
-        private readonly HighlightAllOccurencesOfSelectedWordTransformer _highlightAllOccurencesOfSelectedWordTransformer;
+        private readonly HighlightAllOccurencesOfSelectedWordTransformer _highlightAllOccurrencesOfSelectedWordTransformer;
         private readonly DispatcherTimer _refreshViewTimer;
         private readonly TextEditor _textEditor;
         private readonly List<IControlTool> _tools;
@@ -88,8 +88,8 @@ namespace Orc.CsvTextEditor
 
             _textEditor.TextArea.TextEntering += OnTextEntering;
 
-            _highlightAllOccurencesOfSelectedWordTransformer = new HighlightAllOccurencesOfSelectedWordTransformer();
-            _textEditor.TextArea.TextView.LineTransformers.Add(_highlightAllOccurencesOfSelectedWordTransformer);
+            _highlightAllOccurrencesOfSelectedWordTransformer = new HighlightAllOccurencesOfSelectedWordTransformer();
+            _textEditor.TextArea.TextView.LineTransformers.Add(_highlightAllOccurrencesOfSelectedWordTransformer);
             _textEditor.TextArea.TextView.LineTransformers.Add(new FirstLineAlwaysBoldTransformer());
 
             initializer.Initialize(textEditor, this);
@@ -316,12 +316,7 @@ namespace Orc.CsvTextEditor
             var text = textDocument.Text;
             var currentLine = textDocument.GetLineByNumber(caretLocation.Line);
 
-            if (text[currentLine.Offset + column.Offset] == Symbols.Quote)
-            {
-                return true;
-            }
-
-            return false;
+            return text[currentLine.Offset + column.Offset] == Symbols.Quote;
         }
 
         public void InsertAtCaret(char character)
@@ -558,7 +553,7 @@ namespace Orc.CsvTextEditor
             _isInCustomUpdate = false;
         }
 
-        private string AdjustText(string text)
+        private static string AdjustText(string text)
         {
             text = text ?? string.Empty;
 
@@ -609,12 +604,14 @@ namespace Orc.CsvTextEditor
                 return;
             }
 
-            if (_lastLocation == null || _lastLocation.Offset != location.Offset)
+            if (_lastLocation != null && _lastLocation.Offset == location.Offset)
             {
-                CaretTextLocationChanged?.Invoke(this, new CaretTextLocationChangedEventArgs(location));
-
-                _lastLocation = location;
+                return;
             }
+
+            CaretTextLocationChanged?.Invoke(this, new CaretTextLocationChangedEventArgs(location));
+
+            _lastLocation = location;
         }
 
         private void OnTextAreaSelectionChanged(object sender, EventArgs e)
@@ -622,8 +619,8 @@ namespace Orc.CsvTextEditor
             _commandManager.InvalidateCommands();
 
             // Disable this line if the user is using the "Find Replace" dialog box
-            _highlightAllOccurencesOfSelectedWordTransformer.SelectedWord = _textEditor.SelectedText;
-            _highlightAllOccurencesOfSelectedWordTransformer.Selection = _textEditor.TextArea.Selection;
+            _highlightAllOccurrencesOfSelectedWordTransformer.SelectedWord = _textEditor.SelectedText;
+            _highlightAllOccurrencesOfSelectedWordTransformer.Selection = _textEditor.TextArea.Selection;
 
             _textEditor.TextArea.TextView.Redraw();
         }

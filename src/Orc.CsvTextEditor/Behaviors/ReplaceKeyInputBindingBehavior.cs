@@ -24,8 +24,8 @@ namespace Orc.CsvTextEditor
         #region Depenendcy properties
         public KeyGesture Gesture
         {
-            get { return (KeyGesture)GetValue(GestureProperty); }
-            set { SetValue(GestureProperty, value); }
+            get => (KeyGesture)GetValue(GestureProperty);
+            set => SetValue(GestureProperty, value);
         }
 
         public static readonly DependencyProperty GestureProperty = DependencyProperty.Register(nameof(Gesture), typeof(KeyGesture),
@@ -33,8 +33,8 @@ namespace Orc.CsvTextEditor
 
         public ICommand Command
         {
-            get { return (ICommand)GetValue(CommandProperty); }
-            set { SetValue(CommandProperty, value); }
+            get => (ICommand)GetValue(CommandProperty);
+            set => SetValue(CommandProperty, value);
         }
 
         public static readonly DependencyProperty CommandProperty = DependencyProperty.Register(nameof(Command), typeof(ICommand), typeof(ReplaceKeyInputBindingBehavior),
@@ -50,8 +50,7 @@ namespace Orc.CsvTextEditor
                 return;
             }
 
-            var command = args.NewValue as ICommand;
-            if (command == null)
+            if (!(args.NewValue is ICommand command))
             {
                 return;
             }
@@ -86,8 +85,7 @@ namespace Orc.CsvTextEditor
             for (var i = 0; i < inputBindings.Count; i++)
             {
                 var inputBinding = inputBindings[i];
-                var keyGesture = inputBinding.Gesture as KeyGesture;
-                if (keyGesture == null)
+                if (!(inputBinding.Gesture is KeyGesture keyGesture))
                 {
                     continue;
                 }

@@ -7,10 +7,8 @@
 
 namespace Orc.CsvTextEditor
 {
-    using System;
     using System.Windows;
     using Catel.MVVM.Views;
-    using Controls;
 
     public partial class CsvTextEditorControl
     {
@@ -30,8 +28,8 @@ namespace Orc.CsvTextEditor
         [ViewToViewModel(MappingType = ViewToViewModelMappingType.TwoWayViewWins)]
         public string Text
         {
-            get { return (string)GetValue(TextProperty); }
-            set { SetValue(TextProperty, value); }
+            get => (string)GetValue(TextProperty);
+            set => SetValue(TextProperty, value);
         }
 
         public static readonly DependencyProperty TextProperty = DependencyProperty.Register(nameof(Text), typeof(string), typeof(CsvTextEditorControl), new PropertyMetadata(default(string)));
@@ -39,8 +37,8 @@ namespace Orc.CsvTextEditor
         [ViewToViewModel(MappingType = ViewToViewModelMappingType.ViewToViewModel)]
         public object Scope
         {
-            get { return GetValue(ScopeProperty); }
-            set { SetValue(ScopeProperty, value); }
+            get => GetValue(ScopeProperty);
+            set => SetValue(ScopeProperty, value);
         }
 
         public static readonly DependencyProperty ScopeProperty = DependencyProperty.Register(nameof(Scope), typeof(object), typeof(CsvTextEditorControl),

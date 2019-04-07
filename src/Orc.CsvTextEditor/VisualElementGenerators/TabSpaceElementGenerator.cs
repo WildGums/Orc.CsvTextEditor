@@ -298,16 +298,16 @@ namespace Orc.CsvTextEditor
             return column;
         }
 
-        private void NormalizeColumnsCount(int[][] columnWidthByLine)
+        private void NormalizeColumnsCount(IList<int[]> columnWidthByLine)
         {
-            if (columnWidthByLine.Length == 0)
+            if (columnWidthByLine.Count == 0)
             {
                 return;
             }
 
             var colCount = columnWidthByLine.Min(x => x.Length);
 
-            for (var index = 0; index < columnWidthByLine.Length; index++)
+            for (var index = 0; index < columnWidthByLine.Count; index++)
             {
                 var line = columnWidthByLine[index];
                 if (line.Length == colCount)
