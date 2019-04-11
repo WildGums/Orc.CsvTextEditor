@@ -47,8 +47,7 @@ namespace Orc.CsvTextEditor
         public CsvTextEditorInitializer() { }
         public virtual void Initialize(ICSharpCode.AvalonEdit.TextEditor textEditor, Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance) { }
     }
-    [System.ObsoleteAttribute("Use ControlToolBase instead. Will be treated as an error from version 3.1.0. Will" +
-        " be removed in version 3.2.0.", false)]
+    [System.ObsoleteAttribute("Use ControlToolBase instead. Will be removed in version 3.2.0.", true)]
     public abstract class CsvTextEditorToolBase : Orc.Controls.IControlTool, Orc.CsvTextEditor.ICsvTextEditorTool
     {
         protected CsvTextEditorToolBase(ICSharpCode.AvalonEdit.TextEditor textEditor, Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance) { }
@@ -79,28 +78,28 @@ namespace Orc.CsvTextEditor
     public class FindReplaceService : Orc.Controls.Services.IFindReplaceService, Orc.CsvTextEditor.IFindReplaceService
     {
         public FindReplaceService(ICSharpCode.AvalonEdit.TextEditor textEditor, Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance = null) { }
-        [System.ObsoleteAttribute("Use FindNext with Orc.Controls.FindReplaceSettings parameter instead. Will be tre" +
-            "ated as an error from version 3.1.0. Will be removed in version 3.2.0.", false)]
+        [System.ObsoleteAttribute("Use FindNext with Orc.Controls.FindReplaceSettings parameter instead. Will be rem" +
+            "oved in version 3.2.0.", true)]
         public bool FindNext(string textToFind, Orc.CsvTextEditor.FindReplaceSettings settings) { }
         public bool FindNext(string textToFind, Orc.Controls.FindReplaceSettings settings) { }
         public string GetInitialFindText() { }
-        [System.ObsoleteAttribute("Use FindNext with Orc.Controls.FindReplaceSettings parameter instead. Will be tre" +
-            "ated as an error from version 3.1.0. Will be removed in version 3.2.0.", false)]
+        [System.ObsoleteAttribute("Use FindNext with Orc.Controls.FindReplaceSettings parameter instead. Will be rem" +
+            "oved in version 3.2.0.", true)]
         public bool Replace(string textToFind, string textToReplace, Orc.CsvTextEditor.FindReplaceSettings settings) { }
         public bool Replace(string textToFind, string textToReplace, Orc.Controls.FindReplaceSettings settings) { }
-        [System.ObsoleteAttribute("Use FindNext with Orc.Controls.FindReplaceSettings parameter instead. Will be tre" +
-            "ated as an error from version 3.1.0. Will be removed in version 3.2.0.", false)]
+        [System.ObsoleteAttribute("Use FindNext with Orc.Controls.FindReplaceSettings parameter instead. Will be rem" +
+            "oved in version 3.2.0.", true)]
         public void ReplaceAll(string textToFind, string textToReplace, Orc.CsvTextEditor.FindReplaceSettings settings) { }
         public void ReplaceAll(string textToFind, string textToReplace, Orc.Controls.FindReplaceSettings settings) { }
     }
-    [System.ObsoleteAttribute("Use `Orc.Controls.FindReplaceSettings` instead. Will be treated as an error from " +
-        "version 3.1.0. Will be removed in version 3.2.0.", false)]
+    [System.ObsoleteAttribute("Use `Orc.Controls.FindReplaceSettings` instead. Will be removed in version 3.2.0." +
+        "", true)]
     public class FindReplaceSettings : Orc.Controls.FindReplaceSettings
     {
         public FindReplaceSettings() { }
     }
-    [System.ObsoleteAttribute("Use `Use Orc.CsvTextEditor.FindReplaceTool instead` instead. Will be treated as a" +
-        "n error from version 3.1.0. Will be removed in version 3.2.0.", false)]
+    [System.ObsoleteAttribute("Use `Use Orc.CsvTextEditor.FindReplaceTool instead` instead. Will be removed in v" +
+        "ersion 3.2.0.", true)]
     public class FindReplaceTextEditorTool : Orc.CsvTextEditor.CsvTextEditorToolBase
     {
         public FindReplaceTextEditorTool(ICSharpCode.AvalonEdit.TextEditor textEditor, Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance, Catel.Services.IUIVisualizerService uiVisualizerService, Catel.IoC.ITypeFactory typeFactory) { }
@@ -172,11 +171,10 @@ namespace Orc.CsvTextEditor
             where T : Orc.Controls.IControlTool { }
         public static void ShowTool(this Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance, string toolName, object parameter = null) { }
     }
-    [System.ObsoleteAttribute("Use IControlTool instead. Will be treated as an error from version 3.1.0. Will be" +
-        " removed in version 3.2.0.", false)]
+    [System.ObsoleteAttribute("Use IControlTool instead. Will be removed in version 3.2.0.", true)]
     public interface ICsvTextEditorTool : Orc.Controls.IControlTool { }
-    [System.ObsoleteAttribute("Use `Orc.CsvTextEditor.IFindReplaceService` instead. Will be treated as an error " +
-        "from version 3.1.0. Will be removed in version 3.2.0.", false)]
+    [System.ObsoleteAttribute("Use `Orc.CsvTextEditor.IFindReplaceService` instead. Will be removed in version 3" +
+        ".2.0.", true)]
     public interface IFindReplaceSerivce : Orc.CsvTextEditor.IFindReplaceService { }
     public interface IFindReplaceService
     {
