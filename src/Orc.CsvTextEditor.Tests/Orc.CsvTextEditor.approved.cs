@@ -44,7 +44,7 @@ namespace Orc.CsvTextEditor
     }
     public class CsvTextEditorInitializer : Orc.CsvTextEditor.ICsvTextEditorInitializer
     {
-        public CsvTextEditorInitializer(Catel.IoC.ITypeFactory typeFactory) { }
+        public CsvTextEditorInitializer() { }
         public virtual void Initialize(ICSharpCode.AvalonEdit.TextEditor textEditor, Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance) { }
     }
     [System.ObsoleteAttribute("Use ControlToolBase instead. Will be treated as an error from version 3.1.0. Will" +
