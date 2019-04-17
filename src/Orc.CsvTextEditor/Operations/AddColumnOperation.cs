@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="AddColumnOperation.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -19,29 +19,28 @@ namespace Orc.CsvTextEditor.Operations
         #region Methods
         public override void Execute()
         {
-
-            if (_csvTextEditorInstance.IsCaretWithinQuotedField())
+            if (CsvTextEditorInstance.IsCaretWithinQuotedField())
             {
-                _csvTextEditorInstance.InsertAtCaret(Symbols.Comma);
+                CsvTextEditorInstance.InsertAtCaret(Symbols.Comma);
                 return;
             }
 
-            var oldText = _csvTextEditorInstance.GetText();
+            var oldText = CsvTextEditorInstance.GetText();
 
-            var location = _csvTextEditorInstance.GetLocation();
+            var location = CsvTextEditorInstance.GetLocation();
 
-            var newColumnIndex = location.GetOffsetInLine() == location.Column.Offset 
+            var newColumnIndex = location.GetOffsetInLine() == location.Column.Offset
                 ? location.Column.Index
                 : location.Column.Index + 1;
 
             var newText = oldText.InsertCommaSeparatedColumn(
                 newColumnIndex,
-                _csvTextEditorInstance.LinesCount,
-                _csvTextEditorInstance.ColumnsCount,
-                _csvTextEditorInstance.LineEnding);
+                CsvTextEditorInstance.LinesCount,
+                CsvTextEditorInstance.ColumnsCount,
+                CsvTextEditorInstance.LineEnding);
 
-            _csvTextEditorInstance.SetText(newText);
-            _csvTextEditorInstance.GotoPosition(location.Line.Index, newColumnIndex);
+            CsvTextEditorInstance.SetText(newText);
+            CsvTextEditorInstance.GotoPosition(location.Line.Index, newColumnIndex);
         }
         #endregion
     }

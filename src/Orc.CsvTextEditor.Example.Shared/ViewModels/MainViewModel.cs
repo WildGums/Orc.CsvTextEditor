@@ -1,33 +1,44 @@
-// --------------------------------------------------------------------------------------------------------------------
+﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="MainViewModel.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
 
 namespace Orc.CsvTextEditor.ViewModels
 {
-    using System;
-    using System.Threading.Tasks;
     using Catel;
-    using Catel.Data;
+    using Catel.IoC;
     using Catel.MVVM;
-    using Catel.Reflection;
 
     public class MainViewModel : ViewModelBase
     {
-        public MainViewModel()
-        {
-            Title = "Orc.CsvTextEditor example";
-        }
+        private readonly IServiceLocator _serviceLocator;
 
-        #region Properties
+        #region Constructors
+        public MainViewModel(IServiceLocator serviceLocator)
+        {
+            Argument.IsNotNull(() => serviceLocator);
+
+            _serviceLocator = serviceLocator;
+
+            Title = "Orc.CsvTextEditor example";
+
+            FindAndReplace = new Command(OnFindAndReplace);
+        }
         #endregion
 
-        #region Commands
+        #region Properties
+        public Command FindAndReplace { get; }
+        public object Scope => "Test_CsvTextEditor";
         #endregion
 
         #region Methods
+        private void OnFindAndReplace()
+        {
+            var csvTextEditorInstance = _serviceLocator.TryResolveType<ICsvTextEditorInstance>(Scope);
+            csvTextEditorInstance?.ShowTool<FindReplaceTool>();
+        }
         #endregion
     }
 }

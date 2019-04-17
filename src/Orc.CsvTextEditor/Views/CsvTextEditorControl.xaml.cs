@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="CsvTextEditorControl.xaml.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -8,7 +8,6 @@
 namespace Orc.CsvTextEditor
 {
     using System.Windows;
-    using Catel.Logging;
     using Catel.MVVM.Views;
 
     public partial class CsvTextEditorControl
@@ -29,23 +28,21 @@ namespace Orc.CsvTextEditor
         [ViewToViewModel(MappingType = ViewToViewModelMappingType.TwoWayViewWins)]
         public string Text
         {
-            get { return (string) GetValue(TextProperty); }
-            set { SetValue(TextProperty, value); }
+            get => (string)GetValue(TextProperty);
+            set => SetValue(TextProperty, value);
         }
 
-        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(
-            "Text", typeof(string), typeof(CsvTextEditorControl), new PropertyMetadata(default(string)));
-
+        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(nameof(Text), typeof(string), typeof(CsvTextEditorControl), new PropertyMetadata(default(string)));
 
         [ViewToViewModel(MappingType = ViewToViewModelMappingType.ViewToViewModel)]
         public object Scope
         {
-            get { return GetValue(ScopeProperty); }
-            set { SetValue(ScopeProperty, value); }
+            get => GetValue(ScopeProperty);
+            set => SetValue(ScopeProperty, value);
         }
 
-        public static readonly DependencyProperty ScopeProperty = DependencyProperty.Register(
-            "Scope", typeof(object), typeof(CsvTextEditorControl), new PropertyMetadata(default(object)));
+        public static readonly DependencyProperty ScopeProperty = DependencyProperty.Register(nameof(Scope), typeof(object), typeof(CsvTextEditorControl),
+            new PropertyMetadata(default(object)));
         #endregion
     }
 }

@@ -44,10 +44,11 @@ namespace Orc.CsvTextEditor
     }
     public class CsvTextEditorInitializer : Orc.CsvTextEditor.ICsvTextEditorInitializer
     {
-        public CsvTextEditorInitializer(Catel.IoC.ITypeFactory typeFactory) { }
+        public CsvTextEditorInitializer() { }
         public virtual void Initialize(ICSharpCode.AvalonEdit.TextEditor textEditor, Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance) { }
     }
-    public abstract class CsvTextEditorToolBase : Orc.CsvTextEditor.ICsvTextEditorTool
+    [System.ObsoleteAttribute("Use ControlToolBase instead. Will be removed in version 3.2.0.", true)]
+    public abstract class CsvTextEditorToolBase : Orc.Controls.IControlTool, Orc.CsvTextEditor.ICsvTextEditorTool
     {
         protected CsvTextEditorToolBase(ICSharpCode.AvalonEdit.TextEditor textEditor, Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance) { }
         protected Orc.CsvTextEditor.ICsvTextEditorInstance CsvTextEditorInstance { get; }
@@ -56,9 +57,12 @@ namespace Orc.CsvTextEditor
         protected ICSharpCode.AvalonEdit.TextEditor TextEditor { get; }
         public event System.EventHandler<System.EventArgs> Closed;
         public event System.EventHandler<System.EventArgs> Opened;
+        public virtual void Attach(object target) { }
         public virtual void Close() { }
+        public virtual void Detach() { }
         protected abstract void OnOpen();
         public void Open() { }
+        public virtual void Open(object parameter) { }
     }
     public class CsvTextSynchronizationScope : Catel.Disposable
     {
@@ -71,33 +75,43 @@ namespace Orc.CsvTextEditor
         public bool IsSynchronizing { get; set; }
         public System.IDisposable SynchronizeInScope() { }
     }
-    public class FindReplaceService : Orc.CsvTextEditor.IFindReplaceSerivce
+    public class FindReplaceService : Orc.Controls.Services.IFindReplaceService, Orc.CsvTextEditor.IFindReplaceService
     {
-        public FindReplaceService(ICSharpCode.AvalonEdit.TextEditor textEditor) { }
+        public FindReplaceService(ICSharpCode.AvalonEdit.TextEditor textEditor, Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance = null) { }
+        [System.ObsoleteAttribute("Use FindNext with Orc.Controls.FindReplaceSettings parameter instead. Will be rem" +
+            "oved in version 3.2.0.", true)]
         public bool FindNext(string textToFind, Orc.CsvTextEditor.FindReplaceSettings settings) { }
+        public bool FindNext(string textToFind, Orc.Controls.FindReplaceSettings settings) { }
+        public string GetInitialFindText() { }
+        [System.ObsoleteAttribute("Use FindNext with Orc.Controls.FindReplaceSettings parameter instead. Will be rem" +
+            "oved in version 3.2.0.", true)]
         public bool Replace(string textToFind, string textToReplace, Orc.CsvTextEditor.FindReplaceSettings settings) { }
+        public bool Replace(string textToFind, string textToReplace, Orc.Controls.FindReplaceSettings settings) { }
+        [System.ObsoleteAttribute("Use FindNext with Orc.Controls.FindReplaceSettings parameter instead. Will be rem" +
+            "oved in version 3.2.0.", true)]
         public void ReplaceAll(string textToFind, string textToReplace, Orc.CsvTextEditor.FindReplaceSettings settings) { }
+        public void ReplaceAll(string textToFind, string textToReplace, Orc.Controls.FindReplaceSettings settings) { }
     }
-    public class FindReplaceSettings : Catel.Data.ModelBase
+    [System.ObsoleteAttribute("Use `Orc.Controls.FindReplaceSettings` instead. Will be removed in version 3.2.0." +
+        "", true)]
+    public class FindReplaceSettings : Orc.Controls.FindReplaceSettings
     {
-        public static readonly Catel.Data.PropertyData CaseSensitiveProperty;
-        public static readonly Catel.Data.PropertyData IsSearchUpProperty;
-        public static readonly Catel.Data.PropertyData UseRegexProperty;
-        public static readonly Catel.Data.PropertyData UseWildcardsProperty;
-        public static readonly Catel.Data.PropertyData WholeWordProperty;
         public FindReplaceSettings() { }
-        public bool CaseSensitive { get; set; }
-        public bool IsSearchUp { get; set; }
-        public bool UseRegex { get; set; }
-        public bool UseWildcards { get; set; }
-        public bool WholeWord { get; set; }
     }
+    [System.ObsoleteAttribute("Use `Use Orc.CsvTextEditor.FindReplaceTool instead` instead. Will be removed in v" +
+        "ersion 3.2.0.", true)]
     public class FindReplaceTextEditorTool : Orc.CsvTextEditor.CsvTextEditorToolBase
     {
         public FindReplaceTextEditorTool(ICSharpCode.AvalonEdit.TextEditor textEditor, Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance, Catel.Services.IUIVisualizerService uiVisualizerService, Catel.IoC.ITypeFactory typeFactory) { }
         public override string Name { get; }
         public override void Close() { }
         protected override void OnOpen() { }
+    }
+    public class FindReplaceTool : Orc.Controls.FindReplaceTool<Orc.CsvTextEditor.FindReplaceService>
+    {
+        public FindReplaceTool(Catel.Services.IUIVisualizerService uiVisualizerService, Catel.IoC.ITypeFactory typeFactory, Catel.IoC.IServiceLocator serviceLocator) { }
+        protected override Orc.CsvTextEditor.FindReplaceService CreateFindReplaceService(object target) { }
+        public override void Detach() { }
     }
     public class FirstLineAlwaysBoldTransformer : ICSharpCode.AvalonEdit.Rendering.DocumentColorizingTransformer
     {
@@ -125,10 +139,10 @@ namespace Orc.CsvTextEditor
         bool IsDirty { get; }
         string LineEnding { get; }
         int LinesCount { get; }
-        System.Collections.Generic.IEnumerable<Orc.CsvTextEditor.ICsvTextEditorTool> Tools { get; }
+        System.Collections.Generic.IEnumerable<Orc.Controls.IControlTool> Tools { get; }
         public event System.EventHandler<Orc.CsvTextEditor.CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
         public event System.EventHandler<System.EventArgs> TextChanged;
-        void AddTool(Orc.CsvTextEditor.ICsvTextEditorTool tool);
+        void AddTool(Orc.Controls.IControlTool tool);
         void Copy();
         void Cut();
         void DeleteNextSelectedText();
@@ -145,28 +159,24 @@ namespace Orc.CsvTextEditor
         void Paste();
         void Redo();
         void RefreshView();
-        void RemoveTool(Orc.CsvTextEditor.ICsvTextEditorTool tool);
+        void RemoveTool(Orc.Controls.IControlTool tool);
         void ResetIsDirty();
         void SetText(string text);
         void Undo();
     }
     public class static ICsvTextEditorInstanceExtensions
     {
-        public static Orc.CsvTextEditor.ICsvTextEditorTool GetToolByName(this Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance, string toolName) { }
-        public static void ShowTool<T>(this Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance)
-            where T : Orc.CsvTextEditor.ICsvTextEditorTool { }
-        public static void ShowTool(this Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance, string toolName) { }
+        public static Orc.Controls.IControlTool GetToolByName(this Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance, string toolName) { }
+        public static void ShowTool<T>(this Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance, object parameter = null)
+            where T : Orc.Controls.IControlTool { }
+        public static void ShowTool(this Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance, string toolName, object parameter = null) { }
     }
-    public interface ICsvTextEditorTool
-    {
-        bool IsOpened { get; }
-        string Name { get; }
-        public event System.EventHandler<System.EventArgs> Closed;
-        public event System.EventHandler<System.EventArgs> Opened;
-        void Close();
-        void Open();
-    }
-    public interface IFindReplaceSerivce
+    [System.ObsoleteAttribute("Use IControlTool instead. Will be removed in version 3.2.0.", true)]
+    public interface ICsvTextEditorTool : Orc.Controls.IControlTool { }
+    [System.ObsoleteAttribute("Use `Orc.CsvTextEditor.IFindReplaceService` instead. Will be removed in version 3" +
+        ".2.0.", true)]
+    public interface IFindReplaceSerivce : Orc.CsvTextEditor.IFindReplaceService { }
+    public interface IFindReplaceService
     {
         bool FindNext(string textToFind, Orc.CsvTextEditor.FindReplaceSettings settings);
         bool Replace(string textToFind, string textToReplace, Orc.CsvTextEditor.FindReplaceSettings settings);
@@ -221,11 +231,6 @@ namespace Orc.CsvTextEditor
         public const char Space = ' ';
         public const char VerticalBar = '|';
     }
-    public class static TextEditorExtensions
-    {
-        public static System.Collections.Generic.IList<ICSharpCode.AvalonEdit.CodeCompletion.ICompletionData> GetCompletionDataForText(this ICSharpCode.AvalonEdit.TextEditor textEditor, string autocompletionText, int columnIndex, int[][] scheme) { }
-        public static void SetCaretToSpecificLineAndColumn(this ICSharpCode.AvalonEdit.TextEditor textEditor, int lineIndex, int columnIndex, int[][] columnWidthByLine) { }
-    }
     public class TextToTextArrayMultiValueConverter : System.Windows.Data.IMultiValueConverter
     {
         public TextToTextArrayMultiValueConverter() { }
@@ -261,7 +266,7 @@ namespace Orc.CsvTextEditor.Operations
     }
     public abstract class OperationBase : Orc.CsvTextEditor.Operations.IOperation
     {
-        protected readonly Orc.CsvTextEditor.ICsvTextEditorInstance _csvTextEditorInstance;
+        protected readonly Orc.CsvTextEditor.ICsvTextEditorInstance CsvTextEditorInstance;
         protected OperationBase(Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance) { }
         public abstract void Execute();
     }

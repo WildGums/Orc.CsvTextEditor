@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="RegisterCstTextEditorControlsServicesBehavior.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -10,6 +10,7 @@ namespace Orc.CsvTextEditor
     using System.ComponentModel;
     using Catel.IoC;
     using Catel.Windows.Interactivity;
+    using Controls;
 
     internal class RegisterCstTextEditorControlsServicesBehavior : BehaviorBase<CsvTextEditorControl>
     {
@@ -28,6 +29,7 @@ namespace Orc.CsvTextEditor
         }
         #endregion
 
+        #region Methods
         protected override void OnAttached()
         {
             base.OnAttached();
@@ -54,7 +56,7 @@ namespace Orc.CsvTextEditor
             {
                 UpdateServiceRegistration();
             }
-        }        
+        }
 
         private void UpdateServiceRegistration()
         {
@@ -74,15 +76,17 @@ namespace Orc.CsvTextEditor
 
             if (!_serviceLocator.IsTypeRegistered<ICsvTextEditorInstance>(scope))
             {
-                var csvTextEditorService = (ICsvTextEditorInstance) _typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextEditorInstance>(textEditor);
+                var csvTextEditorService = (ICsvTextEditorInstance)_typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextEditorInstance>(textEditor);
                 _serviceLocator.RegisterInstance(csvTextEditorService, scope);
             }
 
             if (!_serviceLocator.IsTypeRegistered<ICsvTextSynchronizationService>(scope))
             {
-                var csvTextSynchronizationService = (ICsvTextSynchronizationService) _typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextSynchronizationService>();
+                var csvTextSynchronizationService = (ICsvTextSynchronizationService)_typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextSynchronizationService>();
                 _serviceLocator.RegisterInstance(csvTextSynchronizationService, scope);
             }
+
+            textEditorControl.AttachTool<FindReplaceTool>();
 
             _oldScope = scope;
         }
@@ -102,5 +106,6 @@ namespace Orc.CsvTextEditor
                 _serviceLocator.RemoveType<ICsvTextSynchronizationService>(oldScope);
             }
         }
+        #endregion
     }
 }

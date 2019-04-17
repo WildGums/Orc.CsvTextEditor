@@ -5,6 +5,7 @@
               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
               xmlns:catel="http://schemas.catelproject.com"
               xmlns:orccontrols="http://schemas.wildgums.com/orc/controls"
+              xmlns:orccsvtexteditor="http://schemas.wildgums.com/orc/csvtexteditor"
               mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="400">
 
     <orccontrols:StackGrid>
@@ -14,7 +15,10 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-		<!-- TODO: Add your content here -->
+        <orccsvtexteditor:CsvTextEditorControl Text="one,two,three,four,five"
+                                               Scope="{Binding Scope}"/>
+
+        <Button Command="{Binding FindAndReplace}" Content="Find and Replace"/>
 		
     </orccontrols:StackGrid>
 

@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="DisableTextDragDropBehavior.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -13,7 +13,9 @@ namespace Orc.CsvTextEditor
 
     internal class DisableTextDragDropBehavior : BehaviorBase<TextEditor>
     {
+        #region Fields
         private bool _originalAllowDrop;
+        #endregion
 
         #region Methods
         protected override void OnAssociatedObjectLoaded()
@@ -39,11 +41,13 @@ namespace Orc.CsvTextEditor
 
         private static void OnPreviewDragEnter(object sender, DragEventArgs e)
         {
-            if (!e.Data.GetDataPresent(DataFormats.FileDrop, true))
+            if (e.Data.GetDataPresent(DataFormats.FileDrop, true))
             {
-                e.Effects = DragDropEffects.None;
-                e.Handled = true;
+                return;
             }
+
+            e.Effects = DragDropEffects.None;
+            e.Handled = true;
         }
 
         private void OnPreviewDrop(object sender, DragEventArgs e)

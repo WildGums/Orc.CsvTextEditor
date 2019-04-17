@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="KeyGestureExtensions.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -12,6 +12,7 @@ namespace Orc.CsvTextEditor
 
     public static class KeyGestureExtensions
     {
+        #region Methods
         public static bool IsKeyAndModifierEquals(this KeyGesture left, KeyGesture right)
         {
             Argument.IsNotNull(() => left);
@@ -19,5 +20,6 @@ namespace Orc.CsvTextEditor
 
             return left.Key == right.Key && left.Modifiers == right.Modifiers;
         }
+        #endregion
     }
 }

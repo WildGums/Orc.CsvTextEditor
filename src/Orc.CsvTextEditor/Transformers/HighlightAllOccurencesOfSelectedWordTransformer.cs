@@ -1,12 +1,13 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="HighlightAllOccurencesOfSelectedWordTransformer.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
 
 namespace Orc.CsvTextEditor
 {
+    using System;
     using System.Windows.Media;
     using ICSharpCode.AvalonEdit.Document;
     using ICSharpCode.AvalonEdit.Editing;
@@ -38,7 +39,7 @@ namespace Orc.CsvTextEditor
                 return;
             }
 
-            while ((index = text.IndexOf(SelectedWord, start)) >= 0)
+            while ((index = text.IndexOf(SelectedWord, start, StringComparison.Ordinal)) >= 0)
             {
                 // Don't highlight the current selection
                 if (Selection.StartPosition.Column == index + 1 && Selection.StartPosition.Line == line.LineNumber)
@@ -49,13 +50,14 @@ namespace Orc.CsvTextEditor
                     {
                         break;
                     }
+
                     continue;
                 }
 
                 base.ChangeLinePart(
                     lineStartOffset + index, // startOffset
                     lineStartOffset + index + SelectedWord.Length, // endOffset
-                    (VisualLineElement element) => { element.TextRunProperties.SetBackgroundBrush(Brushes.PaleGreen); });
+                    element => { element.TextRunProperties.SetBackgroundBrush(Brushes.PaleGreen); });
 
                 start = index + 1; // search for next occurrence
             }

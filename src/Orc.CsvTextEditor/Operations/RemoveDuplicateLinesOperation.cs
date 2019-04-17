@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="RemoveDuplicateLinesOperation.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -11,7 +11,7 @@ namespace Orc.CsvTextEditor.Operations
 
     public class RemoveDuplicateLinesOperation : OperationBase
     {
-        #region Constants
+        #region Fields
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
         #endregion
 
@@ -27,10 +27,10 @@ namespace Orc.CsvTextEditor.Operations
         {
             Log.Debug("Removing duplicate lines");
 
-            var text = _csvTextEditorInstance.GetText();
-            var lines = text.GetLines(out string newLineSymbol);
+            var text = CsvTextEditorInstance.GetText();
+            var lines = text.GetLines(out var newLineSymbol);
 
-            _csvTextEditorInstance.SetText(string.Join(newLineSymbol, lines));
+            CsvTextEditorInstance.SetText(string.Join(newLineSymbol, lines));
         }
         #endregion
     }

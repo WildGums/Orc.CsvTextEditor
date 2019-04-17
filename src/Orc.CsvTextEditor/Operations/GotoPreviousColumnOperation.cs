@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="GotoPreviousColumnOperation.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -19,7 +19,7 @@ namespace Orc.CsvTextEditor.Operations
         #region Methods
         public override void Execute()
         {
-            var location = _csvTextEditorInstance.GetLocation();
+            var location = CsvTextEditorInstance.GetLocation();
 
             var columnIndex = location.Column.Index;
             var lineIndex = location.Line.Index;
@@ -34,7 +34,7 @@ namespace Orc.CsvTextEditor.Operations
 
             if (isFirstColumn)
             {
-                columnIndex = _csvTextEditorInstance.ColumnsCount - 1;
+                columnIndex = CsvTextEditorInstance.ColumnsCount - 1;
                 lineIndex--;
             }
             else
@@ -42,7 +42,7 @@ namespace Orc.CsvTextEditor.Operations
                 columnIndex--;
             }
 
-            _csvTextEditorInstance.GotoPosition(lineIndex, columnIndex);
+            CsvTextEditorInstance.GotoPosition(lineIndex, columnIndex);
         }
         #endregion
     }

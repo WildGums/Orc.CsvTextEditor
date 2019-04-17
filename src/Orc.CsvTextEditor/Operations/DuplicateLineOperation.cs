@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="DuplicateLineOperation.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -19,13 +19,13 @@ namespace Orc.CsvTextEditor.Operations
         #region Methods
         public override void Execute()
         {
-            var location = _csvTextEditorInstance.GetLocation();
+            var location = CsvTextEditorInstance.GetLocation();
 
-            var text = _csvTextEditorInstance.GetText();
-            text = text.DuplicateTextInLine(location.Line.Offset, location.Line.Offset + location.Line.Length, _csvTextEditorInstance.LineEnding);
+            var text = CsvTextEditorInstance.GetText();
+            text = text.DuplicateTextInLine(location.Line.Offset, location.Line.Offset + location.Line.Length, CsvTextEditorInstance.LineEnding);
 
-            _csvTextEditorInstance.SetText(text);
-            _csvTextEditorInstance.GotoPosition(location.Line.Index + 1, location.Column.Index);
+            CsvTextEditorInstance.SetText(text);
+            CsvTextEditorInstance.GotoPosition(location.Line.Index + 1, location.Column.Index);
         }
         #endregion
     }

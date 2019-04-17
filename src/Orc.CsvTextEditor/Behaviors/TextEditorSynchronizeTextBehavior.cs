@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="TextEditorSynchronizeTextBehavior.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -18,6 +18,7 @@ namespace Orc.CsvTextEditor
         private ICsvTextSynchronizationService _csvTextSynchronizationService;
         #endregion
 
+        #region Methods
         protected override void OnAssociatedObjectLoaded()
         {
             base.OnAssociatedObjectLoaded();
@@ -45,7 +46,7 @@ namespace Orc.CsvTextEditor
             {
                 return;
             }
-            
+
             textEditor.TextChanged -= OnTextChanged;
 
             base.OnAssociatedObjectUnloaded();
@@ -83,5 +84,6 @@ namespace Orc.CsvTextEditor
 
             _csvTextSynchronizationService = serviceLocator.ResolveType<ICsvTextSynchronizationService>(scope);
         }
+        #endregion
     }
 }

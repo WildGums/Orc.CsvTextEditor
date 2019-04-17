@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="FindReplaceService.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -9,32 +9,58 @@ namespace Orc.CsvTextEditor
 {
     using System.Text.RegularExpressions;
     using Catel;
+    using Controls.Extensions;
     using ICSharpCode.AvalonEdit;
 
-    public class FindReplaceService : IFindReplaceSerivce
+    public class FindReplaceService : Controls.Services.IFindReplaceService, IFindReplaceService
     {
         #region Fields
+        private readonly ICsvTextEditorInstance _csvTextEditorInstance;
         private readonly TextEditor _textEditor;
         #endregion
 
         #region Constructors
-        public FindReplaceService(TextEditor textEditor)
+        public FindReplaceService(TextEditor textEditor, ICsvTextEditorInstance csvTextEditorInstance = null)
         {
+            Argument.IsNotNull(() => csvTextEditorInstance);
             Argument.IsNotNull(() => textEditor);
 
+            _csvTextEditorInstance = csvTextEditorInstance;
             _textEditor = textEditor;
         }
         #endregion
 
-        #region Methods
+        #region IFindReplaceService Members
+        [ObsoleteEx(TreatAsErrorFromVersion = "3.1.0", RemoveInVersion = "3.2.0", Message = "Use FindNext with Orc.Controls.FindReplaceSettings parameter instead")]
         public bool FindNext(string textToFind, FindReplaceSettings settings)
+        {
+            return FindNext(textToFind, (Controls.FindReplaceSettings)settings);
+        }
+
+        [ObsoleteEx(TreatAsErrorFromVersion = "3.1.0", RemoveInVersion = "3.2.0", Message = "Use FindNext with Orc.Controls.FindReplaceSettings parameter instead")]
+        public bool Replace(string textToFind, string textToReplace, FindReplaceSettings settings)
+        {
+            return Replace(textToFind, textToReplace, (Controls.FindReplaceSettings)settings);
+        }
+
+        [ObsoleteEx(TreatAsErrorFromVersion = "3.1.0", RemoveInVersion = "3.2.0", Message = "Use FindNext with Orc.Controls.FindReplaceSettings parameter instead")]
+        public void ReplaceAll(string textToFind, string textToReplace, FindReplaceSettings settings)
+        {
+            ReplaceAll(textToFind, textToReplace, (Controls.FindReplaceSettings)settings);
+        }
+
+        public string GetInitialFindText()
+        {
+            return _csvTextEditorInstance?.GetSelectedText().Truncate(20) ?? string.Empty;
+        }
+
+        public bool FindNext(string textToFind, Controls.FindReplaceSettings settings)
         {
             Argument.IsNotNull(() => textToFind);
             Argument.IsNotNull(() => settings);
 
-            var regex = GetRegEx(textToFind, settings);
-            var start = regex.Options.HasFlag(RegexOptions.RightToLeft) ?
-                _textEditor.SelectionStart : _textEditor.SelectionStart + _textEditor.SelectionLength;
+            var regex = settings.GetRegEx(textToFind);
+            var start = regex.Options.HasFlag(RegexOptions.RightToLeft) ? _textEditor.SelectionStart : _textEditor.SelectionStart + _textEditor.SelectionLength;
             var match = regex.Match(_textEditor.Text, start);
 
             if (!match.Success) // start again from beginning or end
@@ -54,13 +80,13 @@ namespace Orc.CsvTextEditor
             return match.Success;
         }
 
-        public bool Replace(string textToFind, string textToReplace, FindReplaceSettings settings)
+        public bool Replace(string textToFind, string textToReplace, Controls.FindReplaceSettings settings)
         {
             Argument.IsNotNull(() => textToFind);
             Argument.IsNotNull(() => textToReplace);
             Argument.IsNotNull(() => settings);
 
-            var regex = GetRegEx(textToFind, settings);
+            var regex = settings.GetRegEx(textToFind);
             var input = _textEditor.Text.Substring(_textEditor.SelectionStart, _textEditor.SelectionLength);
             var match = regex.Match(input);
 
@@ -74,13 +100,13 @@ namespace Orc.CsvTextEditor
             return true;
         }
 
-        public void ReplaceAll(string textToFind, string textToReplace, FindReplaceSettings settings)
+        public void ReplaceAll(string textToFind, string textToReplace, Controls.FindReplaceSettings settings)
         {
             Argument.IsNotNull(() => textToFind);
             Argument.IsNotNull(() => textToReplace);
             Argument.IsNotNull(() => settings);
 
-            var regex = GetRegEx(textToFind, settings, true);
+            var regex = settings.GetRegEx(textToFind, true);
             var offset = 0;
 
             _textEditor.BeginChange();
@@ -93,40 +119,5 @@ namespace Orc.CsvTextEditor
             _textEditor.EndChange();
         }
         #endregion
-
-        private Regex GetRegEx(string textToFind, FindReplaceSettings settings, bool isLeftToRight = false)
-        {
-            Argument.IsNotNull(() => textToFind);
-            Argument.IsNotNull(() => settings);
-
-            var options = RegexOptions.None;
-            if (settings.IsSearchUp && !isLeftToRight)
-            {
-                options |= RegexOptions.RightToLeft;
-            }
-
-            if (!settings.CaseSensitive)
-            {
-                options |= RegexOptions.IgnoreCase;
-            }
-
-            if (settings.UseRegex)
-            {
-                return new Regex(textToFind, options);
-            }
-
-            var pattern = Regex.Escape(textToFind);
-            if (settings.UseWildcards)
-            {
-                pattern = pattern.Replace("\\*", ".*").Replace("\\?", ".");
-            }
-
-            if (settings.WholeWord)
-            {
-                pattern = "\\b" + pattern + "\\b";
-            }
-
-            return new Regex(pattern, options);
-        }
     }
 }

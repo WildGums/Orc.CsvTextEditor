@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="TabSpaceElementGenerator.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -21,12 +21,12 @@ namespace Orc.CsvTextEditor
 
         private readonly Dictionary<int, int> _tabWidths = new Dictionary<int, int>();
 
-        private int[][] _lines;
-        private bool _freezeInProgress;
-        private int _activeRowIndex;
-        private int _activeColumnIndex;
         private int _activeCellRealLength;
-        
+        private int _activeColumnIndex;
+        private int _activeRowIndex;
+        private bool _freezeInProgress;
+
+        private int[][] _lines;
         #endregion
 
         #region Properties
@@ -49,14 +49,15 @@ namespace Orc.CsvTextEditor
         public string NewLine { get; private set; }
         #endregion
 
+        #region Methods
         public void Refresh(string text)
         {
             text = text ?? string.Empty;
 
             NewLine = text.GetNewLineSymbol();
-            
+
             // Some files do not respect the Environment.NewLine so we need to add "\n"
-            var lines = text.Split(new[] { NewLine }, StringSplitOptions.None);
+            var lines = text.Split(new[] {NewLine}, StringSplitOptions.None);
 
             var minFieldsCount = int.MaxValue;
             var maxFieldsCount = int.MinValue;
@@ -68,7 +69,7 @@ namespace Orc.CsvTextEditor
                 var line = lines[index];
                 var fieldsPreview = line.Split(Symbols.Comma);
 
-                List<int> fields = new List<int>();
+                var fields = new List<int>();
 
                 var quotesCount = 0;
                 var fieldLength = 0;
@@ -107,7 +108,7 @@ namespace Orc.CsvTextEditor
                 }
 
                 var lengths = new int[fieldsCount];
-                for (int i = 0; i < fieldsCount; i++)
+                for (var i = 0; i < fieldsCount; i++)
                 {
                     lengths[i] = fields[i] + 1;
                 }
@@ -137,7 +138,7 @@ namespace Orc.CsvTextEditor
             columnWidthByLine[rowIndex][columnIndex] = newWidth;
 
             int? changedWidth = null;
-           
+
             // Increasing column
             if (length >= 0 && columnWidth[columnIndex] <= newWidth)
             {
@@ -150,25 +151,25 @@ namespace Orc.CsvTextEditor
                 changedWidth = columnWidthByLine.Where(x => x.Length > columnIndex).Select(x => x[columnIndex]).Max();
             }
 
-            if (changedWidth.HasValue)
+            if (!changedWidth.HasValue)
             {
-                FreezeColumnResizing(rowIndex, columnIndex);
-
-                if (_freezeInProgress && rowIndex == _activeRowIndex && columnIndex == _activeColumnIndex)
-                {
-                    _activeCellRealLength = changedWidth.Value;     
-                }
-                else
-                {
-                    columnWidth[columnIndex] = changedWidth.Value;
-                }
-
-                return true;
+                return false;
             }
 
-            return false;
+            FreezeColumnResizing(rowIndex, columnIndex);
+
+            if (_freezeInProgress && rowIndex == _activeRowIndex && columnIndex == _activeColumnIndex)
+            {
+                _activeCellRealLength = changedWidth.Value;
+            }
+            else
+            {
+                columnWidth[columnIndex] = changedWidth.Value;
+            }
+
+            return true;
         }
-      
+
         public void FreezeColumnResizing(int rowIndex, int columnIndex)
         {
             if (_freezeInProgress && (_activeRowIndex != rowIndex || _activeColumnIndex != columnIndex))
@@ -192,10 +193,9 @@ namespace Orc.CsvTextEditor
 
         public override VisualLineElement ConstructElement(int offset)
         {
-
             if (offset < 0)
             {
-                return null; 
+                return null;
             }
 
             if (CurrentContext.VisualLine.LastDocumentLine.EndOffset == offset)
@@ -208,13 +208,8 @@ namespace Orc.CsvTextEditor
                 tabWidth = 0;
             }
 
-            if (tabWidth < 0)
-            {
-                return null;
-            }
-
-            return new EmptyVisualLineElement(tabWidth + 1, 1);
-        }        
+            return tabWidth < 0 ? null : new EmptyVisualLineElement(tabWidth + 1, 1);
+        }
 
         public override int GetFirstInterestedOffset(int startOffset)
         {
@@ -249,11 +244,11 @@ namespace Orc.CsvTextEditor
                 locationLine++;
             }
 
-            var curCellWidth = this._freezeInProgress && 
-                _activeRowIndex == locationLine - 1 && 
-                column.Index == _activeColumnIndex 
-                ?
-                _activeCellRealLength : ColumnWidth[column.Index]; 
+            var curCellWidth = _freezeInProgress &&
+                               _activeRowIndex == locationLine - 1 &&
+                               column.Index == _activeColumnIndex
+                ? _activeCellRealLength
+                : ColumnWidth[column.Index];
 
             var tabWidth = curCellWidth - Lines[locationLine - 1][column.Index];
 
@@ -303,16 +298,16 @@ namespace Orc.CsvTextEditor
             return column;
         }
 
-        private void NormalizeColumnsCount(int[][] columnWidthByLine)
+        private static void NormalizeColumnsCount(IList<int[]> columnWidthByLine)
         {
-            if (columnWidthByLine.Length == 0)
+            if (columnWidthByLine.Count == 0)
             {
                 return;
             }
 
             var colCount = columnWidthByLine.Min(x => x.Length);
 
-            for (var index = 0; index < columnWidthByLine.Length; index++)
+            for (var index = 0; index < columnWidthByLine.Count; index++)
             {
                 var line = columnWidthByLine[index];
                 if (line.Length == colCount)
@@ -323,13 +318,13 @@ namespace Orc.CsvTextEditor
                 var normalizedLine = new int[colCount];
                 var lastIndex = colCount - 1;
 
-                for (int i = 0; i < lastIndex; i++)
+                for (var i = 0; i < lastIndex; i++)
                 {
                     normalizedLine[i] = line[i];
                 }
 
-                int lastColWidth = 0;
-                for (int i = lastIndex; i < line.Length; i++)
+                var lastColWidth = 0;
+                for (var i = lastIndex; i < line.Length; i++)
                 {
                     lastColWidth += line[i];
                 }
@@ -340,31 +335,31 @@ namespace Orc.CsvTextEditor
             }
         }
 
-        private int[] CalculateColumnWidth(int[][] columnWidthByLine)
+        private static int[] CalculateColumnWidth(IReadOnlyList<int[]> columnWidthByLine)
         {
-            if (columnWidthByLine.Length == 0)
+            if (columnWidthByLine.Count == 0)
             {
                 return new int[0];
             }
 
-            var accum = new int[columnWidthByLine[0].Length];
-
+            var maxArray = new int[columnWidthByLine[0].Length];
             foreach (var line in columnWidthByLine)
             {
-                if (line.Length > accum.Length)
+                if (line.Length > maxArray.Length)
                 {
                     throw new ArgumentException("Records in CSV have to contain the same number of fields");
                 }
 
-                var length = Math.Min(accum.Length, line.Length);
+                var length = Math.Min(maxArray.Length, line.Length);
 
                 for (var i = 0; i < length; i++)
                 {
-                    accum[i] = Math.Max(accum[i], line[i]);
+                    maxArray[i] = Math.Max(maxArray[i], line[i]);
                 }
             }
 
-            return accum.ToArray();
+            return maxArray.ToArray();
         }
+        #endregion
     }
 }

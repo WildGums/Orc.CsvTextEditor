@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="TextEditorExtensions.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -13,8 +13,9 @@ namespace Orc.CsvTextEditor
     using ICSharpCode.AvalonEdit;
     using ICSharpCode.AvalonEdit.CodeCompletion;
 
-    public static class TextEditorExtensions
+    internal static class TextEditorExtensions
     {
+        #region Methods
         public static void SetCaretToSpecificLineAndColumn(this TextEditor textEditor, int lineIndex, int columnIndex, int[][] columnWidthByLine)
         {
             Argument.IsNotNull(() => textEditor);
@@ -57,7 +58,7 @@ namespace Orc.CsvTextEditor
 
             var data = new SortedList<string, ICompletionData>();
             autocompletionText = autocompletionText.ToLower();
-            
+
             for (var i = 1; i < lines.Count; i++)
             {
                 var line = lines[i];
@@ -75,7 +76,7 @@ namespace Orc.CsvTextEditor
                 var columnOffset = lineOffset + columnStart;
 
                 var columnChunk = text.Substring(columnOffset, columnWidth);
-                var words = columnChunk.Split(null);
+                var words = columnChunk.Split();
                 var currentWord = text.GetWordFromOffset(offset - 1);
 
                 foreach (var word in words)
@@ -99,5 +100,6 @@ namespace Orc.CsvTextEditor
 
             return data.Values;
         }
+        #endregion
     }
 }

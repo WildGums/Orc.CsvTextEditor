@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="FindReplaceViewModel.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -14,18 +14,18 @@ namespace Orc.CsvTextEditor
     internal class FindReplaceViewModel : ViewModelBase
     {
         #region Fields
+        private readonly IFindReplaceService _csvTextEditorFindReplaceService;
         private readonly ICsvTextEditorInstance _csvTextEditorInstance;
-        private readonly IFindReplaceSerivce _csvTextEditorFindReplaceSerivce;
         #endregion
 
         #region Constructors
-        public FindReplaceViewModel(ICsvTextEditorInstance csvTextEditorInstance, IFindReplaceSerivce csvTextEditorFindReplaceSerivce)
+        public FindReplaceViewModel(ICsvTextEditorInstance csvTextEditorInstance, IFindReplaceService csvTextEditorFindReplaceService)
         {
             Argument.IsNotNull(() => csvTextEditorInstance);
-            Argument.IsNotNull(() => csvTextEditorFindReplaceSerivce);
+            Argument.IsNotNull(() => csvTextEditorFindReplaceService);
 
             _csvTextEditorInstance = csvTextEditorInstance;
-            _csvTextEditorFindReplaceSerivce = csvTextEditorFindReplaceSerivce;
+            _csvTextEditorFindReplaceService = csvTextEditorFindReplaceService;
 
             FindNext = new Command<string>(OnFindNext);
             Replace = new Command<object>(OnReplace);
@@ -43,31 +43,33 @@ namespace Orc.CsvTextEditor
 
         [Model]
         public FindReplaceSettings FindReplaceSettings { get; set; }
+
         public string TextToFind { get; set; }
         public string TextToFindForReplace { get; set; }
-        public Command<string> FindNext { get; private set; }
-        public Command<object> Replace { get; private set; }
-        public Command<object> ReplaceAll { get; private set; }
+        public Command<string> FindNext { get; }
+        public Command<object> Replace { get; }
+        public Command<object> ReplaceAll { get; }
         #endregion
 
+        #region Methods
         private void OnReplaceAll(object parameter)
         {
-            var values = (object[]) parameter;
+            var values = (object[])parameter;
             var textToFind = values[0] as string ?? string.Empty;
             var replacementText = values[1] as string ?? string.Empty;
 
-            _csvTextEditorFindReplaceSerivce.ReplaceAll(textToFind, replacementText, FindReplaceSettings);
+            _csvTextEditorFindReplaceService.ReplaceAll(textToFind, replacementText, FindReplaceSettings);
 
             _csvTextEditorInstance.RefreshView();
         }
 
         private void OnReplace(object parameter)
         {
-            var values = (object[]) parameter;
+            var values = (object[])parameter;
             var textToFind = values[0] as string ?? string.Empty;
             var replacementText = values[1] as string ?? string.Empty;
 
-            if (!_csvTextEditorFindReplaceSerivce.Replace(textToFind, replacementText, FindReplaceSettings))
+            if (!_csvTextEditorFindReplaceService.Replace(textToFind, replacementText, FindReplaceSettings))
             {
                 SystemSounds.Beep.Play();
             }
@@ -79,10 +81,11 @@ namespace Orc.CsvTextEditor
         {
             var textToFind = text ?? string.Empty;
 
-            if (!_csvTextEditorFindReplaceSerivce.FindNext(textToFind, FindReplaceSettings))
+            if (!_csvTextEditorFindReplaceService.FindNext(textToFind, FindReplaceSettings))
             {
                 SystemSounds.Beep.Play();
             }
         }
+        #endregion
     }
 }

@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
 // <copyright file="FindReplaceTextEditorTool.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
+//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
@@ -15,10 +15,11 @@ namespace Orc.CsvTextEditor
     using Catel.Threading;
     using ICSharpCode.AvalonEdit;
 
+    [ObsoleteEx(TreatAsErrorFromVersion = "3.1.0", RemoveInVersion = "3.2.0", ReplacementTypeOrMember = "Use Orc.CsvTextEditor.FindReplaceTool instead")]
     public class FindReplaceTextEditorTool : CsvTextEditorToolBase
     {
         #region Fields
-        private readonly IFindReplaceSerivce _findReplaceSerivce;
+        private readonly IFindReplaceService _findReplaceService;
         private readonly IUIVisualizerService _uiVisualizerService;
 
         private FindReplaceViewModel _findReplaceViewModel;
@@ -34,7 +35,7 @@ namespace Orc.CsvTextEditor
 
             _uiVisualizerService = uiVisualizerService;
 
-            _findReplaceSerivce = typeFactory.CreateInstanceWithParametersAndAutoCompletion<FindReplaceService>(TextEditor);
+            _findReplaceService = typeFactory.CreateInstanceWithParametersAndAutoCompletion<FindReplaceService>(TextEditor, csvTextEditorInstance);
         }
         #endregion
 
@@ -42,9 +43,10 @@ namespace Orc.CsvTextEditor
         public override string Name => "CsvTextEditor.FindReplaceTextEditorTool";
         #endregion
 
+        #region Methods
         protected override void OnOpen()
         {
-            _findReplaceViewModel = new FindReplaceViewModel(CsvTextEditorInstance, _findReplaceSerivce);
+            _findReplaceViewModel = new FindReplaceViewModel(CsvTextEditorInstance, _findReplaceService);
 
             _uiVisualizerService.ShowAsync(_findReplaceViewModel);
 
@@ -63,15 +65,16 @@ namespace Orc.CsvTextEditor
             _findReplaceViewModel.ClosedAsync -= OnClosedAsync;
 
 #pragma warning disable 4014
-            _findReplaceViewModel.CloseViewModelAsync(null);            
+            _findReplaceViewModel.CloseViewModelAsync(null);
 #pragma warning restore 4014
         }
-        
+
         private Task OnClosedAsync(object sender, ViewModelClosedEventArgs args)
         {
             Close();
 
             return TaskHelper.Completed;
         }
+        #endregion
     }
 }
