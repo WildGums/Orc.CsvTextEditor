@@ -10,9 +10,8 @@
 
     <orccontrols:StackGrid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
+          <RowDefinition Height="*" />
+          <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <orccsvtexteditor:CsvTextEditorControl Text="one,two,three,four,five"
