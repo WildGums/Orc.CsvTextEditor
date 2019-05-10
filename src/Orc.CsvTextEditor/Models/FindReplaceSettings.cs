@@ -7,7 +7,7 @@
 
 namespace Orc.CsvTextEditor
 {
-    [ObsoleteEx(TreatAsErrorFromVersion = "3.1.0", RemoveInVersion = "3.2.0", ReplacementTypeOrMember = "Orc.Controls.FindReplaceSettings")]
+    [ObsoleteEx(TreatAsErrorFromVersion = "3.1.0", RemoveInVersion = "4.0.0", ReplacementTypeOrMember = "Orc.Controls.FindReplaceSettings")]
     public class FindReplaceSettings : Controls.FindReplaceSettings
     {
     }

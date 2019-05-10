@@ -15,7 +15,7 @@ namespace Orc.CsvTextEditor
     using Catel.Threading;
     using ICSharpCode.AvalonEdit;
 
-    [ObsoleteEx(TreatAsErrorFromVersion = "3.1.0", RemoveInVersion = "3.2.0", ReplacementTypeOrMember = "Use Orc.CsvTextEditor.FindReplaceTool instead")]
+    [ObsoleteEx(TreatAsErrorFromVersion = "3.1.0", RemoveInVersion = "4.0.0", ReplacementTypeOrMember = "Use Orc.CsvTextEditor.FindReplaceTool instead")]
     public class FindReplaceTextEditorTool : CsvTextEditorToolBase
     {
         #region Fields

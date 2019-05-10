@@ -11,7 +11,7 @@ namespace Orc.CsvTextEditor
     using Catel;
     using ICSharpCode.AvalonEdit;
 
-    [ObsoleteEx(TreatAsErrorFromVersion = "3.1.0", RemoveInVersion = "3.2.0", Message = "Use ControlToolBase instead")]
+    [ObsoleteEx(TreatAsErrorFromVersion = "3.1.0", RemoveInVersion = "4.0.0", Message = "Use ControlToolBase instead")]
     public abstract class CsvTextEditorToolBase : ICsvTextEditorTool
     {
         #region Constructors
