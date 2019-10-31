@@ -55,8 +55,8 @@ namespace Orc.CsvTextEditor
                 return;
             }
 
-            var csvTextEditorInstance = _serviceLocator.ResolveType<ICsvTextEditorInstance>(csvTextEditorControl.Scope);
-            csvTextEditorInstance.RemoveTool(this);
+            var csvTextEditorInstance = _serviceLocator.TryResolveType<ICsvTextEditorInstance>(csvTextEditorControl.Scope);
+            csvTextEditorInstance?.RemoveTool(this);
 
             base.Detach();
         }
