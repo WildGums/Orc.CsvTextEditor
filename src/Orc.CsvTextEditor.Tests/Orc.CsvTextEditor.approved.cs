@@ -48,21 +48,11 @@ namespace Orc.CsvTextEditor
         public virtual void Initialize(ICSharpCode.AvalonEdit.TextEditor textEditor, Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance) { }
     }
     [System.ObsoleteAttribute("Use ControlToolBase instead. Will be removed in version 4.0.0.", true)]
-    public abstract class CsvTextEditorToolBase : Orc.Controls.IControlTool, Orc.CsvTextEditor.ICsvTextEditorTool
+    public abstract class CsvTextEditorToolBase : Orc.Controls.ControlToolBase, Orc.Controls.IControlTool, Orc.CsvTextEditor.ICsvTextEditorTool
     {
         protected CsvTextEditorToolBase(ICSharpCode.AvalonEdit.TextEditor textEditor, Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance) { }
         protected Orc.CsvTextEditor.ICsvTextEditorInstance CsvTextEditorInstance { get; }
-        public bool IsOpened { get; }
-        public abstract string Name { get; }
         protected ICSharpCode.AvalonEdit.TextEditor TextEditor { get; }
-        public event System.EventHandler<System.EventArgs> Closed;
-        public event System.EventHandler<System.EventArgs> Opened;
-        public virtual void Attach(object target) { }
-        public virtual void Close() { }
-        public virtual void Detach() { }
-        protected abstract void OnOpen();
-        public void Open() { }
-        public virtual void Open(object parameter) { }
     }
     public class CsvTextSynchronizationScope : Catel.Disposable
     {
@@ -105,7 +95,7 @@ namespace Orc.CsvTextEditor
         public FindReplaceTextEditorTool(ICSharpCode.AvalonEdit.TextEditor textEditor, Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance, Catel.Services.IUIVisualizerService uiVisualizerService, Catel.IoC.ITypeFactory typeFactory) { }
         public override string Name { get; }
         public override void Close() { }
-        protected override void OnOpen() { }
+        protected override void OnOpen(object parameter = null) { }
     }
     public class FindReplaceTool : Orc.Controls.FindReplaceTool<Orc.CsvTextEditor.FindReplaceService>
     {

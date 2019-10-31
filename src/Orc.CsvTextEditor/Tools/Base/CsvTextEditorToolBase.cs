@@ -12,7 +12,7 @@ namespace Orc.CsvTextEditor
     using ICSharpCode.AvalonEdit;
 
     [ObsoleteEx(TreatAsErrorFromVersion = "3.1.0", RemoveInVersion = "4.0.0", Message = "Use ControlToolBase instead")]
-    public abstract class CsvTextEditorToolBase : ControlToolBase
+    public abstract class CsvTextEditorToolBase : ControlToolBase, ICsvTextEditorTool
     {
         #region Constructors
         protected CsvTextEditorToolBase(TextEditor textEditor, ICsvTextEditorInstance csvTextEditorInstance)
