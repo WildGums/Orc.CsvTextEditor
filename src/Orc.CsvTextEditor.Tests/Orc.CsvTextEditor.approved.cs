@@ -101,7 +101,6 @@ namespace Orc.CsvTextEditor
     {
         public FindReplaceTool(Catel.Services.IUIVisualizerService uiVisualizerService, Catel.IoC.ITypeFactory typeFactory, Catel.IoC.IServiceLocator serviceLocator) { }
         protected override Orc.CsvTextEditor.FindReplaceService CreateFindReplaceService(object target) { }
-        public override void Detach() { }
     }
     public class FirstLineAlwaysBoldTransformer : ICSharpCode.AvalonEdit.Rendering.DocumentColorizingTransformer
     {
