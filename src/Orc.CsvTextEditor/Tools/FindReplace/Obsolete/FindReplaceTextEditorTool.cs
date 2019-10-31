@@ -44,7 +44,7 @@ namespace Orc.CsvTextEditor
         #endregion
 
         #region Methods
-        protected override void OnOpen()
+        protected override void OnOpen(object parameter = null)
         {
             _findReplaceViewModel = new FindReplaceViewModel(CsvTextEditorInstance, _findReplaceService);
 
