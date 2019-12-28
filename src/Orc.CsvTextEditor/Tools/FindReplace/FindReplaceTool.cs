@@ -47,19 +47,6 @@ namespace Orc.CsvTextEditor
 
             return findReplaceService;
         }
-
-        public override void Detach()
-        {
-            if (!(Target is CsvTextEditorControl csvTextEditorControl))
-            {
-                return;
-            }
-
-            var csvTextEditorInstance = _serviceLocator.ResolveType<ICsvTextEditorInstance>(csvTextEditorControl.Scope);
-            csvTextEditorInstance.RemoveTool(this);
-
-            base.Detach();
-        }
         #endregion
     }
 }

@@ -31,19 +31,19 @@ namespace Orc.CsvTextEditor
         #endregion
 
         #region IFindReplaceService Members
-        [ObsoleteEx(TreatAsErrorFromVersion = "3.1.0", RemoveInVersion = "3.2.0", Message = "Use FindNext with Orc.Controls.FindReplaceSettings parameter instead")]
+        [ObsoleteEx(TreatAsErrorFromVersion = "3.1.0", RemoveInVersion = "4.0.0", Message = "Use FindNext with Orc.Controls.FindReplaceSettings parameter instead")]
         public bool FindNext(string textToFind, FindReplaceSettings settings)
         {
             return FindNext(textToFind, (Controls.FindReplaceSettings)settings);
         }
 
-        [ObsoleteEx(TreatAsErrorFromVersion = "3.1.0", RemoveInVersion = "3.2.0", Message = "Use FindNext with Orc.Controls.FindReplaceSettings parameter instead")]
+        [ObsoleteEx(TreatAsErrorFromVersion = "3.1.0", RemoveInVersion = "4.0.0", Message = "Use FindNext with Orc.Controls.FindReplaceSettings parameter instead")]
         public bool Replace(string textToFind, string textToReplace, FindReplaceSettings settings)
         {
             return Replace(textToFind, textToReplace, (Controls.FindReplaceSettings)settings);
         }
 
-        [ObsoleteEx(TreatAsErrorFromVersion = "3.1.0", RemoveInVersion = "3.2.0", Message = "Use FindNext with Orc.Controls.FindReplaceSettings parameter instead")]
+        [ObsoleteEx(TreatAsErrorFromVersion = "3.1.0", RemoveInVersion = "4.0.0", Message = "Use FindNext with Orc.Controls.FindReplaceSettings parameter instead")]
         public void ReplaceAll(string textToFind, string textToReplace, FindReplaceSettings settings)
         {
             ReplaceAll(textToFind, textToReplace, (Controls.FindReplaceSettings)settings);
