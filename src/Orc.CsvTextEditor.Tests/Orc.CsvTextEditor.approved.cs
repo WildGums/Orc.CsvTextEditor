@@ -33,19 +33,60 @@ namespace Orc.CsvTextEditor
     }
     public class CsvTextEditorControl : Catel.Windows.Controls.UserControl, System.Windows.Markup.IComponentConnector
     {
-        public static readonly System.Windows.DependencyProperty ScopeProperty;
+        public static readonly System.Windows.DependencyProperty CsvTextEditorInstanceProperty;
+        public static readonly System.Windows.DependencyProperty EditorInstanceTypeProperty;
         public static readonly System.Windows.DependencyProperty TextProperty;
         public CsvTextEditorControl() { }
         [Catel.MVVM.Views.ViewToViewModelAttribute("", MappingType=Catel.MVVM.Views.ViewToViewModelMappingType.ViewToViewModel)]
-        public object Scope { get; set; }
+        public Orc.CsvTextEditor.ICsvTextEditorInstance CsvTextEditorInstance { get; set; }
+        public System.Type EditorInstanceType { get; set; }
         [Catel.MVVM.Views.ViewToViewModelAttribute("", MappingType=Catel.MVVM.Views.ViewToViewModelMappingType.TwoWayViewWins)]
         public string Text { get; set; }
         public void InitializeComponent() { }
+        protected override void OnInitialized(System.EventArgs e) { }
+        protected override void OnViewModelChanged() { }
     }
     public class CsvTextEditorInitializer : Orc.CsvTextEditor.ICsvTextEditorInitializer
     {
         public CsvTextEditorInitializer() { }
         public virtual void Initialize(ICSharpCode.AvalonEdit.TextEditor textEditor, Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance) { }
+    }
+    public class CsvTextEditorInstance : Catel.Disposable, Orc.CsvTextEditor.ICsvTextEditorInstance, System.IDisposable
+    {
+        public CsvTextEditorInstance(ICSharpCode.AvalonEdit.TextEditor textEditor, Catel.MVVM.ICommandManager commandManager, Orc.CsvTextEditor.ICsvTextEditorInitializer initializer, Catel.Services.IDispatcherService dispatcherService, Catel.IoC.ITypeFactory typeFactory) { }
+        public bool CanRedo { get; }
+        public bool CanUndo { get; }
+        public int ColumnsCount { get; }
+        public bool HasSelection { get; }
+        public bool IsAutocompleteEnabled { get; set; }
+        public bool IsDirty { get; }
+        public string LineEnding { get; }
+        public int LinesCount { get; }
+        public System.Collections.Generic.IEnumerable<Orc.Controls.IControlTool> Tools { get; }
+        public event System.EventHandler<Orc.CsvTextEditor.CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
+        public event System.EventHandler<System.EventArgs> TextChanged;
+        public void AddTool(Orc.Controls.IControlTool tool) { }
+        public void Copy() { }
+        public void Cut() { }
+        public void DeleteNextSelectedText() { }
+        public void DeletePreviousSelectedText() { }
+        protected override void DisposeManaged() { }
+        public void ExecuteOperation<TOperation>()
+            where TOperation : Orc.CsvTextEditor.Operations.IOperation { }
+        public Orc.CsvTextEditor.Location GetLocation() { }
+        public string GetSelectedText() { }
+        public string GetText() { }
+        public void GotoPosition(int lineIndex, int columnIndex) { }
+        public void Initialize(string text) { }
+        public void InsertAtCaret(char character) { }
+        public bool IsCaretWithinQuotedField() { }
+        public void Paste() { }
+        public void Redo() { }
+        public void RefreshView() { }
+        public void RemoveTool(Orc.Controls.IControlTool tool) { }
+        public void ResetIsDirty() { }
+        public void SetText(string text) { }
+        public void Undo() { }
     }
     [System.ObsoleteAttribute("Use ControlToolBase instead. Will be removed in version 4.0.0.", true)]
     public abstract class CsvTextEditorToolBase : Orc.Controls.ControlToolBase, Orc.Controls.IControlTool, Orc.CsvTextEditor.ICsvTextEditorTool
@@ -283,5 +324,17 @@ namespace Orc.CsvTextEditor.Operations
     {
         public TrimWhitespacesOperation(Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance) { }
         public override void Execute() { }
+    }
+}
+namespace XamlGeneratedNamespace
+{
+    public sealed class GeneratedInternalTypeHelper : System.Windows.Markup.InternalTypeHelper
+    {
+        public GeneratedInternalTypeHelper() { }
+        protected override void AddEventHandler(System.Reflection.EventInfo eventInfo, object target, System.Delegate handler) { }
+        protected override System.Delegate CreateDelegate(System.Type delegateType, object target, string handler) { }
+        protected override object CreateInstance(System.Type type, System.Globalization.CultureInfo culture) { }
+        protected override object GetPropertyValue(System.Reflection.PropertyInfo propertyInfo, object target, System.Globalization.CultureInfo culture) { }
+        protected override void SetPropertyValue(System.Reflection.PropertyInfo propertyInfo, object target, object value, System.Globalization.CultureInfo culture) { }
     }
 }
