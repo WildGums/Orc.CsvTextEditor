@@ -28,7 +28,7 @@ namespace Orc.CsvTextEditor
     using ICSharpCode.AvalonEdit.Highlighting.Xshd;
     using Operations;
 
-    internal class CsvTextEditorInstance : Disposable, ICsvTextEditorInstance
+    public class CsvTextEditorInstance : Disposable, ICsvTextEditorInstance
     {
         #region Fields
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();

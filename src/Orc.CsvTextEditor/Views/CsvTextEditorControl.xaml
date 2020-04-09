@@ -8,18 +8,12 @@
                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                    xmlns:catel="http://schemas.catelproject.com"
                    Focusable="True" mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300">
-    
-    <i:Interaction.Behaviors>
-        <csvTextEditor:RegisterCstTextEditorControlsServicesBehavior/>
-        <csvTextEditor:TextEditorSynchronizeTextBehavior/>
-    </i:Interaction.Behaviors>
-    
     <Grid>
         <avalonedit:TextEditor x:Name="TextEditor" 
                                FontFamily="Consolas"
                                Focusable="False"
                                FontSize="10pt">
-            
+
             <i:Interaction.Behaviors>
                 <csvTextEditor:DisableTextDragDropBehavior/>
                 <csvTextEditor:ReplaceCommandBindingBehavior ReplacementCommand="ApplicationCommands.Paste" Command="{Binding Paste}"/>

@@ -14,8 +14,8 @@
           <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <orccsvtexteditor:CsvTextEditorControl Text="one,two,three,four,five"
-                                               Scope="{Binding Scope}"/>
+        <orccsvtexteditor:CsvTextEditorControl EditorInstanceType="{Binding EditorInstanceType}" 
+                                               Text="one,two,three,four,five"/>
 
         <Button Command="{Binding FindAndReplace}" Content="Find and Replace"/>
 		

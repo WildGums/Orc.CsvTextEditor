@@ -40,7 +40,7 @@ namespace Orc.CsvTextEditor
             }
 
             var textEditor = csvTextEditorControl.TextEditor;
-            var csvTextEditorInstance = _serviceLocator.ResolveType<ICsvTextEditorInstance>(csvTextEditorControl.Scope);
+            var csvTextEditorInstance = csvTextEditorControl.CsvTextEditorInstance;
             csvTextEditorInstance.AddTool(this);
 
             var findReplaceService = _typeFactory.CreateInstanceWithParametersAndAutoCompletion<FindReplaceService>(textEditor, csvTextEditorInstance);

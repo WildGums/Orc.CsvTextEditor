@@ -7,29 +7,37 @@
 
 namespace Orc.CsvTextEditor.ViewModels
 {
+    using System;
     using Catel;
     using Catel.IoC;
     using Catel.MVVM;
+    using ICSharpCode.AvalonEdit;
+    using Orc.CsvTextEditor;
 
     public class MainViewModel : ViewModelBase
     {
         private readonly IServiceLocator _serviceLocator;
 
         #region Constructors
-        public MainViewModel(IServiceLocator serviceLocator)
+        public MainViewModel(IServiceLocator serviceLocator)//, ICsvTextEditorInstance csvTextEditorInstance)
         {
             Argument.IsNotNull(() => serviceLocator);
+            //Argument.IsNotNull(() => csvTextEditorInstance);
 
             _serviceLocator = serviceLocator;
 
+            //Editor = csvTextEditorInstance;
+            EditorInstanceType = typeof(CsvTextEditorInstance);
             Title = "Orc.CsvTextEditor example";
 
             FindAndReplace = new Command(OnFindAndReplace);
         }
+
         #endregion
 
         #region Properties
         public Command FindAndReplace { get; }
+        public Type EditorInstanceType { get; private set; }
         public object Scope => "Test_CsvTextEditor";
         #endregion
 
