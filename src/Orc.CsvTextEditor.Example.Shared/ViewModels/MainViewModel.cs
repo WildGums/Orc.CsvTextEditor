@@ -22,11 +22,8 @@ namespace Orc.CsvTextEditor.ViewModels
         public MainViewModel(IServiceLocator serviceLocator)//, ICsvTextEditorInstance csvTextEditorInstance)
         {
             Argument.IsNotNull(() => serviceLocator);
-            //Argument.IsNotNull(() => csvTextEditorInstance);
-
             _serviceLocator = serviceLocator;
 
-            //Editor = csvTextEditorInstance;
             EditorInstanceType = typeof(CsvTextEditorInstance);
             Title = "Orc.CsvTextEditor example";
 
