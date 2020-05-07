@@ -27,17 +27,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Example", "Example", "{672B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orc.CsvTextEditor", "Orc.CsvTextEditor\Orc.CsvTextEditor.csproj", "{A97B1B48-88B2-47DC-BC78-9AF835DCF2A0}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Orc.CsvTextEditor.Example.Shared", "Orc.CsvTextEditor.Example.Shared\Orc.CsvTextEditor.Example.Shared.shproj", "{5FCB68E6-A529-4DC3-AE00-123EE0617B1E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orc.CsvTextEditor.Example.NET", "Orc.CsvTextEditor.Example.NET\Orc.CsvTextEditor.Example.NET.csproj", "{464218E7-84DC-4CAC-83CD-771FC697718A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orc.CsvTextEditor.Example", "Orc.CsvTextEditor.Example\Orc.CsvTextEditor.Example.csproj", "{464218E7-84DC-4CAC-83CD-771FC697718A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Orc.CsvTextEditor.Tests", "Orc.CsvTextEditor.Tests\Orc.CsvTextEditor.Tests.csproj", "{BB8A1916-5345-4E65-AA73-9EDB0B7B4FE4}"
 EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		Orc.CsvTextEditor.Example.Shared\Orc.CsvTextEditor.Example.Shared.projitems*{464218e7-84dc-4cac-83cd-771fc697718a}*SharedItemsImports = 5
-		Orc.CsvTextEditor.Example.Shared\Orc.CsvTextEditor.Example.Shared.projitems*{5fcb68e6-a529-4dc3-ae00-123ee0617b1e}*SharedItemsImports = 13
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -64,7 +58,6 @@ Global
 		{D3EA1078-BF3D-4709-871C-AAFF70B95045} = {A8A1A4EE-E04A-43AB-90C9-41E7B82EE1E5}
 		{672BFA2E-9F93-496F-B188-40579FB5D301} = {A8A1A4EE-E04A-43AB-90C9-41E7B82EE1E5}
 		{A97B1B48-88B2-47DC-BC78-9AF835DCF2A0} = {0787DFC6-AB24-4D00-A8A4-FF203DC7D080}
-		{5FCB68E6-A529-4DC3-AE00-123EE0617B1E} = {672BFA2E-9F93-496F-B188-40579FB5D301}
 		{464218E7-84DC-4CAC-83CD-771FC697718A} = {672BFA2E-9F93-496F-B188-40579FB5D301}
 		{BB8A1916-5345-4E65-AA73-9EDB0B7B4FE4} = {D3EA1078-BF3D-4709-871C-AAFF70B95045}
 	EndGlobalSection
