@@ -50,7 +50,7 @@ namespace Orc.CsvTextEditor
             set { SetValue(EditorInstanceTypeProperty, value); }
         }
 
-        public static readonly DependencyProperty EditorInstanceTypeProperty = DependencyProperty.Register("EditorInstanceType", typeof(Type), typeof(CsvTextEditorControl),
+        public static readonly DependencyProperty EditorInstanceTypeProperty = DependencyProperty.Register(nameof(EditorInstanceType), typeof(Type), typeof(CsvTextEditorControl),
                 new PropertyMetadata(typeof(CsvTextEditorInstance), (sender, e) => (sender as CsvTextEditorControl).OnTextEditorWrapperChanged(e)));
 
         private void OnTextEditorWrapperChanged(DependencyPropertyChangedEventArgs e)
@@ -75,7 +75,7 @@ namespace Orc.CsvTextEditor
         }
 
         public static readonly DependencyProperty CsvTextEditorInstanceProperty =
-            DependencyProperty.Register("CsvTextEditorInstance", typeof(ICsvTextEditorInstance), typeof(CsvTextEditorControl), new PropertyMetadata());
+            DependencyProperty.Register(nameof(CsvTextEditorInstance), typeof(ICsvTextEditorInstance), typeof(CsvTextEditorControl), new PropertyMetadata());
 
         #endregion
 

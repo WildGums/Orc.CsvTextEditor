@@ -1,9 +1,9 @@
-﻿[assembly: System.Resources.NeutralResourcesLanguageAttribute("en-US")]
-[assembly: System.Runtime.Versioning.TargetFrameworkAttribute(".NETFramework,Version=v4.6", FrameworkDisplayName=".NET Framework 4.6")]
-[assembly: System.Windows.Markup.XmlnsDefinitionAttribute("http://schemas.wildgums.com/orc/csvtexteditor", "Orc.CsvTextEditor")]
-[assembly: System.Windows.Markup.XmlnsPrefixAttribute("http://schemas.wildgums.com/orc/csvtexteditor", "orccsvtexteditor")]
-[assembly: System.Windows.ThemeInfoAttribute(System.Windows.ResourceDictionaryLocation.None, System.Windows.ResourceDictionaryLocation.SourceAssembly)]
-public class static ModuleInitializer
+﻿[assembly: System.Resources.NeutralResourcesLanguage("en-US")]
+[assembly: System.Runtime.Versioning.TargetFramework(".NETFramework,Version=v4.7", FrameworkDisplayName=".NET Framework 4.7")]
+[assembly: System.Windows.Markup.XmlnsDefinition("http://schemas.wildgums.com/orc/csvtexteditor", "Orc.CsvTextEditor")]
+[assembly: System.Windows.Markup.XmlnsPrefix("http://schemas.wildgums.com/orc/csvtexteditor", "orccsvtexteditor")]
+[assembly: System.Windows.ThemeInfo(System.Windows.ResourceDictionaryLocation.None, System.Windows.ResourceDictionaryLocation.SourceAssembly)]
+public static class ModuleInitializer
 {
     public static void Initialize() { }
 }
@@ -37,10 +37,10 @@ namespace Orc.CsvTextEditor
         public static readonly System.Windows.DependencyProperty EditorInstanceTypeProperty;
         public static readonly System.Windows.DependencyProperty TextProperty;
         public CsvTextEditorControl() { }
-        [Catel.MVVM.Views.ViewToViewModelAttribute("", MappingType=Catel.MVVM.Views.ViewToViewModelMappingType.ViewToViewModel)]
+        [Catel.MVVM.Views.ViewToViewModel("", MappingType=Catel.MVVM.Views.ViewToViewModelMappingType.ViewToViewModel)]
         public Orc.CsvTextEditor.ICsvTextEditorInstance CsvTextEditorInstance { get; set; }
         public System.Type EditorInstanceType { get; set; }
-        [Catel.MVVM.Views.ViewToViewModelAttribute("", MappingType=Catel.MVVM.Views.ViewToViewModelMappingType.TwoWayViewWins)]
+        [Catel.MVVM.Views.ViewToViewModel("", MappingType=Catel.MVVM.Views.ViewToViewModelMappingType.TwoWayViewWins)]
         public string Text { get; set; }
         public void InitializeComponent() { }
         protected override void OnInitialized(System.EventArgs e) { }
@@ -88,7 +88,7 @@ namespace Orc.CsvTextEditor
         public void SetText(string text) { }
         public void Undo() { }
     }
-    [System.ObsoleteAttribute("Use ControlToolBase instead. Will be removed in version 4.0.0.", true)]
+    [System.Obsolete("Use ControlToolBase instead. Will be removed in version 4.0.0.", true)]
     public abstract class CsvTextEditorToolBase : Orc.Controls.ControlToolBase, Orc.Controls.IControlTool, Orc.CsvTextEditor.ICsvTextEditorTool
     {
         protected CsvTextEditorToolBase(ICSharpCode.AvalonEdit.TextEditor textEditor, Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance) { }
@@ -109,27 +109,27 @@ namespace Orc.CsvTextEditor
     public class FindReplaceService : Orc.Controls.Services.IFindReplaceService, Orc.CsvTextEditor.IFindReplaceService
     {
         public FindReplaceService(ICSharpCode.AvalonEdit.TextEditor textEditor, Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance = null) { }
-        [System.ObsoleteAttribute("Use FindNext with Orc.Controls.FindReplaceSettings parameter instead. Will be rem" +
+        public bool FindNext(string textToFind, Orc.Controls.FindReplaceSettings settings) { }
+        [System.Obsolete("Use FindNext with Orc.Controls.FindReplaceSettings parameter instead. Will be rem" +
             "oved in version 4.0.0.", true)]
         public bool FindNext(string textToFind, Orc.CsvTextEditor.FindReplaceSettings settings) { }
-        public bool FindNext(string textToFind, Orc.Controls.FindReplaceSettings settings) { }
         public string GetInitialFindText() { }
-        [System.ObsoleteAttribute("Use FindNext with Orc.Controls.FindReplaceSettings parameter instead. Will be rem" +
+        public bool Replace(string textToFind, string textToReplace, Orc.Controls.FindReplaceSettings settings) { }
+        [System.Obsolete("Use FindNext with Orc.Controls.FindReplaceSettings parameter instead. Will be rem" +
             "oved in version 4.0.0.", true)]
         public bool Replace(string textToFind, string textToReplace, Orc.CsvTextEditor.FindReplaceSettings settings) { }
-        public bool Replace(string textToFind, string textToReplace, Orc.Controls.FindReplaceSettings settings) { }
-        [System.ObsoleteAttribute("Use FindNext with Orc.Controls.FindReplaceSettings parameter instead. Will be rem" +
+        public void ReplaceAll(string textToFind, string textToReplace, Orc.Controls.FindReplaceSettings settings) { }
+        [System.Obsolete("Use FindNext with Orc.Controls.FindReplaceSettings parameter instead. Will be rem" +
             "oved in version 4.0.0.", true)]
         public void ReplaceAll(string textToFind, string textToReplace, Orc.CsvTextEditor.FindReplaceSettings settings) { }
-        public void ReplaceAll(string textToFind, string textToReplace, Orc.Controls.FindReplaceSettings settings) { }
     }
-    [System.ObsoleteAttribute("Use `Orc.Controls.FindReplaceSettings` instead. Will be removed in version 4.0.0." +
+    [System.Obsolete("Use `Orc.Controls.FindReplaceSettings` instead. Will be removed in version 4.0.0." +
         "", true)]
     public class FindReplaceSettings : Orc.Controls.FindReplaceSettings
     {
         public FindReplaceSettings() { }
     }
-    [System.ObsoleteAttribute("Use `Use Orc.CsvTextEditor.FindReplaceTool instead` instead. Will be removed in v" +
+    [System.Obsolete("Use `Use Orc.CsvTextEditor.FindReplaceTool instead` instead. Will be removed in v" +
         "ersion 4.0.0.", true)]
     public class FindReplaceTextEditorTool : Orc.CsvTextEditor.CsvTextEditorToolBase
     {
@@ -170,8 +170,8 @@ namespace Orc.CsvTextEditor
         string LineEnding { get; }
         int LinesCount { get; }
         System.Collections.Generic.IEnumerable<Orc.Controls.IControlTool> Tools { get; }
-        public event System.EventHandler<Orc.CsvTextEditor.CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
-        public event System.EventHandler<System.EventArgs> TextChanged;
+        event System.EventHandler<Orc.CsvTextEditor.CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
+        event System.EventHandler<System.EventArgs> TextChanged;
         void AddTool(Orc.Controls.IControlTool tool);
         void Copy();
         void Cut();
@@ -194,16 +194,16 @@ namespace Orc.CsvTextEditor
         void SetText(string text);
         void Undo();
     }
-    public class static ICsvTextEditorInstanceExtensions
+    public static class ICsvTextEditorInstanceExtensions
     {
         public static Orc.Controls.IControlTool GetToolByName(this Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance, string toolName) { }
+        public static void ShowTool(this Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance, string toolName, object parameter = null) { }
         public static void ShowTool<T>(this Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance, object parameter = null)
             where T : Orc.Controls.IControlTool { }
-        public static void ShowTool(this Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance, string toolName, object parameter = null) { }
     }
-    [System.ObsoleteAttribute("Use IControlTool instead. Will be removed in version 4.0.0.", true)]
+    [System.Obsolete("Use IControlTool instead. Will be removed in version 4.0.0.", true)]
     public interface ICsvTextEditorTool : Orc.Controls.IControlTool { }
-    [System.ObsoleteAttribute("Use `Orc.CsvTextEditor.IFindReplaceService` instead. Will be removed in version 4" +
+    [System.Obsolete("Use `Orc.CsvTextEditor.IFindReplaceService` instead. Will be removed in version 4" +
         ".0.0.", true)]
     public interface IFindReplaceSerivce : Orc.CsvTextEditor.IFindReplaceService { }
     public interface IFindReplaceService
@@ -212,7 +212,7 @@ namespace Orc.CsvTextEditor
         bool Replace(string textToFind, string textToReplace, Orc.CsvTextEditor.FindReplaceSettings settings);
         void ReplaceAll(string textToFind, string textToReplace, Orc.CsvTextEditor.FindReplaceSettings settings);
     }
-    public class static KeyGestureExtensions
+    public static class KeyGestureExtensions
     {
         public static bool IsKeyAndModifierEquals(this System.Windows.Input.KeyGesture left, System.Windows.Input.KeyGesture right) { }
     }
@@ -230,11 +230,11 @@ namespace Orc.CsvTextEditor
         public Orc.CsvTextEditor.Line Line { get; set; }
         public int Offset { get; set; }
     }
-    public class static LocationExtensions
+    public static class LocationExtensions
     {
         public static int GetOffsetInLine(this Orc.CsvTextEditor.Location location) { }
     }
-    public class static StringExtensions
+    public static class StringExtensions
     {
         public static string DuplicateTextInLine(this string text, int startOffset, int endOffset, string newLine) { }
         public static string[] GetLines(this string text, out string newLineSymbol) { }
@@ -251,7 +251,7 @@ namespace Orc.CsvTextEditor
         public static string TrimEnd(this string text, string trimString) { }
         public static string Truncate(this string value, int maxLength) { }
     }
-    public class static Symbols
+    public static class Symbols
     {
         public const char Comma = ',';
         public const char HorizontalTab = '\t';
