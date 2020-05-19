@@ -88,13 +88,6 @@ namespace Orc.CsvTextEditor
         public void SetText(string text) { }
         public void Undo() { }
     }
-    [System.Obsolete("Use ControlToolBase instead. Will be removed in version 4.0.0.", true)]
-    public abstract class CsvTextEditorToolBase : Orc.Controls.ControlToolBase, Orc.Controls.IControlTool, Orc.CsvTextEditor.ICsvTextEditorTool
-    {
-        protected CsvTextEditorToolBase(ICSharpCode.AvalonEdit.TextEditor textEditor, Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance) { }
-        protected Orc.CsvTextEditor.ICsvTextEditorInstance CsvTextEditorInstance { get; }
-        protected ICSharpCode.AvalonEdit.TextEditor TextEditor { get; }
-    }
     public class CsvTextSynchronizationScope : Catel.Disposable
     {
         public CsvTextSynchronizationScope(Orc.CsvTextEditor.CsvTextSynchronizationService csvTextSynchronizationService) { }
@@ -106,37 +99,19 @@ namespace Orc.CsvTextEditor
         public bool IsSynchronizing { get; set; }
         public System.IDisposable SynchronizeInScope() { }
     }
-    public class FindReplaceService : Orc.Controls.Services.IFindReplaceService, Orc.CsvTextEditor.IFindReplaceService
+    public class DisableTextDragDropBehavior : Catel.Windows.Interactivity.BehaviorBase<ICSharpCode.AvalonEdit.TextEditor>
+    {
+        public DisableTextDragDropBehavior() { }
+        protected override void OnAssociatedObjectLoaded() { }
+        protected override void OnAssociatedObjectUnloaded() { }
+    }
+    public class FindReplaceService : Orc.Controls.Services.IFindReplaceService
     {
         public FindReplaceService(ICSharpCode.AvalonEdit.TextEditor textEditor, Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance = null) { }
         public bool FindNext(string textToFind, Orc.Controls.FindReplaceSettings settings) { }
-        [System.Obsolete("Use FindNext with Orc.Controls.FindReplaceSettings parameter instead. Will be rem" +
-            "oved in version 4.0.0.", true)]
-        public bool FindNext(string textToFind, Orc.CsvTextEditor.FindReplaceSettings settings) { }
         public string GetInitialFindText() { }
         public bool Replace(string textToFind, string textToReplace, Orc.Controls.FindReplaceSettings settings) { }
-        [System.Obsolete("Use FindNext with Orc.Controls.FindReplaceSettings parameter instead. Will be rem" +
-            "oved in version 4.0.0.", true)]
-        public bool Replace(string textToFind, string textToReplace, Orc.CsvTextEditor.FindReplaceSettings settings) { }
         public void ReplaceAll(string textToFind, string textToReplace, Orc.Controls.FindReplaceSettings settings) { }
-        [System.Obsolete("Use FindNext with Orc.Controls.FindReplaceSettings parameter instead. Will be rem" +
-            "oved in version 4.0.0.", true)]
-        public void ReplaceAll(string textToFind, string textToReplace, Orc.CsvTextEditor.FindReplaceSettings settings) { }
-    }
-    [System.Obsolete("Use `Orc.Controls.FindReplaceSettings` instead. Will be removed in version 4.0.0." +
-        "", true)]
-    public class FindReplaceSettings : Orc.Controls.FindReplaceSettings
-    {
-        public FindReplaceSettings() { }
-    }
-    [System.Obsolete("Use `Use Orc.CsvTextEditor.FindReplaceTool instead` instead. Will be removed in v" +
-        "ersion 4.0.0.", true)]
-    public class FindReplaceTextEditorTool : Orc.CsvTextEditor.CsvTextEditorToolBase
-    {
-        public FindReplaceTextEditorTool(ICSharpCode.AvalonEdit.TextEditor textEditor, Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance, Catel.Services.IUIVisualizerService uiVisualizerService, Catel.IoC.ITypeFactory typeFactory) { }
-        public override string Name { get; }
-        public override void Close() { }
-        protected override void OnOpen(object parameter = null) { }
     }
     public class FindReplaceTool : Orc.Controls.FindReplaceTool<Orc.CsvTextEditor.FindReplaceService>
     {
@@ -201,17 +176,6 @@ namespace Orc.CsvTextEditor
         public static void ShowTool<T>(this Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance, object parameter = null)
             where T : Orc.Controls.IControlTool { }
     }
-    [System.Obsolete("Use IControlTool instead. Will be removed in version 4.0.0.", true)]
-    public interface ICsvTextEditorTool : Orc.Controls.IControlTool { }
-    [System.Obsolete("Use `Orc.CsvTextEditor.IFindReplaceService` instead. Will be removed in version 4" +
-        ".0.0.", true)]
-    public interface IFindReplaceSerivce : Orc.CsvTextEditor.IFindReplaceService { }
-    public interface IFindReplaceService
-    {
-        bool FindNext(string textToFind, Orc.CsvTextEditor.FindReplaceSettings settings);
-        bool Replace(string textToFind, string textToReplace, Orc.CsvTextEditor.FindReplaceSettings settings);
-        void ReplaceAll(string textToFind, string textToReplace, Orc.CsvTextEditor.FindReplaceSettings settings);
-    }
     public static class KeyGestureExtensions
     {
         public static bool IsKeyAndModifierEquals(this System.Windows.Input.KeyGesture left, System.Windows.Input.KeyGesture right) { }
@@ -233,6 +197,22 @@ namespace Orc.CsvTextEditor
     public static class LocationExtensions
     {
         public static int GetOffsetInLine(this Orc.CsvTextEditor.Location location) { }
+    }
+    public class ReplaceCommandBindingBehavior : Catel.Windows.Interactivity.BehaviorBase<ICSharpCode.AvalonEdit.TextEditor>
+    {
+        public static readonly System.Windows.DependencyProperty CommandProperty;
+        public static readonly System.Windows.DependencyProperty ReplacementCommandProperty;
+        public ReplaceCommandBindingBehavior() { }
+        public System.Windows.Input.ICommand Command { get; set; }
+        public System.Windows.Input.RoutedCommand ReplacementCommand { get; set; }
+    }
+    public class ReplaceKeyInputBindingBehavior : Microsoft.Xaml.Behaviors.Behavior<ICSharpCode.AvalonEdit.TextEditor>
+    {
+        public static readonly System.Windows.DependencyProperty CommandProperty;
+        public static readonly System.Windows.DependencyProperty GestureProperty;
+        public ReplaceKeyInputBindingBehavior() { }
+        public System.Windows.Input.ICommand Command { get; set; }
+        public System.Windows.Input.KeyGesture Gesture { get; set; }
     }
     public static class StringExtensions
     {

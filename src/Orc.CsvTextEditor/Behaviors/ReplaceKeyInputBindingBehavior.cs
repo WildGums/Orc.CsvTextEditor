@@ -10,10 +10,10 @@ namespace Orc.CsvTextEditor
     using System.Linq;
     using System.Windows;
     using System.Windows.Input;
-    using System.Windows.Interactivity;
     using ICSharpCode.AvalonEdit;
+    using Microsoft.Xaml.Behaviors;
 
-    internal class ReplaceKeyInputBindingBehavior : Behavior<TextEditor>
+    public class ReplaceKeyInputBindingBehavior : Behavior<TextEditor>
     {
         #region Fields
         private InputBinding _removedInputBinding;

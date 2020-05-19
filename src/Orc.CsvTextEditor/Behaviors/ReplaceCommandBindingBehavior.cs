@@ -12,7 +12,7 @@ namespace Orc.CsvTextEditor
     using Catel.Windows.Interactivity;
     using ICSharpCode.AvalonEdit;
 
-    internal class ReplaceCommandBindingBehavior : BehaviorBase<TextEditor>
+    public class ReplaceCommandBindingBehavior : BehaviorBase<TextEditor>
     {
         #region Fields
         private CommandBinding _replacedCommandBinding;

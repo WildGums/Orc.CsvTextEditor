@@ -39,9 +39,9 @@ namespace Orc.CsvTextEditor.Example
             languageService.PreferredCulture = CultureInfo.CurrentCulture;
             languageService.FallbackCulture = new CultureInfo("en-US");
 
-            base.OnStartup(e);
-
             this.ApplyTheme();
+
+            base.OnStartup(e);
         }
         #endregion
     }
