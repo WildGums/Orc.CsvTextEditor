@@ -10,6 +10,7 @@
                 <ResourceDictionary Source="/Orc.Theming;component/themes/generic.xaml" />
                 <ResourceDictionary Source="/Orc.Controls;component/themes/generic.xaml" />
                 <ResourceDictionary Source="/Orchestra.Core;component/themes/generic.xaml" />
+                <ResourceDictionary Source="/Orc.CsvTextEditor;component/themes/generic.xaml" />
             </ResourceDictionary.MergedDictionaries>
             
             <SolidColorBrush x:Key="AccentColorBrush" Color="Red" />

@@ -116,6 +116,11 @@ namespace Orc.CsvTextEditor
         #endregion
 
         #region ICsvTextEditorInstance Members
+        public object GetEditor()
+        {
+            return _textEditor;
+        }
+
         public string GetText()
         {
             var text = string.Empty;

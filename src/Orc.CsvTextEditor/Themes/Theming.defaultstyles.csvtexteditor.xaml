@@ -1,0 +1,18 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:orccsvtexteditor="clr-namespace:Orc.CsvTextEditor">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/Orc.CsvTextEditor;component/Controls/CsvTextEditorControl/Themes/CsvTextEditorControl.generic.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <Style x:Key="DefaultCsvTextEditorControlStyle"
+           TargetType="{x:Type orccsvtexteditor:CsvTextEditorControl}" 
+           BasedOn="{StaticResource {x:Type orccsvtexteditor:CsvTextEditorControl}}">
+
+        <Setter Property="Padding" Value="{DynamicResource Padding.TextBox}" />
+        <Setter Property="Margin" Value="{DynamicResource Margin.TextBox}" />
+
+    </Style>
+
+</ResourceDictionary>

@@ -11,6 +11,7 @@ namespace Orc.CsvTextEditor
     using Catel.IoC;
     using Catel.Services;
     using Controls;
+    using ICSharpCode.AvalonEdit;
 
     public class FindReplaceTool : FindReplaceTool<FindReplaceService>
     {
@@ -39,9 +40,11 @@ namespace Orc.CsvTextEditor
                 return null;
             }
 
-            var textEditor = csvTextEditorControl.TextEditor;
             var csvTextEditorInstance = csvTextEditorControl.CsvTextEditorInstance;
-            csvTextEditorInstance.AddTool(this);
+            if (!(csvTextEditorInstance.GetEditor() is TextEditor textEditor))
+            {
+                return null;
+            }
 
             var findReplaceService = _typeFactory.CreateInstanceWithParametersAndAutoCompletion<FindReplaceService>(textEditor, csvTextEditorInstance);
 

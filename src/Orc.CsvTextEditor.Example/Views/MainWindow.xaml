@@ -21,7 +21,7 @@
         <orccsvtexteditor:CsvTextEditorControl EditorInstanceType="{Binding EditorInstanceType}" 
                                                Text="one,two,three,four,five"/>
 
-        <Button Command="{Binding FindAndReplace}" Content="Find and Replace"/>
+        <Button Command="{orccontrols:OpenToolCommand {x:Type orccsvtexteditor:FindReplaceTool}, {x:Type orccsvtexteditor:CsvTextEditorControl}}" Content="Find and Replace"/>
 
     </orccontrols:StackGrid>
 
