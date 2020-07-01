@@ -31,20 +31,31 @@ namespace Orc.CsvTextEditor
         public string Text { get; }
         public void Complete(ICSharpCode.AvalonEdit.Editing.TextArea textArea, ICSharpCode.AvalonEdit.Document.ISegment completionSegment, System.EventArgs insertionRequestEventArgs) { }
     }
-    public class CsvTextEditorControl : Catel.Windows.Controls.UserControl, System.Windows.Markup.IComponentConnector
+    [System.Windows.TemplatePart(Name="PART_TextEditor", Type=typeof(ICSharpCode.AvalonEdit.TextEditor))]
+    public class CsvTextEditorControl : System.Windows.Controls.Control
     {
         public static readonly System.Windows.DependencyProperty CsvTextEditorInstanceProperty;
         public static readonly System.Windows.DependencyProperty EditorInstanceTypeProperty;
         public static readonly System.Windows.DependencyProperty TextProperty;
         public CsvTextEditorControl() { }
-        [Catel.MVVM.Views.ViewToViewModel("", MappingType=Catel.MVVM.Views.ViewToViewModelMappingType.ViewToViewModel)]
         public Orc.CsvTextEditor.ICsvTextEditorInstance CsvTextEditorInstance { get; set; }
         public System.Type EditorInstanceType { get; set; }
-        [Catel.MVVM.Views.ViewToViewModel("", MappingType=Catel.MVVM.Views.ViewToViewModelMappingType.TwoWayViewWins)]
         public string Text { get; set; }
-        public void InitializeComponent() { }
-        protected override void OnInitialized(System.EventArgs e) { }
-        protected override void OnViewModelChanged() { }
+        public static System.Windows.Input.RoutedCommand AddColumn { get; }
+        public static System.Windows.Input.RoutedCommand AddLine { get; }
+        public static System.Windows.Input.RoutedCommand Copy { get; }
+        public static System.Windows.Input.RoutedCommand Cut { get; }
+        public static System.Windows.Input.RoutedCommand DeleteNextSelectedText { get; }
+        public static System.Windows.Input.RoutedCommand DeletePreviousSelectedText { get; }
+        public static System.Windows.Input.RoutedCommand DuplicateLine { get; }
+        public static System.Windows.Input.RoutedCommand GotoNextColumn { get; }
+        public static System.Windows.Input.RoutedCommand GotoPreviousColumn { get; }
+        public static System.Windows.Input.RoutedCommand Paste { get; }
+        public static System.Windows.Input.RoutedCommand Redo { get; }
+        public static System.Windows.Input.RoutedCommand RemoveColumn { get; }
+        public static System.Windows.Input.RoutedCommand RemoveLine { get; }
+        public static System.Windows.Input.RoutedCommand Undo { get; }
+        public override void OnApplyTemplate() { }
     }
     public class CsvTextEditorInitializer : Orc.CsvTextEditor.ICsvTextEditorInitializer
     {
@@ -73,6 +84,7 @@ namespace Orc.CsvTextEditor
         protected override void DisposeManaged() { }
         public void ExecuteOperation<TOperation>()
             where TOperation : Orc.CsvTextEditor.Operations.IOperation { }
+        public object GetEditor() { }
         public Orc.CsvTextEditor.Location GetLocation() { }
         public string GetSelectedText() { }
         public string GetText() { }
@@ -147,13 +159,13 @@ namespace Orc.CsvTextEditor
         System.Collections.Generic.IEnumerable<Orc.Controls.IControlTool> Tools { get; }
         event System.EventHandler<Orc.CsvTextEditor.CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
         event System.EventHandler<System.EventArgs> TextChanged;
-        void AddTool(Orc.Controls.IControlTool tool);
         void Copy();
         void Cut();
         void DeleteNextSelectedText();
         void DeletePreviousSelectedText();
         void ExecuteOperation<TOperation>()
             where TOperation : Orc.CsvTextEditor.Operations.IOperation;
+        object GetEditor();
         Orc.CsvTextEditor.Location GetLocation();
         string GetSelectedText();
         string GetText();
@@ -164,7 +176,6 @@ namespace Orc.CsvTextEditor
         void Paste();
         void Redo();
         void RefreshView();
-        void RemoveTool(Orc.Controls.IControlTool tool);
         void ResetIsDirty();
         void SetText(string text);
         void Undo();
@@ -206,13 +217,14 @@ namespace Orc.CsvTextEditor
         public System.Windows.Input.ICommand Command { get; set; }
         public System.Windows.Input.RoutedCommand ReplacementCommand { get; set; }
     }
-    public class ReplaceKeyInputBindingBehavior : Microsoft.Xaml.Behaviors.Behavior<ICSharpCode.AvalonEdit.TextEditor>
+    public class ReplaceKeyInputBindingBehavior : Catel.Windows.Interactivity.BehaviorBase<ICSharpCode.AvalonEdit.TextEditor>
     {
         public static readonly System.Windows.DependencyProperty CommandProperty;
         public static readonly System.Windows.DependencyProperty GestureProperty;
         public ReplaceKeyInputBindingBehavior() { }
         public System.Windows.Input.ICommand Command { get; set; }
         public System.Windows.Input.KeyGesture Gesture { get; set; }
+        protected override void OnAssociatedObjectLoaded() { }
     }
     public static class StringExtensions
     {
@@ -304,5 +316,17 @@ namespace Orc.CsvTextEditor.Operations
     {
         public TrimWhitespacesOperation(Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance) { }
         public override void Execute() { }
+    }
+}
+namespace XamlGeneratedNamespace
+{
+    public sealed class GeneratedInternalTypeHelper : System.Windows.Markup.InternalTypeHelper
+    {
+        public GeneratedInternalTypeHelper() { }
+        protected override void AddEventHandler(System.Reflection.EventInfo eventInfo, object target, System.Delegate handler) { }
+        protected override System.Delegate CreateDelegate(System.Type delegateType, object target, string handler) { }
+        protected override object CreateInstance(System.Type type, System.Globalization.CultureInfo culture) { }
+        protected override object GetPropertyValue(System.Reflection.PropertyInfo propertyInfo, object target, System.Globalization.CultureInfo culture) { }
+        protected override void SetPropertyValue(System.Reflection.PropertyInfo propertyInfo, object target, object value, System.Globalization.CultureInfo culture) { }
     }
 }
