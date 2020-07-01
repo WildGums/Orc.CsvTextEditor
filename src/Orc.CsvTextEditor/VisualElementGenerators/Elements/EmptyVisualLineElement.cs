@@ -8,9 +8,9 @@
 namespace Orc.CsvTextEditor
 {
     using System.Text;
-    using System.Windows;
     using System.Windows.Media.TextFormatting;
     using ICSharpCode.AvalonEdit.Rendering;
+    using Theming;
 
     internal class EmptyVisualLineElement : VisualLineElement
     {
@@ -18,16 +18,18 @@ namespace Orc.CsvTextEditor
         public EmptyVisualLineElement(int visualLength, int documentLength)
             : base(visualLength, documentLength)
         {
+            
         }
         #endregion
 
         #region Methods
         public override TextRun CreateTextRun(int startVisualColumn, ITextRunConstructionContext context)
         {
-            if (!Equals(TextRunProperties.BackgroundBrush, SystemColors.ControlLightLightBrush))
-            {
-                TextRunProperties.SetBackgroundBrush(SystemColors.ControlLightLightBrush);
-            }
+            var foreground = ThemeManager.Current.GetThemeColorBrush(ThemeColorStyle.DefaultForeground);
+            var background = ThemeManager.Current.GetThemeColorBrush(ThemeColorStyle.DefaultBackground);
+
+            TextRunProperties.SetBackgroundBrush(background);
+            TextRunProperties.SetForegroundBrush(foreground);
 
             var spacesBuilder = new StringBuilder();
             for (var i = 0; i < VisualLength - 1; i++)
@@ -37,7 +39,8 @@ namespace Orc.CsvTextEditor
 
             spacesBuilder.Append(Symbols.VerticalBar);
 
-            return new TextCharacters(spacesBuilder.ToString(), TextRunProperties);
+            var textCharacters = new TextCharacters(spacesBuilder.ToString(), TextRunProperties);
+            return textCharacters;
         }
 
         public override bool IsWhitespace(int visualColumn) => true;

@@ -52,7 +52,7 @@ namespace Orc.CsvTextEditor
         #region Methods
         public void Refresh(string text)
         {
-            text = text ?? string.Empty;
+            text ??= string.Empty;
 
             NewLine = text.GetNewLineSymbol();
 
