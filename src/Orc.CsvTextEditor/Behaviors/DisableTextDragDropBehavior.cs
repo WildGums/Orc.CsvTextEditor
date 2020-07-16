@@ -11,7 +11,7 @@ namespace Orc.CsvTextEditor
     using Catel.Windows.Interactivity;
     using ICSharpCode.AvalonEdit;
 
-    internal class DisableTextDragDropBehavior : BehaviorBase<TextEditor>
+    public class DisableTextDragDropBehavior : BehaviorBase<TextEditor>
     {
         #region Fields
         private bool _originalAllowDrop;

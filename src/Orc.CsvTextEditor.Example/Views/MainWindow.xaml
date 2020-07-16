@@ -1,0 +1,29 @@
+<catel:Window x:Class="Orc.CsvTextEditor.Views.MainWindow"
+              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+              xmlns:catel="http://schemas.catelproject.com"
+              xmlns:orccontrols="http://schemas.wildgums.com/orc/controls"
+              xmlns:orccsvtexteditor="http://schemas.wildgums.com/orc/csvtexteditor" 
+              xmlns:orctheming="http://schemas.wildgums.com/orc/theming"
+              mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="400">
+
+    <orccontrols:StackGrid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <orctheming:ThemeSwitcherView />
+
+        <orccsvtexteditor:CsvTextEditorControl EditorInstanceType="{Binding EditorInstanceType}" 
+                                               Text="one,two,three,four,five"/>
+
+        <Button Command="{orccontrols:OpenToolCommand {x:Type orccsvtexteditor:FindReplaceTool}, {x:Type orccsvtexteditor:CsvTextEditorControl}}" Content="Find and Replace"/>
+
+    </orccontrols:StackGrid>
+
+</catel:Window>
+

@@ -31,9 +31,6 @@ public static class ModuleInitializer
         // TODO: it should not be registered here
         serviceLocator.RegisterType<ICsvTextEditorInstance, CsvTextEditorInstance>();
         serviceLocator.RegisterType<ICsvTextSynchronizationService, CsvTextSynchronizationService>();
-
-        var viewModelLocator = serviceLocator.ResolveType<IViewModelLocator>();
-        viewModelLocator.Register<CsvTextEditorControl, CsvTextEditorControlViewModel>();
     }
     #endregion
 }

@@ -1,0 +1,9 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/Orc.CsvTextEditor;component/Themes/Theming.defaultstyles.csvtexteditor.xaml" />
+
+        <ResourceDictionary Source="/Orc.CsvTextEditor;component/Themes/Styles.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+</ResourceDictionary>

@@ -27,6 +27,8 @@ namespace Orc.CsvTextEditor
         #endregion
 
         #region Methods
+        object GetEditor();
+
         bool IsCaretWithinQuotedField();
 
         void InsertAtCaret(char character);
@@ -50,8 +52,6 @@ namespace Orc.CsvTextEditor
 
         void RefreshView();
 
-        void AddTool(IControlTool tool);
-        void RemoveTool(IControlTool tool);
         string GetSelectedText();
         string GetText();
         void SetText(string text);

@@ -10,10 +10,11 @@ namespace Orc.CsvTextEditor
     using System.Linq;
     using System.Windows;
     using System.Windows.Input;
-    using System.Windows.Interactivity;
+    using Catel.Windows.Interactivity;
     using ICSharpCode.AvalonEdit;
+    using Microsoft.Xaml.Behaviors;
 
-    internal class ReplaceKeyInputBindingBehavior : Behavior<TextEditor>
+    public class ReplaceKeyInputBindingBehavior : BehaviorBase<TextEditor>
     {
         #region Fields
         private InputBinding _removedInputBinding;
@@ -42,15 +43,39 @@ namespace Orc.CsvTextEditor
         #endregion
 
         #region Methods
+        protected override void OnAssociatedObjectLoaded()
+        {
+            if (_hasPendingUpdate)
+            {
+                UpdateInputGesture();
+            }
+
+            base.OnAssociatedObjectLoaded();
+        }
+
         private void OnCommandPropertyChanged(DependencyPropertyChangedEventArgs args)
         {
+            UpdateInputGesture();
+        }
+
+        private bool _hasPendingUpdate;
+
+        private void UpdateInputGesture()
+        {
+            _hasPendingUpdate = true;
+
             var textArea = AssociatedObject?.TextArea;
-            if (textArea == null)
+            if (textArea is null)
             {
                 return;
             }
 
-            if (!(args.NewValue is ICommand command))
+            if (Command is null)
+            {
+                return;
+            }
+
+            if (Gesture is null)
             {
                 return;
             }
@@ -101,7 +126,9 @@ namespace Orc.CsvTextEditor
                 break;
             }
 
-            inputBindings.Add(new InputBinding(command, Gesture));
+            inputBindings.Add(new InputBinding(Command, Gesture));
+
+            _hasPendingUpdate = false;
         }
         #endregion
     }
