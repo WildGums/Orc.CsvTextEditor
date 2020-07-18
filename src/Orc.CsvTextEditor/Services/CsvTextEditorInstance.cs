@@ -34,14 +34,15 @@ namespace Orc.CsvTextEditor
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
         private readonly ICommandManager _commandManager;
+        private readonly ICsvTextEditorInitializer _initializer;
         private readonly IDispatcherService _dispatcherService;
-        private readonly TabSpaceElementGenerator _elementGenerator;
-        private readonly HighlightAllOccurencesOfSelectedWordTransformer _highlightAllOccurrencesOfSelectedWordTransformer;
         private readonly DispatcherTimer _refreshViewTimer;
-        private readonly TextEditor _textEditor;
         private readonly List<IControlTool> _tools;
         private readonly ITypeFactory _typeFactory;
 
+        private TextEditor _textEditor;
+        private TabSpaceElementGenerator _elementGenerator;
+        private HighlightAllOccurencesOfSelectedWordTransformer _highlightAllOccurrencesOfSelectedWordTransformer;
         private CompletionWindow _completionWindow;
         private EditingState _editingState = EditingState.None;
         private bool _initializing;
@@ -54,46 +55,29 @@ namespace Orc.CsvTextEditor
         #region Constructors
         public CsvTextEditorInstance(TextEditor textEditor, ICommandManager commandManager, ICsvTextEditorInitializer initializer,
             IDispatcherService dispatcherService, ITypeFactory typeFactory)
+            : this(commandManager, initializer, dispatcherService, typeFactory)
         {
             Argument.IsNotNull(() => textEditor);
+
+            AttachEditor(textEditor);
+        }
+
+        public CsvTextEditorInstance(ICommandManager commandManager, ICsvTextEditorInitializer initializer,
+            IDispatcherService dispatcherService, ITypeFactory typeFactory)
+        {
             Argument.IsNotNull(() => commandManager);
             Argument.IsNotNull(() => initializer);
             Argument.IsNotNull(() => dispatcherService);
             Argument.IsNotNull(() => typeFactory);
 
-            _textEditor = textEditor;
             _commandManager = commandManager;
+            _initializer = initializer;
             _dispatcherService = dispatcherService;
             _typeFactory = typeFactory;
 
             _tools = new List<IControlTool>();
 
-            // Need to make these options accessible to the user in the settings window
-            _textEditor.ShowLineNumbers = true;
-            _textEditor.Options.HighlightCurrentLine = true;
-            _textEditor.Options.ShowEndOfLine = true;
-            _textEditor.Options.ShowTabs = true;
-
-            _elementGenerator = typeFactory.CreateInstance<TabSpaceElementGenerator>();
-
-            _textEditor.TextArea.TextView.ElementGenerators.Add(_elementGenerator);
-
-            _textEditor.TextArea.SelectionChanged += OnTextAreaSelectionChanged;
-            _textEditor.TextArea.Caret.PositionChanged += OnCaretPositionChanged;
-            _textEditor.TextArea.PreviewMouseLeftButtonDown += OnPreviewMouseLeftButtonDown;
-            _textEditor.TextChanged += OnTextChanged;
-            _textEditor.PreviewKeyDown += OnPreviewKeyDown;
-
-            _textEditor.TextArea.TextEntering += OnTextEntering;
-
-            _highlightAllOccurrencesOfSelectedWordTransformer = new HighlightAllOccurencesOfSelectedWordTransformer();
-            _textEditor.TextArea.TextView.LineTransformers.Add(_highlightAllOccurrencesOfSelectedWordTransformer);
-            _textEditor.TextArea.TextView.LineTransformers.Add(new FirstLineAlwaysBoldTransformer());
-
-            initializer.Initialize(textEditor, this);
-
             _refreshViewTimer = new DispatcherTimer();
-
             _refreshViewTimer.Tick += (sender, e) =>
             {
                 RefreshView();
@@ -113,6 +97,60 @@ namespace Orc.CsvTextEditor
         public bool CanUndo => !_initializing && _textEditor.CanUndo;
         public string LineEnding => _elementGenerator.NewLine;
         public bool IsDirty => _textChangingIterator != 0;
+        public void AttachEditor(object editor)
+        {
+            Argument.IsNotNull(() => editor);
+
+            DetachEditor();
+
+            _textEditor = editor as TextEditor;
+            if (_textEditor is null)
+            {
+                return;
+            }
+
+            // Need to make these options accessible to the user in the settings window
+            _textEditor.SetCurrentValue(TextEditor.ShowLineNumbersProperty, true);
+            _textEditor.Options.HighlightCurrentLine = true;
+            _textEditor.Options.ShowEndOfLine = true;
+            _textEditor.Options.ShowTabs = true;
+
+            _elementGenerator = _typeFactory.CreateInstance<TabSpaceElementGenerator>();
+
+            _textEditor.TextArea.TextView.ElementGenerators.Add(_elementGenerator);
+
+            _textEditor.TextArea.SelectionChanged += OnTextAreaSelectionChanged;
+            _textEditor.TextArea.Caret.PositionChanged += OnCaretPositionChanged;
+            _textEditor.TextArea.PreviewMouseLeftButtonDown += OnPreviewMouseLeftButtonDown;
+            _textEditor.TextChanged += OnTextChanged;
+            _textEditor.PreviewKeyDown += OnPreviewKeyDown;
+
+            _textEditor.TextArea.TextEntering += OnTextEntering;
+
+            _highlightAllOccurrencesOfSelectedWordTransformer = new HighlightAllOccurencesOfSelectedWordTransformer();
+            _textEditor.TextArea.TextView.LineTransformers.Add(_highlightAllOccurrencesOfSelectedWordTransformer);
+            _textEditor.TextArea.TextView.LineTransformers.Add(new FirstLineAlwaysBoldTransformer());
+
+            _initializer.Initialize(_textEditor, this);
+        }
+
+        public void DetachEditor()
+        {
+            if (_textEditor is null)
+            {
+                return;
+            }
+
+            _textEditor.TextArea.SelectionChanged -= OnTextAreaSelectionChanged;
+            _textEditor.TextArea.Caret.PositionChanged -= OnCaretPositionChanged;
+            _textEditor.TextArea.PreviewMouseLeftButtonDown -= OnPreviewMouseLeftButtonDown;
+            _textEditor.TextChanged -= OnTextChanged;
+            _textEditor.PreviewKeyDown -= OnPreviewKeyDown;
+            _textEditor.TextArea.TextEntering -= OnTextEntering;
+
+            _elementGenerator = null;
+            _highlightAllOccurrencesOfSelectedWordTransformer = null;
+        }
         #endregion
 
         #region ICsvTextEditorInstance Members

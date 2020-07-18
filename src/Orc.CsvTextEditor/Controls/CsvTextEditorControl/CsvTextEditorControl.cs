@@ -91,12 +91,8 @@ namespace Orc.CsvTextEditor
         }
 
         public static readonly DependencyProperty EditorInstanceTypeProperty = DependencyProperty.Register(nameof(EditorInstanceType), typeof(Type), typeof(CsvTextEditorControl),
-            new PropertyMetadata(typeof(CsvTextEditorInstance), (sender, e) => (sender as CsvTextEditorControl).OnTextEditorWrapperChanged(e)));
-
-        private void OnTextEditorWrapperChanged(DependencyPropertyChangedEventArgs e)
-        {
-            UpdateServiceRegistration();
-        }
+            new PropertyMetadata(typeof(CsvTextEditorInstance),
+                (sender, e) => ((CsvTextEditorControl)sender).OnTextEditorWrapperChanged(e)));
 
         public string Text
         {
@@ -115,7 +111,8 @@ namespace Orc.CsvTextEditor
         }
 
         public static readonly DependencyProperty CsvTextEditorInstanceProperty =
-            DependencyProperty.Register(nameof(CsvTextEditorInstance), typeof(ICsvTextEditorInstance), typeof(CsvTextEditorControl), new PropertyMetadata());
+            DependencyProperty.Register(nameof(CsvTextEditorInstance), typeof(ICsvTextEditorInstance), typeof(CsvTextEditorControl),
+                new PropertyMetadata((sender, args) => ((CsvTextEditorControl)sender).OnCsvTextEditorInstanceChanged(args)));
         #endregion
 
         #region Methods
@@ -133,6 +130,22 @@ namespace Orc.CsvTextEditor
             UpdateServiceRegistration();
         }
 
+        private void OnTextEditorWrapperChanged(DependencyPropertyChangedEventArgs e)
+        {
+            UpdateServiceRegistration();
+        }
+
+        private void OnCsvTextEditorInstanceChanged(DependencyPropertyChangedEventArgs args)
+        {
+            var oldInstance = args.OldValue as ICsvTextEditorInstance;
+            oldInstance?.DetachEditor();
+
+            var newInstance = args.NewValue as ICsvTextEditorInstance;
+            newInstance?.AttachEditor(_textEditor);
+
+            UpdateInitialization();
+        }
+        
         private void OnTextEditorTextChanged(object sender, EventArgs e)
         {
             if (_synchronizationService?.IsSynchronizing ?? true)
@@ -164,9 +177,8 @@ namespace Orc.CsvTextEditor
 
         private void UpdateServiceRegistration()
         {
-            var textEditor = _textEditor;
             var wrapperInstanceType = EditorInstanceType;
-            if (textEditor == null || wrapperInstanceType == null)
+            if (_textEditor == null || wrapperInstanceType == null)
             {
                 return;
             }
@@ -176,13 +188,8 @@ namespace Orc.CsvTextEditor
                 Log.Error($"Cannot use type {wrapperInstanceType} because it not implemented ICsvTextEditorInstance");
             }
 
-            var csvTextEditorInstance = (ICsvTextEditorInstance)_typeFactory.CreateInstanceWithParametersAndAutoCompletion(wrapperInstanceType, textEditor);
-
+            var csvTextEditorInstance = (ICsvTextEditorInstance)_typeFactory.CreateInstanceWithParametersAndAutoCompletion(wrapperInstanceType);
             SetCurrentValue(CsvTextEditorInstanceProperty, csvTextEditorInstance);
-
-            UpdateInitialization();
-
-            this.AttachTool<FindReplaceTool>();
         }
 
         private void UpdateInitialization()
@@ -196,7 +203,7 @@ namespace Orc.CsvTextEditor
 
                 using (_synchronizationService.SynchronizeInScope())
                 {
-                    CsvTextEditorInstance.Initialize(Text);
+                    CsvTextEditorInstance?.Initialize(Text);
                 }
             }
             catch (Exception ex)

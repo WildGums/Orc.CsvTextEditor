@@ -27,6 +27,8 @@ namespace Orc.CsvTextEditor
         #endregion
 
         #region Methods
+        void AttachEditor(object editor);
+        void DetachEditor();
         object GetEditor();
 
         bool IsCaretWithinQuotedField();
