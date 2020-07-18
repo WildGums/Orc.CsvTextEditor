@@ -64,6 +64,7 @@ namespace Orc.CsvTextEditor
     }
     public class CsvTextEditorInstance : Catel.Disposable, Orc.CsvTextEditor.ICsvTextEditorInstance, System.IDisposable
     {
+        public CsvTextEditorInstance(Catel.MVVM.ICommandManager commandManager, Orc.CsvTextEditor.ICsvTextEditorInitializer initializer, Catel.Services.IDispatcherService dispatcherService, Catel.IoC.ITypeFactory typeFactory) { }
         public CsvTextEditorInstance(ICSharpCode.AvalonEdit.TextEditor textEditor, Catel.MVVM.ICommandManager commandManager, Orc.CsvTextEditor.ICsvTextEditorInitializer initializer, Catel.Services.IDispatcherService dispatcherService, Catel.IoC.ITypeFactory typeFactory) { }
         public bool CanRedo { get; }
         public bool CanUndo { get; }
@@ -77,10 +78,12 @@ namespace Orc.CsvTextEditor
         public event System.EventHandler<Orc.CsvTextEditor.CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
         public event System.EventHandler<System.EventArgs> TextChanged;
         public void AddTool(Orc.Controls.IControlTool tool) { }
+        public void AttachEditor(object editor) { }
         public void Copy() { }
         public void Cut() { }
         public void DeleteNextSelectedText() { }
         public void DeletePreviousSelectedText() { }
+        public void DetachEditor() { }
         protected override void DisposeManaged() { }
         public void ExecuteOperation<TOperation>()
             where TOperation : Orc.CsvTextEditor.Operations.IOperation { }
@@ -159,10 +162,12 @@ namespace Orc.CsvTextEditor
         System.Collections.Generic.IEnumerable<Orc.Controls.IControlTool> Tools { get; }
         event System.EventHandler<Orc.CsvTextEditor.CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
         event System.EventHandler<System.EventArgs> TextChanged;
+        void AttachEditor(object editor);
         void Copy();
         void Cut();
         void DeleteNextSelectedText();
         void DeletePreviousSelectedText();
+        void DetachEditor();
         void ExecuteOperation<TOperation>()
             where TOperation : Orc.CsvTextEditor.Operations.IOperation;
         object GetEditor();
