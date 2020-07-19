@@ -27,6 +27,7 @@ namespace Orc.CsvTextEditor
         private readonly ICsvTextSynchronizationService _synchronizationService;
 
         private TextEditor _textEditor;
+        private bool _isPendingAttach = false;
         #endregion
 
         #region Constructors
@@ -127,7 +128,16 @@ namespace Orc.CsvTextEditor
             }
             _textEditor.TextChanged += OnTextEditorTextChanged;
 
-            UpdateServiceRegistration();
+            if (_isPendingAttach)
+            {
+                _isPendingAttach = false;
+
+                AttachCsvTextEditorInstance();
+            }
+            else
+            {
+                UpdateServiceRegistration();
+            }
         }
 
         private void OnTextEditorWrapperChanged(DependencyPropertyChangedEventArgs e)
@@ -140,9 +150,21 @@ namespace Orc.CsvTextEditor
             var oldInstance = args.OldValue as ICsvTextEditorInstance;
             oldInstance?.DetachEditor();
 
-            var newInstance = args.NewValue as ICsvTextEditorInstance;
-            newInstance?.AttachEditor(_textEditor);
+            if (_textEditor is null)
+            {
+                _isPendingAttach = true;
+            }
+            else
+            {
+                AttachCsvTextEditorInstance();
 
+                _isPendingAttach = false;
+            }
+        }
+
+        private void AttachCsvTextEditorInstance()
+        {
+            CsvTextEditorInstance?.AttachEditor(_textEditor);
             UpdateInitialization();
         }
         
@@ -175,7 +197,7 @@ namespace Orc.CsvTextEditor
             UpdateInitialization();
         }
 
-        private void UpdateServiceRegistration()
+        private void UpdateServiceRegistration(bool forceCreate = true)
         {
             var wrapperInstanceType = EditorInstanceType;
             if (_textEditor == null || wrapperInstanceType == null)
@@ -188,8 +210,11 @@ namespace Orc.CsvTextEditor
                 Log.Error($"Cannot use type {wrapperInstanceType} because it not implemented ICsvTextEditorInstance");
             }
 
-            var csvTextEditorInstance = (ICsvTextEditorInstance)_typeFactory.CreateInstanceWithParametersAndAutoCompletion(wrapperInstanceType);
-            SetCurrentValue(CsvTextEditorInstanceProperty, csvTextEditorInstance);
+            if (CsvTextEditorInstance is null || forceCreate)
+            {
+                var csvTextEditorInstance = (ICsvTextEditorInstance)_typeFactory.CreateInstanceWithParametersAndAutoCompletion(wrapperInstanceType);
+                SetCurrentValue(CsvTextEditorInstanceProperty, csvTextEditorInstance);
+            }
         }
 
         private void UpdateInitialization()
