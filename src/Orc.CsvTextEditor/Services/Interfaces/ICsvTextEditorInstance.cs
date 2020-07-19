@@ -62,6 +62,8 @@ namespace Orc.CsvTextEditor
         #region Events
         event EventHandler<CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
         event EventHandler<EventArgs> TextChanged;
+        event EventHandler<EventArgs> EditorAttached;
+        event EventHandler<EventArgs> EditorDetached;
         #endregion
     }
 }

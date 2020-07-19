@@ -76,6 +76,8 @@ namespace Orc.CsvTextEditor
         public int LinesCount { get; }
         public System.Collections.Generic.IEnumerable<Orc.Controls.IControlTool> Tools { get; }
         public event System.EventHandler<Orc.CsvTextEditor.CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
+        public event System.EventHandler<System.EventArgs> EditorAttached;
+        public event System.EventHandler<System.EventArgs> EditorDetached;
         public event System.EventHandler<System.EventArgs> TextChanged;
         public void AddTool(Orc.Controls.IControlTool tool) { }
         public void AttachEditor(object editor) { }
@@ -161,6 +163,8 @@ namespace Orc.CsvTextEditor
         int LinesCount { get; }
         System.Collections.Generic.IEnumerable<Orc.Controls.IControlTool> Tools { get; }
         event System.EventHandler<Orc.CsvTextEditor.CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
+        event System.EventHandler<System.EventArgs> EditorAttached;
+        event System.EventHandler<System.EventArgs> EditorDetached;
         event System.EventHandler<System.EventArgs> TextChanged;
         void AttachEditor(object editor);
         void Copy();
