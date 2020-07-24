@@ -2,12 +2,10 @@
 <SyntaxDefinition name="Custom Highlighting" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
   <RuleSet>
     <Rule foreground="Red" background="Red">\t</Rule>
-      
-    <Rule foreground="black" background="Tomato">(?i)\bfalse|no\b(?-i)</Rule>
-    <Rule foreground="black" background="YellowGreen">(?i)\btrue|yes\b(?-i)</Rule>
-      
+    <Rule foreground="black" background="Tomato">(?i)^false|no$(?-i)</Rule>
+    <Rule foreground="black" background="YellowGreen">(?i)^true|yes$(?-i)</Rule>
+
     <!-- Digits -->
-    <Rule foreground="Blue">[\d.]+</Rule>
-    
+    <Rule foreground="Blue">[\d.%]+</Rule>
     </RuleSet>
 </SyntaxDefinition>
