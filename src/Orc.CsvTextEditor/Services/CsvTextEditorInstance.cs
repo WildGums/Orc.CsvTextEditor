@@ -22,6 +22,7 @@ namespace Orc.CsvTextEditor
     using Catel.Services;
     using Catel.Windows;
     using Controls;
+    using Controls.Tools;
     using ICSharpCode.AvalonEdit;
     using ICSharpCode.AvalonEdit.CodeCompletion;
     using ICSharpCode.AvalonEdit.Document;
@@ -90,6 +91,7 @@ namespace Orc.CsvTextEditor
 
         #region Properties
         public IEnumerable<IControlTool> Tools => _csvTextEditorControl?.GetControlToolManager().Tools ?? new List<IControlTool>();
+        public IControlToolManager ToolManager => _csvTextEditorControl?.GetControlToolManager();
         public int LinesCount => _textEditor?.Document?.LineCount ?? 0;
         public int ColumnsCount => _elementGenerator?.ColumnCount ?? 0;
         public bool IsAutocompleteEnabled { get; set; } = true;

@@ -10,12 +10,14 @@ namespace Orc.CsvTextEditor
     using System;
     using System.Collections.Generic;
     using Controls;
+    using Controls.Tools;
     using Operations;
 
     public interface ICsvTextEditorInstance : IDisposable
     {
         #region Properties
         IEnumerable<IControlTool> Tools { get; }
+        IControlToolManager ToolManager { get; }
         int LinesCount { get; }
         int ColumnsCount { get; }
         bool IsAutocompleteEnabled { get; set; }

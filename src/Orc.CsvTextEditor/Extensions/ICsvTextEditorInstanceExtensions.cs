@@ -15,11 +15,22 @@ namespace Orc.CsvTextEditor
     {
         #region Methods
         public static void ShowTool<T>(this ICsvTextEditorInstance csvTextEditorInstance, object parameter = null)
-            where T : IControlTool
+            where T : class, IControlTool
         {
             Argument.IsNotNull(() => csvTextEditorInstance);
 
+            var toolManager = csvTextEditorInstance.ToolManager;
+            if (toolManager is null)
+            {
+                return;
+            }
+
             var tool = csvTextEditorInstance.Tools.OfType<T>().FirstOrDefault();
+            if (tool != null)
+            {
+                tool = toolManager.AttachTool(typeof(T)) as T;
+            }
+
             tool?.Open(parameter);
         }
 
