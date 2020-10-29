@@ -20,7 +20,9 @@ namespace Orc.CsvTextEditor
     using Catel.Logging;
     using Catel.MVVM;
     using Catel.Services;
+    using Catel.Windows;
     using Controls;
+    using Controls.Tools;
     using ICSharpCode.AvalonEdit;
     using ICSharpCode.AvalonEdit.CodeCompletion;
     using ICSharpCode.AvalonEdit.Document;
@@ -37,7 +39,6 @@ namespace Orc.CsvTextEditor
         private readonly IDispatcherService _dispatcherService;
         private readonly ICsvTextEditorInitializer _initializer;
         private readonly DispatcherTimer _refreshViewTimer;
-        private readonly List<IControlTool> _tools;
         private readonly ITypeFactory _typeFactory;
 
         private TabSpaceElementGenerator _elementGenerator;
@@ -52,6 +53,7 @@ namespace Orc.CsvTextEditor
         private int _textChangingIterator;
 
         private TextEditor _textEditor;
+        private CsvTextEditorControl _csvTextEditorControl;
         #endregion
 
         #region Constructors
@@ -77,8 +79,6 @@ namespace Orc.CsvTextEditor
             _dispatcherService = dispatcherService;
             _typeFactory = typeFactory;
 
-            _tools = new List<IControlTool>();
-
             _refreshViewTimer = new DispatcherTimer();
             _refreshViewTimer.Tick += (sender, e) =>
             {
@@ -90,7 +90,8 @@ namespace Orc.CsvTextEditor
         #endregion
 
         #region Properties
-        public IEnumerable<IControlTool> Tools => _tools;
+        public IEnumerable<IControlTool> Tools => _csvTextEditorControl?.GetControlToolManager().Tools ?? new List<IControlTool>();
+        public IControlToolManager ToolManager => _csvTextEditorControl?.GetControlToolManager();
         public int LinesCount => _textEditor?.Document?.LineCount ?? 0;
         public int ColumnsCount => _elementGenerator?.ColumnCount ?? 0;
         public bool IsAutocompleteEnabled { get; set; } = true;
@@ -110,6 +111,12 @@ namespace Orc.CsvTextEditor
 
             _textEditor = editor as TextEditor;
             if (_textEditor is null)
+            {
+                return;
+            }
+
+            _csvTextEditorControl = _textEditor.FindLogicalOrVisualAncestorByType<CsvTextEditorControl>();
+            if (_csvTextEditorControl is null)
             {
                 return;
             }
@@ -504,26 +511,6 @@ namespace Orc.CsvTextEditor
 
                 UpdateText(text);
             });
-        }
-
-        public void AddTool(IControlTool tool)
-        {
-            Argument.IsNotNull(() => tool);
-
-            if (_tools.Contains(tool))
-            {
-                return;
-            }
-
-            _tools.Add(tool);
-        }
-
-        public void RemoveTool(IControlTool tool)
-        {
-            Argument.IsNotNull(() => tool);
-
-            _tools.Remove(tool);
-            tool.Close();
         }
 
         public void ResetIsDirty()
