@@ -1,43 +1,42 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras">
+<Project Sdk="MSBuild.Sdk.Extras">
   <PropertyGroup>
     <TargetFrameworks>net46;net47;netcoreapp3.1</TargetFrameworks>
     <AssemblyName>Orc.CsvTextEditor</AssemblyName>
     <RootNamespace>Orc.CsvTextEditor</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
     <PackageId>Orc.CsvTextEditor</PackageId>
-    <PackageVersion>1.0.0-alpha0001</PackageVersion>
+    <PackageVersion>4.0.3</PackageVersion>
     <Description>Csv text editor library.</Description>
     <PackageTags>orc;csv;text;editor</PackageTags>
     <UseWpf>true</UseWpf>
   </PropertyGroup>
-
   <PropertyGroup>
     <!-- SonarQube requires a project guid -->
     <ProjectGuid>A97B1B48-88B2-47DC-BC78-9AF835DCF2A0</ProjectGuid>
   </PropertyGroup>
-  
   <ItemGroup>
     <PackageReference Include="AvalonEdit" Version="6.0.1" />
     <PackageReference Include="Catel.Fody" Version="4.4.4" PrivateAssets="all" />
-    <PackageReference Include="Catel.MVVM" Version="5.12.7" />
-    <PackageReference Include="Fody" Version="6.2.0" PrivateAssets="all">
+    <PackageReference Include="Catel.MVVM" Version="5.12.10" />
+    <PackageReference Include="Fody" Version="6.3.0" PrivateAssets="all">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="MethodTimer.Fody" Version="3.1.2" PrivateAssets="all" />
-    <PackageReference Include="ModuleInit.Fody" Version="2.1.0" PrivateAssets="all" />
+    <PackageReference Include="ModuleInit.Fody" Version="2.1.1" PrivateAssets="all" />
     <PackageReference Include="Obsolete.Fody" Version="5.2.1" PrivateAssets="all" />
-    <PackageReference Include="Orc.Controls" Version="4.0.4" />
+    <PackageReference Include="Orc.Controls" Version="4.1.1" />
   </ItemGroup>
-
   <ItemGroup>
     <None Remove="Resources\Highlightings\CustomHighlighting.xshd" />
     <EmbeddedResource Include="Resources\Highlightings\CustomHighlighting.xshd" />
   </ItemGroup>
-  
   <ItemGroup>
     <PackageReference Update="NETStandard.Library" Version="2.0.3" />
+    <PackageReference Update="WpfAnalyzers" Version="3.2.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
-
   <Import Project="$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props')" />
   <Import Project="$(MSBuildProjectDirectory)\..\Directory.build.shared.mat.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.build.shared.mat.props')" />
 </Project>
