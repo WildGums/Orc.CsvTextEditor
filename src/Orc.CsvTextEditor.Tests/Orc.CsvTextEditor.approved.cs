@@ -74,12 +74,12 @@ namespace Orc.CsvTextEditor
         public bool IsDirty { get; }
         public string LineEnding { get; }
         public int LinesCount { get; }
+        public Orc.Controls.Tools.IControlToolManager ToolManager { get; }
         public System.Collections.Generic.IEnumerable<Orc.Controls.IControlTool> Tools { get; }
         public event System.EventHandler<Orc.CsvTextEditor.CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
         public event System.EventHandler<System.EventArgs> EditorAttached;
         public event System.EventHandler<System.EventArgs> EditorDetached;
         public event System.EventHandler<System.EventArgs> TextChanged;
-        public void AddTool(Orc.Controls.IControlTool tool) { }
         public void AttachEditor(object editor) { }
         public void Copy() { }
         public void Cut() { }
@@ -100,7 +100,6 @@ namespace Orc.CsvTextEditor
         public void Paste() { }
         public void Redo() { }
         public void RefreshView() { }
-        public void RemoveTool(Orc.Controls.IControlTool tool) { }
         public void ResetIsDirty() { }
         public void SetText(string text) { }
         public void Undo() { }
@@ -161,6 +160,7 @@ namespace Orc.CsvTextEditor
         bool IsDirty { get; }
         string LineEnding { get; }
         int LinesCount { get; }
+        Orc.Controls.Tools.IControlToolManager ToolManager { get; }
         System.Collections.Generic.IEnumerable<Orc.Controls.IControlTool> Tools { get; }
         event System.EventHandler<Orc.CsvTextEditor.CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
         event System.EventHandler<System.EventArgs> EditorAttached;
@@ -194,7 +194,7 @@ namespace Orc.CsvTextEditor
         public static Orc.Controls.IControlTool GetToolByName(this Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance, string toolName) { }
         public static void ShowTool(this Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance, string toolName, object parameter = null) { }
         public static void ShowTool<T>(this Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance, object parameter = null)
-            where T : Orc.Controls.IControlTool { }
+            where T :  class, Orc.Controls.IControlTool { }
     }
     public static class KeyGestureExtensions
     {
