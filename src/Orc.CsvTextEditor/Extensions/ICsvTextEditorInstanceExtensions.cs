@@ -26,7 +26,7 @@ namespace Orc.CsvTextEditor
             }
 
             var tool = csvTextEditorInstance.Tools.OfType<T>().FirstOrDefault();
-            if (tool != null)
+            if (tool is null)
             {
                 tool = toolManager.AttachTool(typeof(T)) as T;
             }
