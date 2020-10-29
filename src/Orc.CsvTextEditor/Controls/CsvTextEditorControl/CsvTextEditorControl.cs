@@ -45,7 +45,7 @@ namespace Orc.CsvTextEditor
 
             CreateRoutedCommandBinding(GotoNextColumn, () => CsvTextEditorInstance?.ExecuteOperation<GotoNextColumnOperation>());
             CreateRoutedCommandBinding(GotoPreviousColumn, () => CsvTextEditorInstance?.ExecuteOperation<GotoPreviousColumnOperation>());
-           
+
             CreateRoutedCommandBinding(Undo, () => CsvTextEditorInstance?.Undo(), () => CsvTextEditorInstance?.CanUndo == true);
             CreateRoutedCommandBinding(Redo, () => CsvTextEditorInstance?.Redo(), () => CsvTextEditorInstance?.CanRedo == true);
 
@@ -64,10 +64,10 @@ namespace Orc.CsvTextEditor
         public static RoutedCommand Paste { get; } = new RoutedCommand(nameof(Paste), typeof(CsvTextEditorControl));
         public static RoutedCommand Cut { get; } = new RoutedCommand(nameof(Cut), typeof(CsvTextEditorControl));
         public static RoutedCommand Copy { get; } = new RoutedCommand(nameof(Copy), typeof(CsvTextEditorControl));
-        
+
         public static RoutedCommand GotoNextColumn { get; } = new RoutedCommand(nameof(GotoNextColumn), typeof(CsvTextEditorControl));
         public static RoutedCommand GotoPreviousColumn { get; } = new RoutedCommand(nameof(GotoPreviousColumn), typeof(CsvTextEditorControl));
-       
+
         public static RoutedCommand Undo { get; } = new RoutedCommand(nameof(Undo), typeof(CsvTextEditorControl));
         public static RoutedCommand Redo { get; } = new RoutedCommand(nameof(Redo), typeof(CsvTextEditorControl));
 
@@ -167,7 +167,7 @@ namespace Orc.CsvTextEditor
             CsvTextEditorInstance?.AttachEditor(_textEditor);
             UpdateInitialization();
         }
-        
+
         private void OnTextEditorTextChanged(object sender, EventArgs e)
         {
             if (_synchronizationService?.IsSynchronizing ?? true)

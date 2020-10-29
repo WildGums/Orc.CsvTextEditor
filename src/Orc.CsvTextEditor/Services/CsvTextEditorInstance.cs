@@ -121,11 +121,16 @@ namespace Orc.CsvTextEditor
                 return;
             }
 
+            // NOTE: Performance tips: https://github.com/icsharpcode/AvalonEdit/issues/11
             // Need to make these options accessible to the user in the settings window
             _textEditor.SetCurrentValue(TextEditor.ShowLineNumbersProperty, true);
             _textEditor.Options.HighlightCurrentLine = true;
-            _textEditor.Options.ShowEndOfLine = true;
-            _textEditor.Options.ShowTabs = true;
+            _textEditor.Options.ShowEndOfLine = false;
+            _textEditor.Options.ShowTabs = false;
+            _textEditor.Options.ShowSpaces = false;
+            _textEditor.Options.EnableEmailHyperlinks = false;
+            _textEditor.Options.EnableHyperlinks = false;
+            _textEditor.Options.AllowScrollBelowDocument = false;
 
             _elementGenerator = _typeFactory.CreateInstance<TabSpaceElementGenerator>();
 
