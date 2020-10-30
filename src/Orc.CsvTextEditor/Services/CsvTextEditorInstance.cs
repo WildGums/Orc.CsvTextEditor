@@ -536,7 +536,7 @@ namespace Orc.CsvTextEditor
             finally
             {
                 _settingInitialText = false;
-            }            
+            }
         }
 
         public void ResetIsDirty()
