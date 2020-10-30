@@ -1,6 +1,6 @@
 <Project Sdk="MSBuild.Sdk.Extras">
   <PropertyGroup>
-    <TargetFrameworks>net50-windows</TargetFrameworks>
+    <TargetFrameworks>net46;net47;netcoreapp3.1</TargetFrameworks>
     <AssemblyName>Orc.CsvTextEditor</AssemblyName>
     <RootNamespace>Orc.CsvTextEditor</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
