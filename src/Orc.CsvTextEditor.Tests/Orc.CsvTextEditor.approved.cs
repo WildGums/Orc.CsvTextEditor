@@ -1,4 +1,4 @@
-﻿[assembly: System.Resources.NeutralResourcesLanguage("en-US")]
+[assembly: System.Resources.NeutralResourcesLanguage("en-US")]
 [assembly: System.Runtime.Versioning.TargetFramework(".NETCoreApp,Version=v3.1", FrameworkDisplayName="")]
 [assembly: System.Windows.Markup.XmlnsDefinition("http://schemas.wildgums.com/orc/csvtexteditor", "Orc.CsvTextEditor")]
 [assembly: System.Windows.Markup.XmlnsPrefix("http://schemas.wildgums.com/orc/csvtexteditor", "orccsvtexteditor")]
@@ -101,6 +101,7 @@ namespace Orc.CsvTextEditor
         public void Redo() { }
         public void RefreshView() { }
         public void ResetIsDirty() { }
+        public void SetInitialText(string text) { }
         public void SetText(string text) { }
         public void Undo() { }
     }
@@ -186,6 +187,7 @@ namespace Orc.CsvTextEditor
         void Redo();
         void RefreshView();
         void ResetIsDirty();
+        void SetInitialText(string text);
         void SetText(string text);
         void Undo();
     }
