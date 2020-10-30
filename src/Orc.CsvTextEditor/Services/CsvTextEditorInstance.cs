@@ -51,6 +51,7 @@ namespace Orc.CsvTextEditor
         private bool _isInRedoUndo;
         private Location _lastLocation;
         private int _textChangingIterator;
+        private bool _settingInitialText;
 
         private TextEditor _textEditor;
         private CsvTextEditorControl _csvTextEditorControl;
@@ -97,7 +98,7 @@ namespace Orc.CsvTextEditor
         public bool IsAutocompleteEnabled { get; set; } = true;
         public bool HasSelection => _textEditor?.SelectionLength > 0;
         public bool CanRedo => !_initializing && (_textEditor?.CanRedo ?? false);
-        public bool CanUndo => !_initializing && (_textEditor?.CanUndo ?? false);
+        public bool CanUndo => IsDirty && !_initializing && (_textEditor?.CanUndo ?? false);
         public string LineEnding => _elementGenerator?.NewLine ?? string.Empty;
         public bool IsDirty => _textChangingIterator != 0;
         #endregion
@@ -430,6 +431,12 @@ namespace Orc.CsvTextEditor
 
         private void UpdateTextChangingIterator()
         {
+            if (_settingInitialText)
+            {
+                ResetIsDirty();
+                return;
+            }
+
             switch (_editingState)
             {
                 case EditingState.Undoing:
@@ -516,6 +523,20 @@ namespace Orc.CsvTextEditor
 
                 UpdateText(text);
             });
+        }
+
+        public void SetInitialText(string text)
+        {
+            _settingInitialText = true;
+
+            try
+            {
+                SetText(text);
+            }
+            finally
+            {
+                _settingInitialText = false;
+            }            
         }
 
         public void ResetIsDirty()
