@@ -683,6 +683,26 @@ namespace Orc.CsvTextEditor
             return _textEditor.TextArea.Selection.GetText();
         }
 
+        public void SetSelectedText(string text)
+        {
+            _highlightAllOccurrencesOfSelectedWordTransformer.SelectedWord = text;
+
+            _textEditor.TextArea.TextView.Redraw();
+        }
+
+        public void SetSelection(int start, int length)
+        {
+            _textEditor.SelectionStart = start;
+            _textEditor.SelectionLength = length;
+
+            if (length == 0)
+            {
+                return;
+            }
+
+            _textEditor.TextArea.TextView.Redraw();
+        }
+
         public bool IsCaretWithinQuotedField()
         {
             var caretPosition = _textEditor.CaretOffset;
