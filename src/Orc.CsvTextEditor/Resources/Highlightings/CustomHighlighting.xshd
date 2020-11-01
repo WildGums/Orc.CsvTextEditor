@@ -1,9 +1,10 @@
 ﻿<?xml version="1.0"?>
 <SyntaxDefinition name="Custom Highlighting" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
   <RuleSet>
-    <Rule foreground="Red" background="Red">\t</Rule>
-    <Rule foreground="black" background="Tomato">(?i)^false|no$(?-i)</Rule>
-    <Rule foreground="black" background="YellowGreen">(?i)^true|yes$(?-i)</Rule>
+    <!-- Find color names here https://www.w3schools.com/colors/colors_names.asp -->
+    <Rule foreground="White" background="SeaShell">\s+(?=,)</Rule>
+    <Rule foreground="Black" background="LightCoral">(?i)\b(false|no|n(?=,))\b(?-i)</Rule>
+    <Rule foreground="Black" background="LightGreen">(?i)\b(true|yes|y(?=,))\b(?-i)</Rule>
 
     <!-- Digits -->
     <Rule foreground="Blue">[\d.%]+</Rule>
