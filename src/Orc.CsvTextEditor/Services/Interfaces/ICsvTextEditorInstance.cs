@@ -57,8 +57,11 @@ namespace Orc.CsvTextEditor
         void RefreshView();
 
         string GetSelectedText();
+        void SetSelectedText(string text);
+        void SetSelection(int start, int length);
         string GetText();
         void SetText(string text);
+        void SetInitialText(string text);
         #endregion
 
         #region Events

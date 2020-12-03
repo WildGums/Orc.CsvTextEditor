@@ -51,6 +51,7 @@ namespace Orc.CsvTextEditor
         private bool _isInRedoUndo;
         private Location _lastLocation;
         private int _textChangingIterator;
+        private bool _settingInitialText;
 
         private TextEditor _textEditor;
         private CsvTextEditorControl _csvTextEditorControl;
@@ -97,7 +98,7 @@ namespace Orc.CsvTextEditor
         public bool IsAutocompleteEnabled { get; set; } = true;
         public bool HasSelection => _textEditor?.SelectionLength > 0;
         public bool CanRedo => !_initializing && (_textEditor?.CanRedo ?? false);
-        public bool CanUndo => !_initializing && (_textEditor?.CanUndo ?? false);
+        public bool CanUndo => IsDirty && !_initializing && (_textEditor?.CanUndo ?? false);
         public string LineEnding => _elementGenerator?.NewLine ?? string.Empty;
         public bool IsDirty => _textChangingIterator != 0;
         #endregion
@@ -121,11 +122,16 @@ namespace Orc.CsvTextEditor
                 return;
             }
 
+            // NOTE: Performance tips: https://github.com/icsharpcode/AvalonEdit/issues/11
             // Need to make these options accessible to the user in the settings window
             _textEditor.SetCurrentValue(TextEditor.ShowLineNumbersProperty, true);
             _textEditor.Options.HighlightCurrentLine = true;
-            _textEditor.Options.ShowEndOfLine = true;
-            _textEditor.Options.ShowTabs = true;
+            _textEditor.Options.ShowEndOfLine = false;
+            _textEditor.Options.ShowTabs = false;
+            _textEditor.Options.ShowSpaces = false;
+            _textEditor.Options.EnableEmailHyperlinks = false;
+            _textEditor.Options.EnableHyperlinks = false;
+            _textEditor.Options.AllowScrollBelowDocument = false;
 
             _elementGenerator = _typeFactory.CreateInstance<TabSpaceElementGenerator>();
 
@@ -425,6 +431,12 @@ namespace Orc.CsvTextEditor
 
         private void UpdateTextChangingIterator()
         {
+            if (_settingInitialText)
+            {
+                ResetIsDirty();
+                return;
+            }
+
             switch (_editingState)
             {
                 case EditingState.Undoing:
@@ -511,6 +523,20 @@ namespace Orc.CsvTextEditor
 
                 UpdateText(text);
             });
+        }
+
+        public void SetInitialText(string text)
+        {
+            _settingInitialText = true;
+
+            try
+            {
+                SetText(text);
+            }
+            finally
+            {
+                _settingInitialText = false;
+            }
         }
 
         public void ResetIsDirty()
@@ -655,6 +681,26 @@ namespace Orc.CsvTextEditor
         public string GetSelectedText()
         {
             return _textEditor.TextArea.Selection.GetText();
+        }
+
+        public void SetSelectedText(string text)
+        {
+            _highlightAllOccurrencesOfSelectedWordTransformer.SelectedWord = text;
+
+            _textEditor.TextArea.TextView.Redraw();
+        }
+
+        public void SetSelection(int start, int length)
+        {
+            _textEditor.SelectionStart = start;
+            _textEditor.SelectionLength = length;
+
+            if (length == 0)
+            {
+                return;
+            }
+
+            _textEditor.TextArea.TextView.Redraw();
         }
 
         public bool IsCaretWithinQuotedField()

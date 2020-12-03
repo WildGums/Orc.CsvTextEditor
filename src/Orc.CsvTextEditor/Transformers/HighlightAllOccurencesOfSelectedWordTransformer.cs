@@ -14,7 +14,7 @@ namespace Orc.CsvTextEditor
     using ICSharpCode.AvalonEdit.Rendering;
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <remarks>
     /// This code originally comes from http://stackoverflow.com/questions/9223674/highlight-all-occurrences-of-selected-word-in-avalonedit.
@@ -34,7 +34,7 @@ namespace Orc.CsvTextEditor
             var start = 0;
             int index;
 
-            if (string.IsNullOrEmpty(SelectedWord) || Selection == null)
+            if (string.IsNullOrEmpty(SelectedWord))
             {
                 return;
             }
@@ -42,7 +42,7 @@ namespace Orc.CsvTextEditor
             while ((index = text.IndexOf(SelectedWord, start, StringComparison.Ordinal)) >= 0)
             {
                 // Don't highlight the current selection
-                if (Selection.StartPosition.Column == index + 1 && Selection.StartPosition.Line == line.LineNumber)
+                if (Selection != null && Selection.StartPosition.Column == index + 1 && Selection.StartPosition.Line == line.LineNumber)
                 {
                     start = Selection.EndPosition.Column;
 
