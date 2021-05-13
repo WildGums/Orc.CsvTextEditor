@@ -42,14 +42,14 @@ namespace Orc.CsvTextEditor
         private void OnCommandPropertyChanged()
         {
             var textArea = AssociatedObject?.TextArea;
-            if (textArea == null)
+            if (textArea is null)
             {
                 return;
             }
 
             var commandBindings = textArea.CommandBindings;
 
-            if (_replacedCommandBinding != null)
+            if (_replacedCommandBinding is not null)
             {
                 commandBindings.Add(_replacedCommandBinding);
             }

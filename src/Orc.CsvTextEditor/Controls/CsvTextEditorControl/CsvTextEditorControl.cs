@@ -176,7 +176,7 @@ namespace Orc.CsvTextEditor
             }
 
             var textEditor = _textEditor;
-            if (textEditor == null)
+            if (textEditor is null)
             {
                 return;
             }
@@ -200,7 +200,7 @@ namespace Orc.CsvTextEditor
         private void UpdateServiceRegistration(bool forceCreate = true)
         {
             var wrapperInstanceType = EditorInstanceType;
-            if (_textEditor == null || wrapperInstanceType == null)
+            if (_textEditor is null || wrapperInstanceType is null)
             {
                 return;
             }
@@ -242,7 +242,7 @@ namespace Orc.CsvTextEditor
             var routedCommandBinding = new CommandBinding { Command = routedCommand };
             routedCommandBinding.Executed += (sender, args) => executeAction?.Invoke();
 
-            if (canExecute != null)
+            if (canExecute is not null)
             {
                 routedCommandBinding.CanExecute += (sender, args) => args.CanExecute = canExecute.Invoke();
             }

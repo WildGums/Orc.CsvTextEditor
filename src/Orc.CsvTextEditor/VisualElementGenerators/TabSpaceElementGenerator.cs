@@ -213,7 +213,7 @@ namespace Orc.CsvTextEditor
 
         public override int GetFirstInterestedOffset(int startOffset)
         {
-            if (Lines == null)
+            if (Lines is null)
             {
                 return startOffset;
             }
@@ -228,7 +228,7 @@ namespace Orc.CsvTextEditor
                 return startOffset;
             }
 
-            if (column == null || column.Index == ColumnWidth.Length - 1)
+            if (column is null || column.Index == ColumnWidth.Length - 1)
             {
                 if (Lines.Length == locationLine)
                 {
