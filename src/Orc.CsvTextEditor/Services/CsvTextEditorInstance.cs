@@ -669,6 +669,11 @@ namespace Orc.CsvTextEditor
 
         public void RefreshView()
         {
+            if (_textEditor is null)
+            {
+                return;
+            }
+
             _elementGenerator.Refresh(_textEditor.Text);
             _textEditor.TextArea.TextView.Redraw();
         }
