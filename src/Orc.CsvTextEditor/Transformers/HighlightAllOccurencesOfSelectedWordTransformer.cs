@@ -42,7 +42,7 @@ namespace Orc.CsvTextEditor
             while ((index = text.IndexOf(SelectedWord, start, StringComparison.Ordinal)) >= 0)
             {
                 // Don't highlight the current selection
-                if (Selection != null && Selection.StartPosition.Column == index + 1 && Selection.StartPosition.Line == line.LineNumber)
+                if (Selection is not null && Selection.StartPosition.Column == index + 1 && Selection.StartPosition.Line == line.LineNumber)
                 {
                     start = Selection.EndPosition.Column;
 

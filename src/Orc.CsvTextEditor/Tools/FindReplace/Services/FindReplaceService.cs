@@ -9,7 +9,7 @@ namespace Orc.CsvTextEditor
 {
     using System.Text.RegularExpressions;
     using Catel;
-    using Controls.Extensions;
+    using Controls;
     using ICSharpCode.AvalonEdit;
 
     public class FindReplaceService : Controls.Services.IFindReplaceService

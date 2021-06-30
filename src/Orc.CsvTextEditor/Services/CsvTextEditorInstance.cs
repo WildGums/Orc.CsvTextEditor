@@ -246,7 +246,7 @@ namespace Orc.CsvTextEditor
                 return;
             }
 
-            if (_completionWindow != null)
+            if (_completionWindow is not null)
             {
                 return;
             }
@@ -278,7 +278,7 @@ namespace Orc.CsvTextEditor
         {
             using (var customHighlightings = GetType().Assembly.GetManifestResourceStream("Orc.CsvTextEditor.Resources.Highlightings.CustomHighlighting.xshd"))
             {
-                if (customHighlightings == null)
+                if (customHighlightings is null)
                 {
                     throw Log.ErrorAndCreateException<InvalidOperationException>("Could not find embedded resource");
                 }
@@ -463,12 +463,12 @@ namespace Orc.CsvTextEditor
         private void OnCaretPositionChanged(object sender, EventArgs eventArgs)
         {
             var location = GetLocation();
-            if (location == null)
+            if (location is null)
             {
                 return;
             }
 
-            if (_lastLocation != null && _lastLocation.Offset == location.Offset)
+            if (_lastLocation is not null && _lastLocation.Offset == location.Offset)
             {
                 return;
             }
@@ -597,7 +597,7 @@ namespace Orc.CsvTextEditor
             var textLocation = textDocument.GetLocation(offset);
 
             var column = _elementGenerator.GetColumn(textLocation);
-            if (column == null)
+            if (column is null)
             {
                 return null;
             }
@@ -669,6 +669,11 @@ namespace Orc.CsvTextEditor
 
         public void RefreshView()
         {
+            if (_textEditor is null)
+            {
+                return;
+            }
+
             _elementGenerator.Refresh(_textEditor.Text);
             _textEditor.TextArea.TextView.Redraw();
         }

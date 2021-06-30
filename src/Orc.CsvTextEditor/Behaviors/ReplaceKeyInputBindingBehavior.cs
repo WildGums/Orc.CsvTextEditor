@@ -89,7 +89,7 @@ namespace Orc.CsvTextEditor
 
                 var routedCommand = commandBinding.Command as RoutedCommand;
                 var gesture = routedCommand?.InputGestures.OfType<KeyGesture>().FirstOrDefault(x => x.IsKeyAndModifierEquals(Gesture));
-                if (gesture == null)
+                if (gesture is null)
                 {
                     continue;
                 }
@@ -102,7 +102,7 @@ namespace Orc.CsvTextEditor
             }
 
             var inputBindings = textArea.InputBindings;
-            if (_removedInputBinding != null)
+            if (_removedInputBinding is not null)
             {
                 inputBindings.Add(_removedInputBinding);
             }
