@@ -36,6 +36,7 @@ namespace Orc.CsvTextEditor
         bool IsCaretWithinQuotedField();
 
         void InsertAtCaret(char character);
+        void InsertAtPosition(int offset, string str);
 
         void ResetIsDirty();
         void Copy();
@@ -53,6 +54,7 @@ namespace Orc.CsvTextEditor
         void DeletePreviousSelectedText();
 
         void GotoPosition(int lineIndex, int columnIndex);
+        void GotoPosition(int offset);
 
         void RefreshView();
 
