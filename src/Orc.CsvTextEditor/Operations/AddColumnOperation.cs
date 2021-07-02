@@ -24,8 +24,8 @@ namespace Orc.CsvTextEditor.Operations
             var endPosition = startPosition + location.Column.Width;
 
             var text = CsvTextEditorInstance.GetText();
-            text = TryRemoveQuoteFromPosition(endPosition - 2, text, out var quotesRemoved);
-            text = TryRemoveQuoteFromPosition(startPosition, text, out quotesRemoved);
+            text = RemoveQuoteFromPosition(endPosition - 2, text, out var quotesRemoved);
+            text = RemoveQuoteFromPosition(startPosition, text, out quotesRemoved);
 
             var offsetDelta = -1;
             if (!quotesRemoved)
@@ -42,7 +42,7 @@ namespace Orc.CsvTextEditor.Operations
             CsvTextEditorInstance.GotoPosition(location.Offset + offsetDelta);
         }
 
-        private static string TryRemoveQuoteFromPosition(int symbolPosition, string text, out bool quotesRemoved)
+        private static string RemoveQuoteFromPosition(int symbolPosition, string text, out bool quotesRemoved)
         {
             quotesRemoved = false;
             if (symbolPosition >= text.Length || symbolPosition < 0)
