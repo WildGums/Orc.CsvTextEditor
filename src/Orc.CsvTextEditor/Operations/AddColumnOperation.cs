@@ -7,15 +7,18 @@
 
 namespace Orc.CsvTextEditor.Operations
 {
+    using Catel.Logging;
+
     internal class QuoteColumnOperation : OperationBase
     {
+        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+
         #region Constructors
         public QuoteColumnOperation(ICsvTextEditorInstance csvTextEditorInstance)
             : base(csvTextEditorInstance)
         {
         }
         #endregion
-
 
         public override void Execute()
         {
@@ -24,8 +27,19 @@ namespace Orc.CsvTextEditor.Operations
             var endPosition = startPosition + location.Column.Width;
 
             var text = CsvTextEditorInstance.GetText();
-            text = RemoveQuoteFromPosition(endPosition - 2, text, out var quotesRemoved);
-            text = RemoveQuoteFromPosition(startPosition, text, out quotesRemoved);
+
+            var quotesRemoved = false;
+            if (TryRemoveQuoteFromPosition(endPosition - 2, text, out var outputText))
+            {
+                text = outputText;
+                quotesRemoved = true;
+            }
+
+            if (TryRemoveQuoteFromPosition(startPosition, text, out outputText))
+            {
+                text = outputText;
+                quotesRemoved = true;
+            }
 
             var offsetDelta = -1;
             if (!quotesRemoved)
@@ -38,28 +52,28 @@ namespace Orc.CsvTextEditor.Operations
             }
 
             CsvTextEditorInstance.SetText(text);
-
             CsvTextEditorInstance.GotoPosition(location.Offset + offsetDelta);
+
+            Log.Debug($"{nameof(QuoteColumnOperation)} executed; quotes were {(quotesRemoved ? "removed" : "added")}");
         }
 
-        private static string RemoveQuoteFromPosition(int symbolPosition, string text, out bool quotesRemoved)
+        private static bool TryRemoveQuoteFromPosition(int symbolPosition, string inputText, out string outputText)
         {
-            quotesRemoved = false;
-            if (symbolPosition >= text.Length || symbolPosition < 0)
+            outputText = inputText;
+            if (symbolPosition >= inputText.Length || symbolPosition < 0)
             {
-                return text;
+                return false;
             }
 
-            var startSymbol = text[symbolPosition];
+            var startSymbol = inputText[symbolPosition];
             if (!Equals(startSymbol, Symbols.Quote))
             {
-                return text;
+                return false;
             }
 
-            text = text.Remove(symbolPosition, 1);
-            quotesRemoved = true;
+            outputText = inputText.Remove(symbolPosition, 1);
 
-            return text;
+            return true;
         }
     }
 
