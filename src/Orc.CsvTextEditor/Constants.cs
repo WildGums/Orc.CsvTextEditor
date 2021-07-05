@@ -19,4 +19,10 @@ namespace Orc.CsvTextEditor
         public const char VerticalBar = '|';
         #endregion
     }
+
+    public static class SymbolsStr
+    {
+        public static readonly string Comma = Symbols.Comma.ToString();
+        public static readonly string Quote = Symbols.Quote.ToString();
+    }
 }

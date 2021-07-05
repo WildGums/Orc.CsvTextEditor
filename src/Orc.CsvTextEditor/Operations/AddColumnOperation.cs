@@ -50,13 +50,12 @@
             }
 
             var startPosition = location.Column.Offset + location.Line.Offset;
-            var quoteStr = Symbols.Quote.ToString();
 
             var text = CsvTextEditorInstance.GetText();
 
-            text = text.Insert(startPosition, quoteStr);
-            text = text.Insert(location.Offset + 1, Symbols.Comma.ToString());
-            text = text.Insert(startPosition + location.Column.Width + 1, quoteStr);
+            text = text.Insert(startPosition, SymbolsStr.Quote);
+            text = text.Insert(location.Offset + 1, SymbolsStr.Comma);
+            text = text.Insert(startPosition + location.Column.Width + 1, SymbolsStr.Quote);
 
             CsvTextEditorInstance.SetText(text);
             CsvTextEditorInstance.GotoPosition(location.Offset + 2);

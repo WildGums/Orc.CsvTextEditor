@@ -6,8 +6,6 @@
     {
         #region Fields
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
-
-        private static readonly string QuoteString = Symbols.Quote.ToString();
         #endregion
 
         #region Constructors
@@ -42,8 +40,8 @@
             var offsetDelta = -1;
             if (!quotesRemoved)
             {
-                text = text.Insert(startPosition, QuoteString)
-                    .Insert(endPosition, QuoteString);
+                text = text.Insert(startPosition, SymbolsStr.Quote)
+                    .Insert(endPosition, SymbolsStr.Quote);
 
                 offsetDelta = 1;
             }
