@@ -54,6 +54,7 @@ namespace Orc.CsvTextEditor
             CreateRoutedCommandBinding(DuplicateLine, () => CsvTextEditorInstance?.ExecuteOperation<DuplicateLineOperation>());
             CreateRoutedCommandBinding(RemoveColumn, () => CsvTextEditorInstance?.ExecuteOperation<RemoveColumnOperation>());
             CreateRoutedCommandBinding(AddColumn, () => CsvTextEditorInstance?.ExecuteOperation<AddColumnOperation>());
+            CreateRoutedCommandBinding(QuoteColumn, () => CsvTextEditorInstance?.ExecuteOperation<QuoteColumnOperation>());
 
             CreateRoutedCommandBinding(DeleteNextSelectedText, () => CsvTextEditorInstance?.DeleteNextSelectedText());
             CreateRoutedCommandBinding(DeletePreviousSelectedText, () => CsvTextEditorInstance?.DeletePreviousSelectedText());
@@ -61,24 +62,25 @@ namespace Orc.CsvTextEditor
         #endregion
 
         #region Routed commands
-        public static RoutedCommand Paste { get; } = new RoutedCommand(nameof(Paste), typeof(CsvTextEditorControl));
-        public static RoutedCommand Cut { get; } = new RoutedCommand(nameof(Cut), typeof(CsvTextEditorControl));
-        public static RoutedCommand Copy { get; } = new RoutedCommand(nameof(Copy), typeof(CsvTextEditorControl));
+        public static RoutedCommand Paste { get; } = new(nameof(Paste), typeof(CsvTextEditorControl));
+        public static RoutedCommand Cut { get; } = new(nameof(Cut), typeof(CsvTextEditorControl));
+        public static RoutedCommand Copy { get; } = new(nameof(Copy), typeof(CsvTextEditorControl));
 
-        public static RoutedCommand GotoNextColumn { get; } = new RoutedCommand(nameof(GotoNextColumn), typeof(CsvTextEditorControl));
-        public static RoutedCommand GotoPreviousColumn { get; } = new RoutedCommand(nameof(GotoPreviousColumn), typeof(CsvTextEditorControl));
+        public static RoutedCommand GotoNextColumn { get; } = new(nameof(GotoNextColumn), typeof(CsvTextEditorControl));
+        public static RoutedCommand GotoPreviousColumn { get; } = new(nameof(GotoPreviousColumn), typeof(CsvTextEditorControl));
 
-        public static RoutedCommand Undo { get; } = new RoutedCommand(nameof(Undo), typeof(CsvTextEditorControl));
-        public static RoutedCommand Redo { get; } = new RoutedCommand(nameof(Redo), typeof(CsvTextEditorControl));
+        public static RoutedCommand Undo { get; } = new(nameof(Undo), typeof(CsvTextEditorControl));
+        public static RoutedCommand Redo { get; } = new(nameof(Redo), typeof(CsvTextEditorControl));
 
-        public static RoutedCommand AddLine { get; } = new RoutedCommand(nameof(AddLine), typeof(CsvTextEditorControl));
-        public static RoutedCommand RemoveLine { get; } = new RoutedCommand(nameof(RemoveLine), typeof(CsvTextEditorControl));
-        public static RoutedCommand DuplicateLine { get; } = new RoutedCommand(nameof(DuplicateLine), typeof(CsvTextEditorControl));
-        public static RoutedCommand RemoveColumn { get; } = new RoutedCommand(nameof(RemoveColumn), typeof(CsvTextEditorControl));
-        public static RoutedCommand AddColumn { get; } = new RoutedCommand(nameof(AddColumn), typeof(CsvTextEditorControl));
+        public static RoutedCommand AddLine { get; } = new(nameof(AddLine), typeof(CsvTextEditorControl));
+        public static RoutedCommand RemoveLine { get; } = new(nameof(RemoveLine), typeof(CsvTextEditorControl));
+        public static RoutedCommand DuplicateLine { get; } = new(nameof(DuplicateLine), typeof(CsvTextEditorControl));
+        public static RoutedCommand RemoveColumn { get; } = new(nameof(RemoveColumn), typeof(CsvTextEditorControl));
+        public static RoutedCommand AddColumn { get; } = new(nameof(AddColumn), typeof(CsvTextEditorControl));
+        public static RoutedCommand QuoteColumn { get; } = new(nameof(QuoteColumn), typeof(CsvTextEditorControl));
 
-        public static RoutedCommand DeleteNextSelectedText { get; } = new RoutedCommand(nameof(DeleteNextSelectedText), typeof(CsvTextEditorControl));
-        public static RoutedCommand DeletePreviousSelectedText { get; } = new RoutedCommand(nameof(DeletePreviousSelectedText), typeof(CsvTextEditorControl));
+        public static RoutedCommand DeleteNextSelectedText { get; } = new(nameof(DeleteNextSelectedText), typeof(CsvTextEditorControl));
+        public static RoutedCommand DeletePreviousSelectedText { get; } = new(nameof(DeletePreviousSelectedText), typeof(CsvTextEditorControl));
         #endregion
 
         #region Dependency properties

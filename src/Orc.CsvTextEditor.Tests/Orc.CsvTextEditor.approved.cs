@@ -51,6 +51,7 @@ namespace Orc.CsvTextEditor
         public static System.Windows.Input.RoutedCommand GotoNextColumn { get; }
         public static System.Windows.Input.RoutedCommand GotoPreviousColumn { get; }
         public static System.Windows.Input.RoutedCommand Paste { get; }
+        public static System.Windows.Input.RoutedCommand QuoteColumn { get; }
         public static System.Windows.Input.RoutedCommand Redo { get; }
         public static System.Windows.Input.RoutedCommand RemoveColumn { get; }
         public static System.Windows.Input.RoutedCommand RemoveLine { get; }
@@ -93,9 +94,11 @@ namespace Orc.CsvTextEditor
         public Orc.CsvTextEditor.Location GetLocation() { }
         public string GetSelectedText() { }
         public string GetText() { }
+        public void GotoPosition(int offset) { }
         public void GotoPosition(int lineIndex, int columnIndex) { }
         public void Initialize(string text) { }
         public void InsertAtCaret(char character) { }
+        public void InsertAtPosition(int offset, string str) { }
         public bool IsCaretWithinQuotedField() { }
         public void Paste() { }
         public void Redo() { }
@@ -142,6 +145,11 @@ namespace Orc.CsvTextEditor
         public FirstLineAlwaysBoldTransformer() { }
         protected override void ColorizeLine(ICSharpCode.AvalonEdit.Document.DocumentLine line) { }
     }
+    public class GrayedQuotesDocumentColorizingTransformer : ICSharpCode.AvalonEdit.Rendering.DocumentColorizingTransformer
+    {
+        public GrayedQuotesDocumentColorizingTransformer() { }
+        protected override void ColorizeLine(ICSharpCode.AvalonEdit.Document.DocumentLine line) { }
+    }
     public class HighlightAllOccurencesOfSelectedWordTransformer : ICSharpCode.AvalonEdit.Rendering.DocumentColorizingTransformer
     {
         public HighlightAllOccurencesOfSelectedWordTransformer() { }
@@ -181,9 +189,11 @@ namespace Orc.CsvTextEditor
         Orc.CsvTextEditor.Location GetLocation();
         string GetSelectedText();
         string GetText();
+        void GotoPosition(int offset);
         void GotoPosition(int lineIndex, int columnIndex);
         void Initialize(string text);
         void InsertAtCaret(char character);
+        void InsertAtPosition(int offset, string str);
         bool IsCaretWithinQuotedField();
         void Paste();
         void Redo();
@@ -267,6 +277,11 @@ namespace Orc.CsvTextEditor
         public const char Quote = '\"';
         public const char Space = ' ';
         public const char VerticalBar = '|';
+    }
+    public static class SymbolsStr
+    {
+        public static readonly string Comma;
+        public static readonly string Quote;
     }
     public class TextToTextArrayMultiValueConverter : System.Windows.Data.IMultiValueConverter
     {

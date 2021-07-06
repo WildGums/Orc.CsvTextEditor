@@ -35,6 +35,8 @@ namespace Orc.CsvTextEditor
         #region Fields
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
+        private static readonly string QuoteString = Symbols.Quote.ToString();
+
         private readonly ICommandManager _commandManager;
         private readonly IDispatcherService _dispatcherService;
         private readonly ICsvTextEditorInitializer _initializer;
@@ -46,6 +48,7 @@ namespace Orc.CsvTextEditor
         private EditingState _editingState = EditingState.None;
         private HighlightAllOccurencesOfSelectedWordTransformer _highlightAllOccurrencesOfSelectedWordTransformer;
         private FirstLineAlwaysBoldTransformer _firstLineAlwaysBoldTransformer;
+        private GrayedQuotesDocumentColorizingTransformer _invisibleQuotesTransformer;
         private bool _initializing;
         private bool _isInCustomUpdate;
         private bool _isInRedoUndo;
@@ -151,6 +154,9 @@ namespace Orc.CsvTextEditor
             _firstLineAlwaysBoldTransformer = new FirstLineAlwaysBoldTransformer();
             _textEditor.TextArea.TextView.LineTransformers.Add(_firstLineAlwaysBoldTransformer);
 
+            _invisibleQuotesTransformer = new GrayedQuotesDocumentColorizingTransformer();
+            _textEditor.TextArea.TextView.LineTransformers.Add(_invisibleQuotesTransformer);
+
             _initializer.Initialize(_textEditor, this);
 
             EditorAttached?.Invoke(this, EventArgs.Empty);
@@ -232,6 +238,15 @@ namespace Orc.CsvTextEditor
 
         private void OnTextEntering(object sender, TextCompositionEventArgs e)
         {
+            if (Equals(e.Text, QuoteString))
+            {
+                e.Handled = true;
+
+                ExecuteOperation<QuoteColumnOperation>();
+
+                return;
+            }
+
             if (IsAutocompleteEnabled)
             {
                 PerformAutoComplete(e.Text);
@@ -539,6 +554,11 @@ namespace Orc.CsvTextEditor
             }
         }
 
+        public void InsertAtPosition(int offset, string str)
+        {
+            _textEditor.Document.Insert(offset, str);
+        }
+
         public void ResetIsDirty()
         {
             _textChangingIterator = 0;
@@ -683,6 +703,11 @@ namespace Orc.CsvTextEditor
             _textEditor.SetCaretToSpecificLineAndColumn(lineIndex, columnIndex, _elementGenerator.Lines);
         }
 
+        public void GotoPosition(int offset)
+        {
+            _textEditor.CaretOffset = offset;
+        }
+
         public string GetSelectedText()
         {
             return _textEditor.TextArea.Selection.GetText();
@@ -717,7 +742,9 @@ namespace Orc.CsvTextEditor
             var text = textDocument.Text;
             var currentLine = textDocument.GetLineByNumber(caretLocation.Line);
 
-            return text[currentLine.Offset + column.Offset] == Symbols.Quote;
+            var insertPosition = currentLine.Offset + column.Offset;
+
+            return text.Length > insertPosition && text[insertPosition] == Symbols.Quote;
         }
 
         public void InsertAtCaret(char character)

@@ -29,15 +29,15 @@ namespace Orc.CsvTextEditor
         #region Methods
         protected override void ColorizeLine(DocumentLine line)
         {
-            var lineStartOffset = line.Offset;
-            var text = CurrentContext.Document.GetText(line);
-            var start = 0;
-            int index;
-
             if (string.IsNullOrEmpty(SelectedWord))
             {
                 return;
             }
+
+            var lineStartOffset = line.Offset;
+            var text = CurrentContext.Document.GetText(line);
+            var start = 0;
+            int index;
 
             while ((index = text.IndexOf(SelectedWord, start, StringComparison.Ordinal)) >= 0)
             {
@@ -54,7 +54,7 @@ namespace Orc.CsvTextEditor
                     continue;
                 }
 
-                base.ChangeLinePart(
+                ChangeLinePart(
                     lineStartOffset + index, // startOffset
                     lineStartOffset + index + SelectedWord.Length, // endOffset
                     element => { element.TextRunProperties.SetBackgroundBrush(Brushes.PaleGreen); });
