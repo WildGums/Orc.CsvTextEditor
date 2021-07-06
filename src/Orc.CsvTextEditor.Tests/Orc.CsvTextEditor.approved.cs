@@ -278,6 +278,11 @@ namespace Orc.CsvTextEditor
         public const char Space = ' ';
         public const char VerticalBar = '|';
     }
+    public static class SymbolsStr
+    {
+        public static readonly string Comma;
+        public static readonly string Quote;
+    }
     public class TextToTextArrayMultiValueConverter : System.Windows.Data.IMultiValueConverter
     {
         public TextToTextArrayMultiValueConverter() { }
