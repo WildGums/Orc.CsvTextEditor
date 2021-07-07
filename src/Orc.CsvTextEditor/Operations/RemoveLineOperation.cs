@@ -19,23 +19,23 @@ namespace Orc.CsvTextEditor.Operations
         #region Methods
         public override void Execute()
         {
-            var location = CsvTextEditorInstance.GetLocation();
+            var location = _csvTextEditorInstance.GetLocation();
 
-            var text = CsvTextEditorInstance.GetText();
+            var text = _csvTextEditorInstance.GetText();
 
-            if (location.Line.Index == CsvTextEditorInstance.LinesCount - 1)
+            if (location.Line.Index == _csvTextEditorInstance.LinesCount - 1)
             {
                 text = text.Remove(location.Line.Offset);
                 text = text.TrimEnd();
             }
             else
             {
-                text = text.Remove(location.Line.Offset, location.Line.Length + CsvTextEditorInstance.LineEnding.Length);
+                text = text.Remove(location.Line.Offset, location.Line.Length + _csvTextEditorInstance.LineEnding.Length);
             }
 
-            CsvTextEditorInstance.SetText(text);
+            _csvTextEditorInstance.SetText(text);
 
-            CsvTextEditorInstance.GotoPosition(location.Line.Index - 1, location.Column.Index);
+            _csvTextEditorInstance.GotoPosition(location.Line.Index - 1, location.Column.Index);
         }
         #endregion
     }

@@ -27,10 +27,10 @@ namespace Orc.CsvTextEditor.Operations
         {
             Log.Debug("Removing duplicate lines");
 
-            var text = CsvTextEditorInstance.GetText();
+            var text = _csvTextEditorInstance.GetText();
             var lines = text.GetLines(out var newLineSymbol);
 
-            CsvTextEditorInstance.SetText(string.Join(newLineSymbol, lines));
+            _csvTextEditorInstance.SetText(string.Join(newLineSymbol, lines));
         }
         #endregion
     }

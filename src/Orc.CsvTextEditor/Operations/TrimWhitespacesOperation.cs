@@ -28,10 +28,10 @@ namespace Orc.CsvTextEditor.Operations
         {
             Log.Debug("Trimming white spaces");
 
-            var text = CsvTextEditorInstance.GetText();
+            var text = _csvTextEditorInstance.GetText();
             var lines = text.GetLines(out var newLineSymbol);
 
-            CsvTextEditorInstance.SetText(string.Join(newLineSymbol, lines.Select(x => x.TrimCommaSeparatedValues())));
+            _csvTextEditorInstance.SetText(string.Join(newLineSymbol, lines.Select(x => x.TrimCommaSeparatedValues())));
         }
         #endregion
     }

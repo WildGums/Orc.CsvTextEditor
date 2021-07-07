@@ -104,6 +104,9 @@ namespace Orc.CsvTextEditor
         public bool CanUndo => IsDirty && !_initializing && (_textEditor?.CanUndo ?? false);
         public string LineEnding => _elementGenerator?.NewLine ?? string.Empty;
         public bool IsDirty => _textChangingIterator != 0;
+        public int SelectionStart => _textEditor?.SelectionStart ?? 0;
+        public int SelectionLength => _textEditor?.SelectionLength ?? 0;
+        public string SelectionText => _textEditor?.SelectedText;
         #endregion
 
         #region Methods
@@ -571,10 +574,7 @@ namespace Orc.CsvTextEditor
 
         public void Paste()
         {
-            var text = Clipboard.GetText();
-            text = text.Replace(Symbols.Comma.ToString(), string.Empty)
-                .Replace(_elementGenerator.NewLine, string.Empty);
-            _textEditor.Document.Replace(_textEditor.SelectionStart, _textEditor.SelectionLength, text);
+            ExecuteOperation<PasteOperation>();
         }
 
         public void Redo()

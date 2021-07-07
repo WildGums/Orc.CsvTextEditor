@@ -28,10 +28,10 @@ namespace Orc.CsvTextEditor.Operations
         {
             Log.Debug("Removing blank lines");
 
-            var text = CsvTextEditorInstance.GetText();
+            var text = _csvTextEditorInstance.GetText();
             var lines = text.GetLines(out string newLineSymbol);
 
-            CsvTextEditorInstance.SetText(string.Join(newLineSymbol, lines.Where(x => !x.IsEmptyCommaSeparatedLine())));
+            _csvTextEditorInstance.SetText(string.Join(newLineSymbol, lines.Where(x => !x.IsEmptyCommaSeparatedLine())));
         }
         #endregion
     }
