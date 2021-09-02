@@ -19,13 +19,13 @@ namespace Orc.CsvTextEditor.Operations
         #region Methods
         public override void Execute()
         {
-            var location = CsvTextEditorInstance.GetLocation();
+            var location = _csvTextEditorInstance.GetLocation();
 
             var columnIndex = location.Column.Index;
             var lineIndex = location.Line.Index;
 
-            var isLastColumn = columnIndex + 1 == CsvTextEditorInstance.ColumnsCount;
-            var isLastLine = lineIndex + 1 == CsvTextEditorInstance.LinesCount;
+            var isLastColumn = columnIndex + 1 == _csvTextEditorInstance.ColumnsCount;
+            var isLastLine = lineIndex + 1 == _csvTextEditorInstance.LinesCount;
 
             if (isLastColumn && isLastLine)
             {
@@ -42,7 +42,7 @@ namespace Orc.CsvTextEditor.Operations
                 columnIndex++;
             }
 
-            CsvTextEditorInstance.GotoPosition(lineIndex, columnIndex);
+            _csvTextEditorInstance.GotoPosition(lineIndex, columnIndex);
         }
         #endregion
     }

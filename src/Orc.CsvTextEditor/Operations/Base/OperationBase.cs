@@ -12,7 +12,7 @@ namespace Orc.CsvTextEditor.Operations
     public abstract class OperationBase : IOperation
     {
         #region Fields
-        protected readonly ICsvTextEditorInstance CsvTextEditorInstance;
+        protected readonly ICsvTextEditorInstance _csvTextEditorInstance;
         #endregion
 
         #region Constructors
@@ -20,7 +20,7 @@ namespace Orc.CsvTextEditor.Operations
         {
             Argument.IsNotNull(() => csvTextEditorInstance);
 
-            CsvTextEditorInstance = csvTextEditorInstance;
+            _csvTextEditorInstance = csvTextEditorInstance;
         }
         #endregion
 
