@@ -75,6 +75,9 @@ namespace Orc.CsvTextEditor
         public bool IsDirty { get; }
         public string LineEnding { get; }
         public int LinesCount { get; }
+        public int SelectionLength { get; }
+        public int SelectionStart { get; }
+        public string SelectionText { get; }
         public Orc.Controls.Tools.IControlToolManager ToolManager { get; }
         public System.Collections.Generic.IEnumerable<Orc.Controls.IControlTool> Tools { get; }
         public event System.EventHandler<Orc.CsvTextEditor.CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
@@ -171,6 +174,9 @@ namespace Orc.CsvTextEditor
         bool IsDirty { get; }
         string LineEnding { get; }
         int LinesCount { get; }
+        int SelectionLength { get; }
+        int SelectionStart { get; }
+        string SelectionText { get; }
         Orc.Controls.Tools.IControlToolManager ToolManager { get; }
         System.Collections.Generic.IEnumerable<Orc.Controls.IControlTool> Tools { get; }
         event System.EventHandler<Orc.CsvTextEditor.CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
@@ -318,9 +324,14 @@ namespace Orc.CsvTextEditor.Operations
     }
     public abstract class OperationBase : Orc.CsvTextEditor.Operations.IOperation
     {
-        protected readonly Orc.CsvTextEditor.ICsvTextEditorInstance CsvTextEditorInstance;
+        protected readonly Orc.CsvTextEditor.ICsvTextEditorInstance _csvTextEditorInstance;
         protected OperationBase(Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance) { }
         public abstract void Execute();
+    }
+    public class PasteOperation : Orc.CsvTextEditor.Operations.OperationBase
+    {
+        public PasteOperation(Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance) { }
+        public override void Execute() { }
     }
     public class RemoveBlankLinesOperation : Orc.CsvTextEditor.Operations.OperationBase
     {
