@@ -82,7 +82,7 @@ namespace Orc.CsvTextEditor
             return true;
         }
 
-        public void ReplaceAll(string textToFind, string textToReplace, Controls.FindReplaceSettings settings)
+        public void ReplaceAll(string textToFind, string textToReplace, FindReplaceSettings settings)
         {
             Argument.IsNotNull(() => textToFind);
             Argument.IsNotNull(() => textToReplace);
@@ -97,7 +97,6 @@ namespace Orc.CsvTextEditor
                 _textEditor.Document.Replace(offset + match.Index, match.Length, textToReplace);
                 offset += textToReplace.Length - match.Length;
             }
-
             _textEditor.EndChange();
         }
         #endregion

@@ -26,6 +26,9 @@ namespace Orc.CsvTextEditor
         bool CanUndo { get; }
         string LineEnding { get; }
         bool IsDirty { get; }
+        int SelectionStart { get; }
+        int SelectionLength { get; }
+        string SelectionText { get; }
         #endregion
 
         #region Methods

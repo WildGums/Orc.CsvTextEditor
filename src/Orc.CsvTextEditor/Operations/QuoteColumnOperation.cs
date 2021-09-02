@@ -18,11 +18,11 @@
         #region Methods
         public override void Execute()
         {
-            var location = CsvTextEditorInstance.GetLocation();
+            var location = _csvTextEditorInstance.GetLocation();
             var startPosition = location.Column.Offset + location.Line.Offset;
             var endPosition = startPosition + location.Column.Width;
 
-            var text = CsvTextEditorInstance.GetText();
+            var text = _csvTextEditorInstance.GetText();
 
             var quotesRemoved = false;
             if (TryRemoveQuoteFromPosition(endPosition - 2, text, out var outputText))
@@ -46,8 +46,8 @@
                 offsetDelta = 1;
             }
 
-            CsvTextEditorInstance.SetText(text);
-            CsvTextEditorInstance.GotoPosition(location.Offset + offsetDelta);
+            _csvTextEditorInstance.SetText(text);
+            _csvTextEditorInstance.GotoPosition(location.Offset + offsetDelta);
 
             Log.Debug($"{nameof(QuoteColumnOperation)} executed; quotes were {(quotesRemoved ? "removed" : "added")}");
         }

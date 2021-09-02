@@ -23,9 +23,13 @@
 
                             <b:Interaction.Behaviors>
                                 <orccsvtexteditor:DisableTextDragDropBehavior/>
-                                <orccsvtexteditor:ReplaceCommandBindingBehavior ReplacementCommand="{x:Static ApplicationCommands.Paste}" Command="{x:Static orccsvtexteditor:CsvTextEditorControl.Paste}"/>
-                                <orccsvtexteditor:ReplaceCommandBindingBehavior ReplacementCommand="{x:Static ApplicationCommands.Cut}" Command="{x:Static orccsvtexteditor:CsvTextEditorControl.Cut}"/>
-                                <orccsvtexteditor:ReplaceCommandBindingBehavior ReplacementCommand="{x:Static ApplicationCommands.Copy}" Command="{x:Static orccsvtexteditor:CsvTextEditorControl.Copy}"/>
+                                <!--<orccsvtexteditor:ReplaceCommandBindingBehavior ReplacementCommand="{x:Static ApplicationCommands.Paste}" Command="{x:Static orccsvtexteditor:CsvTextEditorControl.Paste}"/>
+                                <orccsvtexteditor:ReplaceCommandBindingBehavior ReplacementCommand="{x:Static ApplicationCommands.Cut}" Command="{x:Static orccsvtexteditor:CsvTextEditorControl.Cut}"/>-->
+                                <!--<orccsvtexteditor:ReplaceCommandBindingBehavior ReplacementCommand="{x:Static ApplicationCommands.Copy}" Command="{x:Static orccsvtexteditor:CsvTextEditorControl.Copy}"/>-->
+
+                                <orccsvtexteditor:ReplaceKeyInputBindingBehavior Gesture="CTRL+C" Command="{x:Static orccsvtexteditor:CsvTextEditorControl.Copy}"/>
+                                <orccsvtexteditor:ReplaceKeyInputBindingBehavior Gesture="CTRL+V" Command="{x:Static orccsvtexteditor:CsvTextEditorControl.Paste}"/>
+                                <orccsvtexteditor:ReplaceKeyInputBindingBehavior Gesture="CTRL+X" Command="{x:Static orccsvtexteditor:CsvTextEditorControl.Cut}"/>
 
                                 <orccsvtexteditor:ReplaceKeyInputBindingBehavior Gesture="Tab" Command="{x:Static orccsvtexteditor:CsvTextEditorControl.GotoNextColumn}"/>
                                 <orccsvtexteditor:ReplaceKeyInputBindingBehavior Gesture="Shift+Tab" Command="{x:Static orccsvtexteditor:CsvTextEditorControl.GotoPreviousColumn}"/>
