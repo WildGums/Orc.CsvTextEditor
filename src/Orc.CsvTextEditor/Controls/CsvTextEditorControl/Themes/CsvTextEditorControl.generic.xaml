@@ -37,7 +37,7 @@
                                 <orccsvtexteditor:ReplaceKeyInputBindingBehavior Gesture="CTRL+Z" Command="{x:Static orccsvtexteditor:CsvTextEditorControl.Undo}"/>
 
                                 <orccsvtexteditor:ReplaceKeyInputBindingBehavior Gesture="Enter" Command="{x:Static orccsvtexteditor:CsvTextEditorControl.AddLine}"/>
-                                <orccsvtexteditor:ReplaceKeyInputBindingBehavior Gesture="CTRL+L" Command="{x:Static orccsvtexteditor:CsvTextEditorControl.RemoveLine}"/>
+                                <orccsvtexteditor:ReplaceKeyInputBindingBehavior Gesture="CTRL+Del" Command="{x:Static orccsvtexteditor:CsvTextEditorControl.RemoveLine}"/>
                                 <orccsvtexteditor:ReplaceKeyInputBindingBehavior Gesture="CTRL+D" Command="{x:Static orccsvtexteditor:CsvTextEditorControl.DuplicateLine}"/>
 
                                 <orccsvtexteditor:ReplaceKeyInputBindingBehavior Gesture="CTRL+OemComma" Command="{x:Static orccsvtexteditor:CsvTextEditorControl.RemoveColumn}"/>
