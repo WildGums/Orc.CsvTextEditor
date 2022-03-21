@@ -33,7 +33,9 @@ namespace Orc.CsvTextEditor
         #region Constructors
         public CsvTextEditorControl()
         {
+#pragma warning disable IDISP001 // Dispose created
             var serviceLocator = this.GetServiceLocator();
+#pragma warning restore IDISP001 // Dispose created
             _typeFactory = serviceLocator.ResolveType<ITypeFactory>();
 
             _synchronizationService = _typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextSynchronizationService>();
