@@ -1,12 +1,6 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="FindReplaceTool.cs" company="WildGums">
-//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace Orc.CsvTextEditor
+﻿namespace Orc.CsvTextEditor
 {
+    using System;
     using Catel;
     using Catel.IoC;
     using Catel.Services;
@@ -15,33 +9,33 @@ namespace Orc.CsvTextEditor
 
     public class FindReplaceTool : FindReplaceTool<FindReplaceService>
     {
-        #region Fields
         private readonly IServiceLocator _serviceLocator;
         private readonly ITypeFactory _typeFactory;
-        #endregion
 
-        #region Constructors
         public FindReplaceTool(IUIVisualizerService uiVisualizerService, ITypeFactory typeFactory, IServiceLocator serviceLocator)
             : base(uiVisualizerService, typeFactory)
         {
-            Argument.IsNotNull(() => typeFactory);
-            Argument.IsNotNull(() => serviceLocator);
+            ArgumentNullException.ThrowIfNull(typeFactory);
+            ArgumentNullException.ThrowIfNull(serviceLocator);
 
             _typeFactory = typeFactory;
             _serviceLocator = serviceLocator;
         }
-        #endregion
 
-        #region Methods
-        protected override FindReplaceService CreateFindReplaceService(object target)
+        protected override FindReplaceService? CreateFindReplaceService(object target)
         {
-            if (!(target is CsvTextEditorControl csvTextEditorControl))
+            if (target is not CsvTextEditorControl csvTextEditorControl)
             {
                 return null;
             }
 
             var csvTextEditorInstance = csvTextEditorControl.CsvTextEditorInstance;
-            if (!(csvTextEditorInstance.GetEditor() is TextEditor textEditor))
+            if (csvTextEditorInstance is null)
+            {
+                return null;
+            }
+
+            if (csvTextEditorInstance.GetEditor() is not TextEditor textEditor)
             {
                 return null;
             }
@@ -50,6 +44,5 @@ namespace Orc.CsvTextEditor
 
             return findReplaceService;
         }
-        #endregion
     }
 }

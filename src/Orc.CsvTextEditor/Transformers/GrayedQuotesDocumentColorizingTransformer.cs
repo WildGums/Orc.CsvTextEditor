@@ -7,13 +7,12 @@
 
     public class GrayedQuotesDocumentColorizingTransformer : DocumentColorizingTransformer
     {
-        #region Fields
         private static readonly string QuoteString = Symbols.Quote.ToString();
-        #endregion
-
-        #region Methods
+     
         protected override void ColorizeLine(DocumentLine line)
         {
+            ArgumentNullException.ThrowIfNull(line);
+
             var lineStartOffset = line.Offset;
             var text = CurrentContext.Document.GetText(line);
 
@@ -30,6 +29,5 @@
                 start = index + 1; // search for next occurrence
             }
         }
-        #endregion
     }
 }

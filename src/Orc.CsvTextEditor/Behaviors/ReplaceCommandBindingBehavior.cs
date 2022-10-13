@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ReplaceCommandBindingBehavior.cs" company="WildGums">
-//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace Orc.CsvTextEditor
+﻿namespace Orc.CsvTextEditor
 {
     using System.Windows;
     using System.Windows.Input;
@@ -14,31 +7,26 @@ namespace Orc.CsvTextEditor
 
     public class ReplaceCommandBindingBehavior : BehaviorBase<TextEditor>
     {
-        #region Fields
-        private CommandBinding _replacedCommandBinding;
-        #endregion
+        private CommandBinding? _replacedCommandBinding;
 
-        #region Dependency properties
-        public RoutedCommand ReplacementCommand
+        public RoutedCommand? ReplacementCommand
         {
-            get => (RoutedCommand)GetValue(ReplacementCommandProperty);
+            get => (RoutedCommand?)GetValue(ReplacementCommandProperty);
             set => SetValue(ReplacementCommandProperty, value);
         }
 
         public static readonly DependencyProperty ReplacementCommandProperty = DependencyProperty.Register(nameof(ReplacementCommand), typeof(RoutedCommand),
             typeof(ReplaceCommandBindingBehavior), new PropertyMetadata(default(RoutedCommand)));
 
-        public ICommand Command
+        public ICommand? Command
         {
-            get => (ICommand)GetValue(CommandProperty);
+            get => (ICommand?)GetValue(CommandProperty);
             set => SetValue(CommandProperty, value);
         }
 
         public static readonly DependencyProperty CommandProperty = DependencyProperty.Register(nameof(Command), typeof(ICommand),
             typeof(ReplaceCommandBindingBehavior), new PropertyMetadata(default(ICommand), (o, args) => ((ReplaceCommandBindingBehavior)o).OnCommandPropertyChanged()));
-        #endregion
 
-        #region Methods
         private void OnCommandPropertyChanged()
         {
             var textArea = AssociatedObject?.TextArea;
@@ -71,6 +59,5 @@ namespace Orc.CsvTextEditor
 
             _replacedCommandBinding = null;
         }
-        #endregion
     }
 }

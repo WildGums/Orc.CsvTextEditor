@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="CsvTextEditorControl.cs" company="WildGums">
-//   Copyright (c) 2008 - 2020 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace Orc.CsvTextEditor
+﻿namespace Orc.CsvTextEditor
 {
     using System;
     using System.Windows;
@@ -20,25 +13,22 @@ namespace Orc.CsvTextEditor
     [TemplatePart(Name = "PART_TextEditor", Type = typeof(TextEditor))]
     public class CsvTextEditorControl : Control
     {
-        #region Fields
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
         private readonly ITypeFactory _typeFactory;
         private readonly ICsvTextSynchronizationService _synchronizationService;
 
-        private TextEditor _textEditor;
+        private TextEditor? _textEditor;
         private bool _isPendingAttach = false;
-        #endregion
 
-        #region Constructors
         public CsvTextEditorControl()
         {
 #pragma warning disable IDISP001 // Dispose created
             var serviceLocator = this.GetServiceLocator();
 #pragma warning restore IDISP001 // Dispose created
-            _typeFactory = serviceLocator.ResolveType<ITypeFactory>();
+            _typeFactory = serviceLocator.ResolveRequiredType<ITypeFactory>();
 
-            _synchronizationService = _typeFactory.CreateInstanceWithParametersAndAutoCompletion<CsvTextSynchronizationService>();
+            _synchronizationService = _typeFactory.CreateRequiredInstanceWithParametersAndAutoCompletion<CsvTextSynchronizationService>();
             serviceLocator.RegisterInstance(_synchronizationService, this);
 
             CreateRoutedCommandBinding(Paste, () => CsvTextEditorInstance?.Paste());
@@ -61,9 +51,7 @@ namespace Orc.CsvTextEditor
             CreateRoutedCommandBinding(DeleteNextSelectedText, () => CsvTextEditorInstance?.DeleteNextSelectedText());
             CreateRoutedCommandBinding(DeletePreviousSelectedText, () => CsvTextEditorInstance?.DeletePreviousSelectedText());
         }
-        #endregion
 
-        #region Routed commands
         public static RoutedCommand Paste { get; } = new(nameof(Paste), typeof(CsvTextEditorControl));
         public static RoutedCommand Cut { get; } = new(nameof(Cut), typeof(CsvTextEditorControl));
         public static RoutedCommand Copy { get; } = new(nameof(Copy), typeof(CsvTextEditorControl));
@@ -83,15 +71,13 @@ namespace Orc.CsvTextEditor
 
         public static RoutedCommand DeleteNextSelectedText { get; } = new(nameof(DeleteNextSelectedText), typeof(CsvTextEditorControl));
         public static RoutedCommand DeletePreviousSelectedText { get; } = new(nameof(DeletePreviousSelectedText), typeof(CsvTextEditorControl));
-        #endregion
-
-        #region Dependency properties
+        
         /// <summary>
         /// Customize Type of wrapper used for underlying TextEditor
         /// </summary>
-        public Type EditorInstanceType
+        public Type? EditorInstanceType
         {
-            get { return (Type)GetValue(EditorInstanceTypeProperty); }
+            get { return (Type?)GetValue(EditorInstanceTypeProperty); }
             set { SetValue(EditorInstanceTypeProperty, value); }
         }
 
@@ -99,9 +85,9 @@ namespace Orc.CsvTextEditor
             new PropertyMetadata(typeof(CsvTextEditorInstance),
                 (sender, e) => ((CsvTextEditorControl)sender).OnTextEditorWrapperChanged(e)));
 
-        public string Text
+        public string? Text
         {
-            get => (string)GetValue(TextProperty);
+            get => (string?)GetValue(TextProperty);
             set => SetValue(TextProperty, value);
         }
 
@@ -109,27 +95,27 @@ namespace Orc.CsvTextEditor
             typeof(string), typeof(CsvTextEditorControl), new PropertyMetadata(default(string),
                 (sender, args) => ((CsvTextEditorControl)sender).OnTextChanged(args)));
 
-        public ICsvTextEditorInstance CsvTextEditorInstance
+        public ICsvTextEditorInstance? CsvTextEditorInstance
         {
-            get { return (ICsvTextEditorInstance)GetValue(CsvTextEditorInstanceProperty); }
+            get { return (ICsvTextEditorInstance?)GetValue(CsvTextEditorInstanceProperty); }
             set { SetValue(CsvTextEditorInstanceProperty, value); }
         }
 
         public static readonly DependencyProperty CsvTextEditorInstanceProperty =
             DependencyProperty.Register(nameof(CsvTextEditorInstance), typeof(ICsvTextEditorInstance), typeof(CsvTextEditorControl),
                 new PropertyMetadata((sender, args) => ((CsvTextEditorControl)sender).OnCsvTextEditorInstanceChanged(args)));
-        #endregion
 
-        #region Methods
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
 
-            _textEditor = GetTemplateChild("PART_TextEditor") as TextEditor;
-            if (_textEditor is null)
+            var textEditor = GetTemplateChild("PART_TextEditor") as TextEditor;
+            if (textEditor is null)
             {
                 throw Log.ErrorAndCreateException<InvalidOperationException>("Can't find template part 'PART_TextEditor'");
             }
+
+            _textEditor = textEditor;
             _textEditor.TextChanged += OnTextEditorTextChanged;
 
             if (_isPendingAttach)
@@ -168,11 +154,15 @@ namespace Orc.CsvTextEditor
 
         private void AttachCsvTextEditorInstance()
         {
-            CsvTextEditorInstance?.AttachEditor(_textEditor);
+            if (_textEditor is not null)
+            {
+                CsvTextEditorInstance?.AttachEditor(_textEditor);
+            }
+
             UpdateInitialization();
         }
 
-        private void OnTextEditorTextChanged(object sender, EventArgs e)
+        private void OnTextEditorTextChanged(object? sender, EventArgs e)
         {
             if (_synchronizationService?.IsSynchronizing ?? true)
             {
@@ -216,7 +206,7 @@ namespace Orc.CsvTextEditor
 
             if (CsvTextEditorInstance is null || forceCreate)
             {
-                var csvTextEditorInstance = (ICsvTextEditorInstance)_typeFactory.CreateInstanceWithParametersAndAutoCompletion(wrapperInstanceType);
+                var csvTextEditorInstance = (ICsvTextEditorInstance)_typeFactory.CreateRequiredInstanceWithParametersAndAutoCompletion(wrapperInstanceType);
                 SetCurrentValue(CsvTextEditorInstanceProperty, csvTextEditorInstance);
             }
         }
@@ -232,7 +222,7 @@ namespace Orc.CsvTextEditor
 
                 using (_synchronizationService.SynchronizeInScope())
                 {
-                    CsvTextEditorInstance?.Initialize(Text);
+                    CsvTextEditorInstance?.Initialize(Text ?? string.Empty);
                 }
             }
             catch (Exception ex)
@@ -241,7 +231,7 @@ namespace Orc.CsvTextEditor
             }
         }
 
-        private void CreateRoutedCommandBinding(RoutedCommand routedCommand, Action executeAction, Func<bool> canExecute = null)
+        private void CreateRoutedCommandBinding(RoutedCommand routedCommand, Action executeAction, Func<bool>? canExecute = null)
         {
             var routedCommandBinding = new CommandBinding { Command = routedCommand };
             routedCommandBinding.Executed += (sender, args) => executeAction?.Invoke();
@@ -253,6 +243,5 @@ namespace Orc.CsvTextEditor
 
             CommandBindings.Add(routedCommandBinding);
         }
-        #endregion
     }
 }

@@ -1,12 +1,6 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="FirstLineAlwaysBoldTransformer.cs" company="WildGums">
-//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace Orc.CsvTextEditor
+﻿namespace Orc.CsvTextEditor
 {
+    using System;
     using System.Windows;
     using System.Windows.Media;
     using ICSharpCode.AvalonEdit.Document;
@@ -14,9 +8,10 @@ namespace Orc.CsvTextEditor
 
     public class FirstLineAlwaysBoldTransformer : DocumentColorizingTransformer
     {
-        #region Methods
         protected override void ColorizeLine(DocumentLine line)
         {
+            ArgumentNullException.ThrowIfNull(line);
+
             if (line.LineNumber != 1)
             {
                 return;
@@ -30,6 +25,5 @@ namespace Orc.CsvTextEditor
                     element.TextRunProperties.SetTypeface(new Typeface(tf.FontFamily, FontStyles.Normal, FontWeights.ExtraBold, tf.Stretch));
                 });
         }
-        #endregion
     }
 }

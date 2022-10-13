@@ -4,18 +4,13 @@
 
     internal class QuoteColumnOperation : OperationBase
     {
-        #region Fields
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
-        #endregion
 
-        #region Constructors
         public QuoteColumnOperation(ICsvTextEditorInstance csvTextEditorInstance)
             : base(csvTextEditorInstance)
         {
         }
-        #endregion
 
-        #region Methods
         public override void Execute()
         {
             var location = _csvTextEditorInstance.GetLocation();
@@ -70,6 +65,5 @@
 
             return true;
         }
-        #endregion
     }
 }

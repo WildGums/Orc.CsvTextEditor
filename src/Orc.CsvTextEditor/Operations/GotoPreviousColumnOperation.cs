@@ -1,22 +1,12 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="GotoPreviousColumnOperation.cs" company="WildGums">
-//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace Orc.CsvTextEditor.Operations
+﻿namespace Orc.CsvTextEditor.Operations
 {
     public class GotoPreviousColumnOperation : OperationBase
     {
-        #region Constructors
         public GotoPreviousColumnOperation(ICsvTextEditorInstance csvTextEditorInstance)
             : base(csvTextEditorInstance)
         {
         }
-        #endregion
 
-        #region Methods
         public override void Execute()
         {
             var location = _csvTextEditorInstance.GetLocation();
@@ -44,6 +34,5 @@ namespace Orc.CsvTextEditor.Operations
 
             _csvTextEditorInstance.GotoPosition(lineIndex, columnIndex);
         }
-        #endregion
     }
 }

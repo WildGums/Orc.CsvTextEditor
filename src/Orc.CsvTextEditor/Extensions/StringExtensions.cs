@@ -1,24 +1,15 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="StringExtensions.cs" company="WildGums">
-//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace Orc.CsvTextEditor
+﻿namespace Orc.CsvTextEditor
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using Catel;
 
     public static class StringExtensions
     {
-        #region Methods
         public static string RemoveCommaSeparatedText(this string text, int positionStart, int length, string newLine)
         {
-            Argument.IsNotNull(nameof(text), text);
+            ArgumentNullException.ThrowIfNull(text);
 
             var endPosition = positionStart + length;
 
@@ -47,7 +38,7 @@ namespace Orc.CsvTextEditor
 
         public static string GetWordFromOffset(this string text, int offset)
         {
-            Argument.IsNotNull(() => text);
+            ArgumentNullException.ThrowIfNull(text);
 
             var textLength = text.Length;
             if (offset < 0 || offset >= textLength)
@@ -77,7 +68,7 @@ namespace Orc.CsvTextEditor
 
         public static string InsertCommaSeparatedColumn(this string text, int column, int linesCount, int columnsCount, string newLine)
         {
-            Argument.IsNotNull(nameof(text), text);
+            ArgumentNullException.ThrowIfNull(text);
 
             if (column == columnsCount)
             {
@@ -132,7 +123,8 @@ namespace Orc.CsvTextEditor
 
         public static string RemoveEmptyLines(this string text)
         {
-            Argument.IsNotNull(() => text);
+            ArgumentNullException.ThrowIfNull(text);
+
             var newLineSymbol = text.GetNewLineSymbol();
             var lines = text.Split(new[] {newLineSymbol}, StringSplitOptions.None).ToList();
             lines.RemoveAll(x => x == string.Empty);
@@ -158,7 +150,7 @@ namespace Orc.CsvTextEditor
 
         public static string InsertLineWithTextTransfer(this string text, int insertLineIndex, int offsetInLine, int columnCount, string lineEnding)
         {
-            Argument.IsNotNull(nameof(text), text);
+            ArgumentNullException.ThrowIfNull(text);
 
             var lineEndingLength = lineEnding.Length;
 
@@ -179,7 +171,7 @@ namespace Orc.CsvTextEditor
 
         public static string DuplicateTextInLine(this string text, int startOffset, int endOffset, string newLine)
         {
-            Argument.IsNotNull(nameof(text), text);
+            ArgumentNullException.ThrowIfNull(text);
 
             var lineToDuplicate = text.Substring(startOffset, endOffset - startOffset);
             if (!lineToDuplicate.EndsWith(newLine))
@@ -192,14 +184,14 @@ namespace Orc.CsvTextEditor
 
         public static string RemoveText(this string text, int startOffset, int endOffset, string newLine)
         {
-            Argument.IsNotNull(nameof(text), text);
+            ArgumentNullException.ThrowIfNull(text);
 
             return text.Remove(startOffset, endOffset - startOffset).TrimEnd(newLine);
         }
 
         public static string RemoveCommaSeparatedColumn(this string text, int column, int linesCount, int columnsCount, string newLine)
         {
-            Argument.IsNotNull(nameof(text), text);
+            ArgumentNullException.ThrowIfNull(text);
 
             if (columnsCount <= 1 || linesCount == 0)
             {
@@ -266,7 +258,7 @@ namespace Orc.CsvTextEditor
 
         public static string GetNewLineSymbol(this string text)
         {
-            Argument.IsNotNull(nameof(text), text);
+            ArgumentNullException.ThrowIfNull(text);
 
             if (text.Contains("\r\n"))
             {
@@ -283,14 +275,14 @@ namespace Orc.CsvTextEditor
 
         public static bool IsEmptyCommaSeparatedLine(this string textLine)
         {
-            Argument.IsNotNull(() => textLine);
+            ArgumentNullException.ThrowIfNull(textLine);
 
             return textLine.All(x => x == Symbols.Comma || x == Symbols.Space);
         }
 
         public static string TrimCommaSeparatedValues(this string textLine)
         {
-            Argument.IsNotNull(() => textLine);
+            ArgumentNullException.ThrowIfNull(textLine);
 
             var trimmedValues = textLine.Split(new[] {Symbols.Comma}, StringSplitOptions.None).Select(x => x.Trim());
 
@@ -299,9 +291,10 @@ namespace Orc.CsvTextEditor
 
         public static string TrimEnd(this string text, string trimString)
         {
-            Argument.IsNotNull(nameof(text), text);
+            ArgumentNullException.ThrowIfNull(text);
 
             var result = text;
+
             while (result.EndsWith(trimString))
             {
                 result = result.Substring(0, result.Length - trimString.Length);
@@ -312,7 +305,7 @@ namespace Orc.CsvTextEditor
 
         private static string InsertLine(this string text, int insertLineIndex, int columnsCount, string newLine)
         {
-            Argument.IsNotNull(nameof(text), text);
+            ArgumentNullException.ThrowIfNull(text);
 
             var newLineLength = newLine.Length;
 
@@ -362,6 +355,5 @@ namespace Orc.CsvTextEditor
 
             return indexer;
         }
-        #endregion
     }
 }

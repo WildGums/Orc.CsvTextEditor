@@ -26,7 +26,7 @@ namespace Orc.CsvTextEditor
         public CsvColumnCompletionData(string text) { }
         public object Content { get; }
         public object Description { get; }
-        public System.Windows.Media.ImageSource Image { get; }
+        public System.Windows.Media.ImageSource? Image { get; }
         public double Priority { get; }
         public string Text { get; }
         public void Complete(ICSharpCode.AvalonEdit.Editing.TextArea textArea, ICSharpCode.AvalonEdit.Document.ISegment completionSegment, System.EventArgs insertionRequestEventArgs) { }
@@ -38,9 +38,9 @@ namespace Orc.CsvTextEditor
         public static readonly System.Windows.DependencyProperty EditorInstanceTypeProperty;
         public static readonly System.Windows.DependencyProperty TextProperty;
         public CsvTextEditorControl() { }
-        public Orc.CsvTextEditor.ICsvTextEditorInstance CsvTextEditorInstance { get; set; }
-        public System.Type EditorInstanceType { get; set; }
-        public string Text { get; set; }
+        public Orc.CsvTextEditor.ICsvTextEditorInstance? CsvTextEditorInstance { get; set; }
+        public System.Type? EditorInstanceType { get; set; }
+        public string? Text { get; set; }
         public static System.Windows.Input.RoutedCommand AddColumn { get; }
         public static System.Windows.Input.RoutedCommand AddLine { get; }
         public static System.Windows.Input.RoutedCommand Copy { get; }
@@ -80,10 +80,10 @@ namespace Orc.CsvTextEditor
         public string SelectionText { get; }
         public Orc.Controls.Tools.IControlToolManager ToolManager { get; }
         public System.Collections.Generic.IEnumerable<Orc.Controls.IControlTool> Tools { get; }
-        public event System.EventHandler<Orc.CsvTextEditor.CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
-        public event System.EventHandler<System.EventArgs> EditorAttached;
-        public event System.EventHandler<System.EventArgs> EditorDetached;
-        public event System.EventHandler<System.EventArgs> TextChanged;
+        public event System.EventHandler<Orc.CsvTextEditor.CaretTextLocationChangedEventArgs>? CaretTextLocationChanged;
+        public event System.EventHandler<System.EventArgs>? EditorAttached;
+        public event System.EventHandler<System.EventArgs>? EditorDetached;
+        public event System.EventHandler<System.EventArgs>? TextChanged;
         public void AttachEditor(object editor) { }
         public void Copy() { }
         public void Cut() { }
@@ -132,7 +132,7 @@ namespace Orc.CsvTextEditor
     }
     public class FindReplaceService : Orc.Controls.Services.IFindReplaceService
     {
-        public FindReplaceService(ICSharpCode.AvalonEdit.TextEditor textEditor, Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance = null) { }
+        public FindReplaceService(ICSharpCode.AvalonEdit.TextEditor textEditor, Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance) { }
         public bool FindNext(string textToFind, Orc.Controls.FindReplaceSettings settings) { }
         public string GetInitialFindText() { }
         public bool Replace(string textToFind, string textToReplace, Orc.Controls.FindReplaceSettings settings) { }
@@ -141,7 +141,7 @@ namespace Orc.CsvTextEditor
     public class FindReplaceTool : Orc.Controls.FindReplaceTool<Orc.CsvTextEditor.FindReplaceService>
     {
         public FindReplaceTool(Catel.Services.IUIVisualizerService uiVisualizerService, Catel.IoC.ITypeFactory typeFactory, Catel.IoC.IServiceLocator serviceLocator) { }
-        protected override Orc.CsvTextEditor.FindReplaceService CreateFindReplaceService(object target) { }
+        protected override Orc.CsvTextEditor.FindReplaceService? CreateFindReplaceService(object target) { }
     }
     public class FirstLineAlwaysBoldTransformer : ICSharpCode.AvalonEdit.Rendering.DocumentColorizingTransformer
     {
@@ -156,8 +156,8 @@ namespace Orc.CsvTextEditor
     public class HighlightAllOccurencesOfSelectedWordTransformer : ICSharpCode.AvalonEdit.Rendering.DocumentColorizingTransformer
     {
         public HighlightAllOccurencesOfSelectedWordTransformer() { }
-        public string SelectedWord { set; }
-        public ICSharpCode.AvalonEdit.Editing.Selection Selection { set; }
+        public string? SelectedWord { set; }
+        public ICSharpCode.AvalonEdit.Editing.Selection? Selection { set; }
         protected override void ColorizeLine(ICSharpCode.AvalonEdit.Document.DocumentLine line) { }
     }
     public interface ICsvTextEditorInitializer
@@ -179,10 +179,10 @@ namespace Orc.CsvTextEditor
         string SelectionText { get; }
         Orc.Controls.Tools.IControlToolManager ToolManager { get; }
         System.Collections.Generic.IEnumerable<Orc.Controls.IControlTool> Tools { get; }
-        event System.EventHandler<Orc.CsvTextEditor.CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
-        event System.EventHandler<System.EventArgs> EditorAttached;
-        event System.EventHandler<System.EventArgs> EditorDetached;
-        event System.EventHandler<System.EventArgs> TextChanged;
+        event System.EventHandler<Orc.CsvTextEditor.CaretTextLocationChangedEventArgs>? CaretTextLocationChanged;
+        event System.EventHandler<System.EventArgs>? EditorAttached;
+        event System.EventHandler<System.EventArgs>? EditorDetached;
+        event System.EventHandler<System.EventArgs>? TextChanged;
         void AttachEditor(object editor);
         void Copy();
         void Cut();
@@ -213,9 +213,9 @@ namespace Orc.CsvTextEditor
     }
     public static class ICsvTextEditorInstanceExtensions
     {
-        public static Orc.Controls.IControlTool GetToolByName(this Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance, string toolName) { }
-        public static void ShowTool(this Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance, string toolName, object parameter = null) { }
-        public static void ShowTool<T>(this Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance, object parameter = null)
+        public static Orc.Controls.IControlTool? GetToolByName(this Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance, string toolName) { }
+        public static void ShowTool(this Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance, string toolName, object? parameter = null) { }
+        public static void ShowTool<T>(this Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance, object? parameter = null)
             where T :  class, Orc.Controls.IControlTool { }
     }
     public static class KeyGestureExtensions
@@ -231,9 +231,9 @@ namespace Orc.CsvTextEditor
     }
     public class Location
     {
-        public Location() { }
-        public Orc.CsvTextEditor.Column Column { get; set; }
-        public Orc.CsvTextEditor.Line Line { get; set; }
+        public Location(Orc.CsvTextEditor.Column column, Orc.CsvTextEditor.Line line) { }
+        public Orc.CsvTextEditor.Column Column { get; }
+        public Orc.CsvTextEditor.Line Line { get; }
         public int Offset { get; set; }
     }
     public static class LocationExtensions
@@ -245,16 +245,16 @@ namespace Orc.CsvTextEditor
         public static readonly System.Windows.DependencyProperty CommandProperty;
         public static readonly System.Windows.DependencyProperty ReplacementCommandProperty;
         public ReplaceCommandBindingBehavior() { }
-        public System.Windows.Input.ICommand Command { get; set; }
-        public System.Windows.Input.RoutedCommand ReplacementCommand { get; set; }
+        public System.Windows.Input.ICommand? Command { get; set; }
+        public System.Windows.Input.RoutedCommand? ReplacementCommand { get; set; }
     }
     public class ReplaceKeyInputBindingBehavior : Catel.Windows.Interactivity.BehaviorBase<ICSharpCode.AvalonEdit.TextEditor>
     {
         public static readonly System.Windows.DependencyProperty CommandProperty;
         public static readonly System.Windows.DependencyProperty GestureProperty;
         public ReplaceKeyInputBindingBehavior() { }
-        public System.Windows.Input.ICommand Command { get; set; }
-        public System.Windows.Input.KeyGesture Gesture { get; set; }
+        public System.Windows.Input.ICommand? Command { get; set; }
+        public System.Windows.Input.KeyGesture? Gesture { get; set; }
         protected override void OnAssociatedObjectLoaded() { }
     }
     public static class StringExtensions

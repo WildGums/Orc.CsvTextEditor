@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ReplaceKeyInputBindingBehavior.cs" company="WildGums">
-//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace Orc.CsvTextEditor
+﻿namespace Orc.CsvTextEditor
 {
     using System.Linq;
     using System.Windows;
@@ -16,33 +9,28 @@ namespace Orc.CsvTextEditor
 
     public class ReplaceKeyInputBindingBehavior : BehaviorBase<TextEditor>
     {
-        #region Fields
-        private InputBinding _removedInputBinding;
-        private KeyGesture _removedKeyGesture;
-        private RoutedCommand _removedRoutedCommand;
-        #endregion
+        private InputBinding? _removedInputBinding;
+        private KeyGesture? _removedKeyGesture;
+        private RoutedCommand? _removedRoutedCommand;
 
-        #region Depenendcy properties
-        public KeyGesture Gesture
+        public KeyGesture? Gesture
         {
-            get => (KeyGesture)GetValue(GestureProperty);
+            get => (KeyGesture?)GetValue(GestureProperty);
             set => SetValue(GestureProperty, value);
         }
 
         public static readonly DependencyProperty GestureProperty = DependencyProperty.Register(nameof(Gesture), typeof(KeyGesture),
             typeof(ReplaceKeyInputBindingBehavior), new PropertyMetadata(default(KeyGesture)));
 
-        public ICommand Command
+        public ICommand? Command
         {
-            get => (ICommand)GetValue(CommandProperty);
+            get => (ICommand?)GetValue(CommandProperty);
             set => SetValue(CommandProperty, value);
         }
 
         public static readonly DependencyProperty CommandProperty = DependencyProperty.Register(nameof(Command), typeof(ICommand), typeof(ReplaceKeyInputBindingBehavior),
             new PropertyMetadata(default(ICommand), (o, args) => ((ReplaceKeyInputBindingBehavior)o).OnCommandPropertyChanged(args)));
-        #endregion
-
-        #region Methods
+      
         protected override void OnAssociatedObjectLoaded()
         {
             if (_hasPendingUpdate)
@@ -94,7 +82,7 @@ namespace Orc.CsvTextEditor
                     continue;
                 }
 
-                routedCommand.InputGestures.Remove(gesture);
+                routedCommand?.InputGestures.Remove(gesture);
 
                 _removedKeyGesture = gesture;
                 _removedRoutedCommand = routedCommand;
@@ -130,6 +118,5 @@ namespace Orc.CsvTextEditor
 
             _hasPendingUpdate = false;
         }
-        #endregion
     }
 }

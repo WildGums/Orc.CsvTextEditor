@@ -1,12 +1,6 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="EmptyVisualLineElement.cs" company="WildGums">
-//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace Orc.CsvTextEditor
+﻿namespace Orc.CsvTextEditor
 {
+    using System;
     using System.Text;
     using System.Windows.Media.TextFormatting;
     using ICSharpCode.AvalonEdit.Rendering;
@@ -14,17 +8,16 @@ namespace Orc.CsvTextEditor
 
     internal class EmptyVisualLineElement : VisualLineElement
     {
-        #region Constructors
         public EmptyVisualLineElement(int visualLength, int documentLength)
             : base(visualLength, documentLength)
         {
             
         }
-        #endregion
 
-        #region Methods
         public override TextRun CreateTextRun(int startVisualColumn, ITextRunConstructionContext context)
         {
+            ArgumentNullException.ThrowIfNull(context);
+
             var foreground = ThemeManager.Current.GetThemeColorBrush(ThemeColorStyle.DefaultForeground);
             var background = ThemeManager.Current.GetThemeColorBrush(ThemeColorStyle.DefaultBackground);
 
@@ -44,6 +37,5 @@ namespace Orc.CsvTextEditor
         }
 
         public override bool IsWhitespace(int visualColumn) => true;
-        #endregion
     }
 }

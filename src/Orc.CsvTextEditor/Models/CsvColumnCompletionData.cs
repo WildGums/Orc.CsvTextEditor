@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="CsvColumnCompletionData.cs" company="WildGums">
-//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace Orc.CsvTextEditor
+﻿namespace Orc.CsvTextEditor
 {
     using System;
     using ICSharpCode.AvalonEdit.CodeCompletion;
@@ -14,28 +7,26 @@ namespace Orc.CsvTextEditor
 
     public class CsvColumnCompletionData : ICompletionData
     {
-        #region Constructors
         public CsvColumnCompletionData(string text)
         {
             Text = text;
         }
-        #endregion
 
-        #region Properties
-        public System.Windows.Media.ImageSource Image => null;
+        public System.Windows.Media.ImageSource? Image => null;
 
         public string Text { get; }
         public object Content => Text;
         public object Description => Text;
         public double Priority { get; }
-        #endregion
 
-        #region ICompletionData Members
         public void Complete(TextArea textArea, ISegment completionSegment,
             EventArgs insertionRequestEventArgs)
         {
+            ArgumentNullException.ThrowIfNull(textArea);
+            ArgumentNullException.ThrowIfNull(completionSegment);
+            ArgumentNullException.ThrowIfNull(insertionRequestEventArgs);
+
             textArea.Document.Replace(completionSegment, Text);
         }
-        #endregion
     }
 }

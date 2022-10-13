@@ -1,23 +1,15 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ICsvTextEditorInstanceExtensions.cs" company="WildGums">
-//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace Orc.CsvTextEditor
+﻿namespace Orc.CsvTextEditor
 {
+    using System;
     using System.Linq;
-    using Catel;
     using Controls;
 
     public static class ICsvTextEditorInstanceExtensions
     {
-        #region Methods
-        public static void ShowTool<T>(this ICsvTextEditorInstance csvTextEditorInstance, object parameter = null)
+        public static void ShowTool<T>(this ICsvTextEditorInstance csvTextEditorInstance, object? parameter = null)
             where T : class, IControlTool
         {
-            Argument.IsNotNull(() => csvTextEditorInstance);
+            ArgumentNullException.ThrowIfNull(csvTextEditorInstance);
 
             var toolManager = csvTextEditorInstance.ToolManager;
             if (toolManager is null)
@@ -34,22 +26,21 @@ namespace Orc.CsvTextEditor
             tool?.Open(parameter);
         }
 
-        public static void ShowTool(this ICsvTextEditorInstance csvTextEditorInstance, string toolName, object parameter = null)
+        public static void ShowTool(this ICsvTextEditorInstance csvTextEditorInstance, string toolName, object? parameter = null)
         {
-            Argument.IsNotNull(() => csvTextEditorInstance);
+            ArgumentNullException.ThrowIfNull(csvTextEditorInstance);
 
             var tool = csvTextEditorInstance.GetToolByName(toolName);
 
             tool?.Open(parameter);
         }
 
-        public static IControlTool GetToolByName(this ICsvTextEditorInstance csvTextEditorInstance, string toolName)
+        public static IControlTool? GetToolByName(this ICsvTextEditorInstance csvTextEditorInstance, string toolName)
         {
-            Argument.IsNotNull(() => csvTextEditorInstance);
+            ArgumentNullException.ThrowIfNull(csvTextEditorInstance);
 
             var tools = csvTextEditorInstance.Tools;
             return tools.FirstOrDefault(x => x.Name == toolName);
         }
-        #endregion
     }
 }
