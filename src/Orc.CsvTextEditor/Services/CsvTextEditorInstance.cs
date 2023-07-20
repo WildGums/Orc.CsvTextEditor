@@ -97,7 +97,7 @@
                 var manager = _csvTextEditorControl?.GetControlToolManager();
                 if (manager is null)
                 {
-                    throw new InvalidOperationException("Manager is null");
+                    throw Log.ErrorAndCreateException<InvalidOperationException>("Manager is null");
                 }
 
                 return manager;
