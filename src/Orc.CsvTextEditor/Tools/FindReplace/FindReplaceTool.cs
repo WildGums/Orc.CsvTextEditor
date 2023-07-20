@@ -13,7 +13,7 @@
         private readonly ITypeFactory _typeFactory;
 
         public FindReplaceTool(IUIVisualizerService uiVisualizerService, ITypeFactory typeFactory, IServiceLocator serviceLocator)
-            : base(uiVisualizerService, typeFactory)
+            : base(uiVisualizerService, typeFactory, serviceLocator)
         {
             ArgumentNullException.ThrowIfNull(typeFactory);
             ArgumentNullException.ThrowIfNull(serviceLocator);

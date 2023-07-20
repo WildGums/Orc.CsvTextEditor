@@ -354,7 +354,8 @@
             {
                 if (line.Length > maxArray.Length)
                 {
-                    throw new ArgumentException("Records in CSV have to contain the same number of fields");
+                    throw Log.ErrorAndCreateException<ArgumentException>("Records in CSV have to contain the same number of fields");
+
                 }
 
                 var length = Math.Min(maxArray.Length, line.Length);
