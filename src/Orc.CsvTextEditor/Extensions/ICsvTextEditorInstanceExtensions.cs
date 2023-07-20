@@ -8,7 +8,7 @@
     public static class ICsvTextEditorInstanceExtensions
     {
         [ObsoleteEx(TreatAsErrorFromVersion = "5.1", RemoveInVersion = "6.0", Message = "Use ShowToolAsync instead")]
-        public static void ShowTool<T>(this ICsvTextEditorInstance csvTextEditorInstance, object? parameter = null)
+        public static async void ShowTool<T>(this ICsvTextEditorInstance csvTextEditorInstance, object? parameter = null)
             where T : class, IControlTool
         {
             ArgumentNullException.ThrowIfNull(csvTextEditorInstance);
@@ -21,18 +21,15 @@
 
             var tool = csvTextEditorInstance.Tools.OfType<T>().FirstOrDefault();
 
-            Task.Run(async () =>
+            if (tool is null)
             {
-                if (tool is null)
-                {
-                    tool = await toolManager.AttachToolAsync(typeof(T)) as T;
-                }
+                tool = await toolManager.AttachToolAsync(typeof(T)) as T;
+            }
 
-                if (tool is not null)
-                {
-                    await tool.OpenAsync(parameter);
-                };
-            });
+            if (tool is not null)
+            {
+                await tool.OpenAsync(parameter);
+            };
         }
 
         public static async Task ShowToolAsync<T>(this ICsvTextEditorInstance csvTextEditorInstance, object? parameter = null)
@@ -66,10 +63,10 @@
 
             var tool = csvTextEditorInstance.GetToolByName(toolName);
 
-            Task.Run(async () =>
+            if (tool is not null)
             {
-                tool?.OpenAsync(parameter);
-            });
+                _ = tool.OpenAsync(parameter);
+            }
         }
 
         public static async Task ShowToolAsync(this ICsvTextEditorInstance csvTextEditorInstance, string toolName, object? parameter = null)
