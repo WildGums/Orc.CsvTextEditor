@@ -133,6 +133,7 @@ namespace Orc.CsvTextEditor
     public class FindReplaceService : Orc.Controls.Services.IFindReplaceService
     {
         public FindReplaceService(ICSharpCode.AvalonEdit.TextEditor textEditor, Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance) { }
+        public void FindAll(string textToFind, Orc.Controls.FindReplaceSettings settings) { }
         public bool FindNext(string textToFind, Orc.Controls.FindReplaceSettings settings) { }
         public string GetInitialFindText() { }
         public bool Replace(string textToFind, string textToReplace, Orc.Controls.FindReplaceSettings settings) { }
