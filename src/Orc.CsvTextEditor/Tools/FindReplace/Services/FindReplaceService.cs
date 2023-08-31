@@ -2,7 +2,6 @@
 {
     using System;
     using System.Text.RegularExpressions;
-    using Catel;
     using Controls;
     using ICSharpCode.AvalonEdit;
 
@@ -51,7 +50,12 @@
             return match.Success;
         }
 
-        public bool Replace(string textToFind, string textToReplace, Controls.FindReplaceSettings settings)
+        public void FindAll(string textToFind, FindReplaceSettings settings)
+        {
+            //TODO
+        }
+
+        public bool Replace(string textToFind, string textToReplace, FindReplaceSettings settings)
         {
             ArgumentNullException.ThrowIfNull(textToFind);
             ArgumentNullException.ThrowIfNull(textToReplace);
