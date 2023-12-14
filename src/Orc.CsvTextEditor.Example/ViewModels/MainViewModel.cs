@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MainViewModel.cs" company="WildGums">
-//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace Orc.CsvTextEditor.ViewModels
+﻿namespace Orc.CsvTextEditor.ViewModels
 {
     using System;
     using Catel;
@@ -18,10 +11,10 @@ namespace Orc.CsvTextEditor.ViewModels
     {
         private readonly IServiceLocator _serviceLocator;
 
-        #region Constructors
         public MainViewModel(IServiceLocator serviceLocator)//, ICsvTextEditorInstance csvTextEditorInstance)
         {
-            Argument.IsNotNull(() => serviceLocator);
+            ArgumentNullException.ThrowIfNull(serviceLocator);
+
             _serviceLocator = serviceLocator;
 
             EditorInstanceType = typeof(CsvTextEditorInstance);
@@ -30,19 +23,13 @@ namespace Orc.CsvTextEditor.ViewModels
             FindAndReplace = new Command(OnFindAndReplace);
         }
 
-        #endregion
-
-        #region Properties
         public Command FindAndReplace { get; }
         public Type EditorInstanceType { get; private set; }
-        #endregion
 
-        #region Methods
         private void OnFindAndReplace()
         {
             //var csvTextEditorInstance = _serviceLocator.TryResolveType<ICsvTextEditorInstance>(Scope);
             //csvTextEditorInstance?.ShowTool<FindReplaceTool>();
         }
-        #endregion
     }
 }

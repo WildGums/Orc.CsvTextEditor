@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TabSpaceElementGenerator.cs" company="WildGums">
-//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace Orc.CsvTextEditor
+﻿namespace Orc.CsvTextEditor
 {
     using System;
     using System.Collections.Generic;
@@ -16,7 +9,6 @@ namespace Orc.CsvTextEditor
 
     internal class TabSpaceElementGenerator : VisualLineElementGenerator
     {
-        #region Fields
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
         private readonly Dictionary<int, int> _tabWidths = new Dictionary<int, int>();
@@ -26,10 +18,14 @@ namespace Orc.CsvTextEditor
         private int _activeRowIndex;
         private bool _freezeInProgress;
 
-        private int[][] _lines;
-        #endregion
+        private int[][] _lines = Array.Empty<int[]>();
 
-        #region Properties
+        public TabSpaceElementGenerator()
+        {
+            ColumnWidth = Array.Empty<int>();
+            NewLine = Environment.NewLine;
+        }
+
         public int[][] Lines
         {
             get => _lines;
@@ -45,11 +41,22 @@ namespace Orc.CsvTextEditor
         }
 
         public int[] ColumnWidth { get; private set; }
-        public int ColumnCount => Lines?[0].Length ?? 0;
-        public string NewLine { get; private set; }
-        #endregion
+        public int ColumnCount
+        {
+            get
+            {
+                var lines = Lines;
+                if (lines.Length <= 0)
+                {
+                    return 0;
+                }
 
-        #region Methods
+                return lines[0].Length;
+            }
+        }
+
+        public string NewLine { get; private set; }
+
         public void Refresh(string text)
         {
             text ??= string.Empty;
@@ -191,7 +198,7 @@ namespace Orc.CsvTextEditor
             return true;
         }
 
-        public override VisualLineElement ConstructElement(int offset)
+        public override VisualLineElement? ConstructElement(int offset)
         {
             if (offset < 0)
             {
@@ -265,7 +272,7 @@ namespace Orc.CsvTextEditor
             }
         }
 
-        public Column GetColumn(TextLocation location)
+        public Column? GetColumn(TextLocation location)
         {
             var lines = Lines;
 
@@ -347,7 +354,8 @@ namespace Orc.CsvTextEditor
             {
                 if (line.Length > maxArray.Length)
                 {
-                    throw new ArgumentException("Records in CSV have to contain the same number of fields");
+                    throw Log.ErrorAndCreateException<ArgumentException>("Records in CSV have to contain the same number of fields");
+
                 }
 
                 var length = Math.Min(maxArray.Length, line.Length);
@@ -360,6 +368,5 @@ namespace Orc.CsvTextEditor
 
             return maxArray.ToArray();
         }
-        #endregion
     }
 }

@@ -1,18 +1,15 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Location.cs" company="WildGums">
-//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace Orc.CsvTextEditor
+﻿namespace Orc.CsvTextEditor
 {
     public class Location
     {
-        #region Properties
-        public Column Column { get; set; }
-        public Line Line { get; set; }
+        public Location(Column column, Line line)
+        {
+            Column = column;
+            Line = line;
+        }
+
+        public Column Column { get; private set; }
+        public Line Line { get; private set; }
         public int Offset { get; set; }
-        #endregion
     }
 }

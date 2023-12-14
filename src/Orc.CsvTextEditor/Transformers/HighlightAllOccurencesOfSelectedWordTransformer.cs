@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="HighlightAllOccurencesOfSelectedWordTransformer.cs" company="WildGums">
-//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace Orc.CsvTextEditor
+﻿namespace Orc.CsvTextEditor
 {
     using System;
     using System.Windows.Media;
@@ -21,15 +14,15 @@ namespace Orc.CsvTextEditor
     /// </remarks>
     public class HighlightAllOccurencesOfSelectedWordTransformer : DocumentColorizingTransformer
     {
-        #region Properties
-        public string SelectedWord { private get; set; }
-        public Selection Selection { private get; set; }
-        #endregion
+        public string? SelectedWord { private get; set; }
+        public Selection? Selection { private get; set; }
 
-        #region Methods
         protected override void ColorizeLine(DocumentLine line)
         {
-            if (string.IsNullOrEmpty(SelectedWord))
+            ArgumentNullException.ThrowIfNull(line);
+
+            var selectedWord = SelectedWord;
+            if (string.IsNullOrEmpty(selectedWord))
             {
                 return;
             }
@@ -39,7 +32,7 @@ namespace Orc.CsvTextEditor
             var start = 0;
             int index;
 
-            while ((index = text.IndexOf(SelectedWord, start, StringComparison.Ordinal)) >= 0)
+            while ((index = text.IndexOf(selectedWord, start, StringComparison.Ordinal)) >= 0)
             {
                 // Don't highlight the current selection
                 if (Selection is not null && Selection.StartPosition.Column == index + 1 && Selection.StartPosition.Line == line.LineNumber)
@@ -56,12 +49,11 @@ namespace Orc.CsvTextEditor
 
                 ChangeLinePart(
                     lineStartOffset + index, // startOffset
-                    lineStartOffset + index + SelectedWord.Length, // endOffset
+                    lineStartOffset + index + selectedWord.Length, // endOffset
                     element => { element.TextRunProperties.SetBackgroundBrush(Brushes.PaleGreen); });
 
                 start = index + 1; // search for next occurrence
             }
         }
-        #endregion
     }
 }

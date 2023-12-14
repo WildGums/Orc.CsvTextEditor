@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ModuleInitializer.cs" company="WildGums">
-//   Copyright (c) 2008 - 2017 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-using Catel.IoC;
+﻿using Catel.IoC;
 using Catel.Logging;
 using Catel.MVVM;
 using Orc.CsvTextEditor;
@@ -15,11 +8,8 @@ using Orc.CsvTextEditor;
 /// </summary>
 public static class ModuleInitializer
 {
-    #region Fields
     private static readonly ILog Log = LogManager.GetCurrentClassLogger();
-    #endregion
 
-    #region Methods
     /// <summary>
     /// Initializes the module.
     /// </summary>
@@ -32,5 +22,4 @@ public static class ModuleInitializer
         serviceLocator.RegisterType<ICsvTextEditorInstance, CsvTextEditorInstance>();
         serviceLocator.RegisterType<ICsvTextSynchronizationService, CsvTextSynchronizationService>();
     }
-    #endregion
 }

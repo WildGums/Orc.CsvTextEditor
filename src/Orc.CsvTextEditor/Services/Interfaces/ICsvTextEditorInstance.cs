@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ICsvTextEditorInstance.cs" company="WildGums">
-//   Copyright (c) 2008 - 2018 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace Orc.CsvTextEditor
+﻿namespace Orc.CsvTextEditor
 {
     using System;
     using System.Collections.Generic;
@@ -15,7 +8,6 @@ namespace Orc.CsvTextEditor
 
     public interface ICsvTextEditorInstance : IDisposable
     {
-        #region Properties
         IEnumerable<IControlTool> Tools { get; }
         IControlToolManager ToolManager { get; }
         int LinesCount { get; }
@@ -29,9 +21,7 @@ namespace Orc.CsvTextEditor
         int SelectionStart { get; }
         int SelectionLength { get; }
         string SelectionText { get; }
-        #endregion
 
-        #region Methods
         void AttachEditor(object editor);
         void DetachEditor();
         object GetEditor();
@@ -67,13 +57,10 @@ namespace Orc.CsvTextEditor
         string GetText();
         void SetText(string text);
         void SetInitialText(string text);
-        #endregion
 
-        #region Events
-        event EventHandler<CaretTextLocationChangedEventArgs> CaretTextLocationChanged;
-        event EventHandler<EventArgs> TextChanged;
-        event EventHandler<EventArgs> EditorAttached;
-        event EventHandler<EventArgs> EditorDetached;
-        #endregion
+        event EventHandler<CaretTextLocationChangedEventArgs>? CaretTextLocationChanged;
+        event EventHandler<EventArgs>? TextChanged;
+        event EventHandler<EventArgs>? EditorAttached;
+        event EventHandler<EventArgs>? EditorDetached;
     }
 }

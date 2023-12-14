@@ -1,12 +1,6 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TextEditorExtensions.cs" company="WildGums">
-//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace Orc.CsvTextEditor
+﻿namespace Orc.CsvTextEditor
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Catel;
@@ -15,10 +9,9 @@ namespace Orc.CsvTextEditor
 
     internal static class TextEditorExtensions
     {
-        #region Methods
         public static void SetCaretToSpecificLineAndColumn(this TextEditor textEditor, int lineIndex, int columnIndex, int[][] columnWidthByLine)
         {
-            Argument.IsNotNull(() => textEditor);
+            ArgumentNullException.ThrowIfNull(textEditor);
 
             if (lineIndex < 0 || columnIndex < 0)
             {
@@ -48,7 +41,7 @@ namespace Orc.CsvTextEditor
 
         public static IList<ICompletionData> GetCompletionDataForText(this TextEditor textEditor, string autocompletionText, int columnIndex, int[][] scheme)
         {
-            Argument.IsNotNull(() => textEditor);
+            ArgumentNullException.ThrowIfNull(textEditor);
 
             var textDocument = textEditor.Document;
             var offset = textEditor.CaretOffset;
@@ -100,6 +93,5 @@ namespace Orc.CsvTextEditor
 
             return data.Values;
         }
-        #endregion
     }
 }

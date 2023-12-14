@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TextToTextArrayMultiValueConverter.cs" company="WildGums">
-//   Copyright (c) 2008 - 2019 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace Orc.CsvTextEditor
+﻿namespace Orc.CsvTextEditor
 {
     using System;
     using System.Globalization;
@@ -13,7 +6,6 @@ namespace Orc.CsvTextEditor
 
     public class TextToTextArrayMultiValueConverter : IMultiValueConverter
     {
-        #region IMultiValueConverter Members
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
             return values.Clone();
@@ -23,6 +15,5 @@ namespace Orc.CsvTextEditor
         {
             throw new NotImplementedException();
         }
-        #endregion
     }
 }

@@ -2,14 +2,11 @@
 {
     internal class AddColumnOperation : OperationBase
     {
-        #region Constructors
         public AddColumnOperation(ICsvTextEditorInstance csvTextEditorInstance)
             : base(csvTextEditorInstance)
         {
         }
-        #endregion
 
-        #region Methods
         public override void Execute()
         {
             if (_csvTextEditorInstance.IsCaretWithinQuotedField())
@@ -72,6 +69,5 @@
             _csvTextEditorInstance.SetText(newText);
             _csvTextEditorInstance.GotoPosition(location.Line.Index, newColumnIndex);
         }
-        #endregion
     }
 }
