@@ -29,7 +29,7 @@
         }
 
         public static readonly DependencyProperty CommandProperty = DependencyProperty.Register(nameof(Command), typeof(ICommand), typeof(ReplaceKeyInputBindingBehavior),
-            new PropertyMetadata(default(ICommand), (o, args) => ((ReplaceKeyInputBindingBehavior)o).OnCommandPropertyChanged(args)));
+            new PropertyMetadata(default(ICommand), (o, args) => ((ReplaceKeyInputBindingBehavior)o).OnCommandChanged(args)));
       
         protected override void OnAssociatedObjectLoaded()
         {
@@ -41,7 +41,7 @@
             base.OnAssociatedObjectLoaded();
         }
 
-        private void OnCommandPropertyChanged(DependencyPropertyChangedEventArgs args)
+        private void OnCommandChanged(DependencyPropertyChangedEventArgs args)
         {
             UpdateInputGesture();
         }

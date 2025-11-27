@@ -25,9 +25,9 @@
         }
 
         public static readonly DependencyProperty CommandProperty = DependencyProperty.Register(nameof(Command), typeof(ICommand),
-            typeof(ReplaceCommandBindingBehavior), new PropertyMetadata(default(ICommand), (o, args) => ((ReplaceCommandBindingBehavior)o).OnCommandPropertyChanged()));
+            typeof(ReplaceCommandBindingBehavior), new PropertyMetadata(default(ICommand), (o, args) => ((ReplaceCommandBindingBehavior)o).OnCommandChanged()));
 
-        private void OnCommandPropertyChanged()
+        private void OnCommandChanged()
         {
             var textArea = AssociatedObject?.TextArea;
             if (textArea is null)
