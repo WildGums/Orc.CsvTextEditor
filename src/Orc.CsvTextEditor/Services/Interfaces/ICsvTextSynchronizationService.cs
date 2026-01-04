@@ -2,7 +2,7 @@
 {
     using System;
 
-    internal interface ICsvTextSynchronizationService
+    public interface ICsvTextSynchronizationService
     {
         bool IsSynchronizing { get; }
 

@@ -38,7 +38,7 @@ namespace Orc.CsvTextEditor
         public static readonly System.Windows.DependencyProperty CsvTextEditorInstanceProperty;
         public static readonly System.Windows.DependencyProperty EditorInstanceTypeProperty;
         public static readonly System.Windows.DependencyProperty TextProperty;
-        public CsvTextEditorControl() { }
+        public CsvTextEditorControl(Orc.CsvTextEditor.ICsvTextSynchronizationService csvTextSynchronizationService, Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance) { }
         public Orc.CsvTextEditor.ICsvTextEditorInstance? CsvTextEditorInstance { get; set; }
         public System.Type? EditorInstanceType { get; set; }
         public string? Text { get; set; }
@@ -66,8 +66,8 @@ namespace Orc.CsvTextEditor
     }
     public class CsvTextEditorInstance : Catel.Disposable, Orc.CsvTextEditor.ICsvTextEditorInstance, System.IDisposable
     {
-        public CsvTextEditorInstance(Catel.MVVM.ICommandManager commandManager, Orc.CsvTextEditor.ICsvTextEditorInitializer initializer, Catel.Services.IDispatcherService dispatcherService, Catel.IoC.ITypeFactory typeFactory) { }
-        public CsvTextEditorInstance(ICSharpCode.AvalonEdit.TextEditor textEditor, Catel.MVVM.ICommandManager commandManager, Orc.CsvTextEditor.ICsvTextEditorInitializer initializer, Catel.Services.IDispatcherService dispatcherService, Catel.IoC.ITypeFactory typeFactory) { }
+        public CsvTextEditorInstance(Catel.MVVM.ICommandManager commandManager, Orc.CsvTextEditor.ICsvTextEditorInitializer initializer, Catel.Services.IDispatcherService dispatcherService, System.IServiceProvider serviceProvider) { }
+        public CsvTextEditorInstance(ICSharpCode.AvalonEdit.TextEditor textEditor, Catel.MVVM.ICommandManager commandManager, Orc.CsvTextEditor.ICsvTextEditorInitializer initializer, Catel.Services.IDispatcherService dispatcherService, System.IServiceProvider serviceProvider) { }
         public bool CanRedo { get; }
         public bool CanUndo { get; }
         public int ColumnsCount { get; }
@@ -119,7 +119,7 @@ namespace Orc.CsvTextEditor
         public CsvTextSynchronizationScope(Orc.CsvTextEditor.CsvTextSynchronizationService csvTextSynchronizationService) { }
         protected override void DisposeManaged() { }
     }
-    public class CsvTextSynchronizationService
+    public class CsvTextSynchronizationService : Orc.CsvTextEditor.ICsvTextSynchronizationService
     {
         public CsvTextSynchronizationService() { }
         public bool IsSynchronizing { get; set; }
@@ -142,7 +142,7 @@ namespace Orc.CsvTextEditor
     }
     public class FindReplaceTool : Orc.Controls.FindReplaceTool<Orc.CsvTextEditor.FindReplaceService>
     {
-        public FindReplaceTool(Catel.Services.IUIVisualizerService uiVisualizerService, Catel.IoC.ITypeFactory typeFactory, Catel.IoC.IServiceLocator serviceLocator) { }
+        public FindReplaceTool(System.IServiceProvider serviceProvider, Catel.Services.IUIVisualizerService uiVisualizerService) { }
         protected override Orc.CsvTextEditor.FindReplaceService? CreateFindReplaceService(object target) { }
     }
     public class FirstLineAlwaysBoldTransformer : ICSharpCode.AvalonEdit.Rendering.DocumentColorizingTransformer
@@ -225,6 +225,11 @@ namespace Orc.CsvTextEditor
         public static System.Threading.Tasks.Task ShowToolAsync<T>(this Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance, object? parameter = null)
             where T :  class, Orc.Controls.IControlTool { }
     }
+    public interface ICsvTextSynchronizationService
+    {
+        bool IsSynchronizing { get; }
+        System.IDisposable SynchronizeInScope();
+    }
     public static class KeyGestureExtensions
     {
         public static bool IsKeyAndModifierEquals(this System.Windows.Input.KeyGesture left, System.Windows.Input.KeyGesture right) { }
@@ -246,6 +251,10 @@ namespace Orc.CsvTextEditor
     public static class LocationExtensions
     {
         public static int GetOffsetInLine(this Orc.CsvTextEditor.Location location) { }
+    }
+    public static class OrcCsvTextEditorModule
+    {
+        public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddOrcCsvTextEditor(this Microsoft.Extensions.DependencyInjection.IServiceCollection serviceCollection) { }
     }
     public class ReplaceCommandBindingBehavior : Catel.Windows.Interactivity.BehaviorBase<ICSharpCode.AvalonEdit.TextEditor>
     {

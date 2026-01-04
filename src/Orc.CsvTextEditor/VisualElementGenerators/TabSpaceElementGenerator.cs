@@ -6,10 +6,11 @@
     using Catel.Logging;
     using ICSharpCode.AvalonEdit.Document;
     using ICSharpCode.AvalonEdit.Rendering;
+    using Microsoft.Extensions.Logging;
 
     internal class TabSpaceElementGenerator : VisualLineElementGenerator
     {
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger Logger = LogManager.GetLogger(typeof(TabSpaceElementGenerator));
 
         private readonly Dictionary<int, int> _tabWidths = new Dictionary<int, int>();
 
@@ -267,7 +268,7 @@
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Failed to get first interested offset");
+                Logger.LogError(ex, "Failed to get first interested offset");
                 return startOffset;
             }
         }
@@ -354,7 +355,7 @@
             {
                 if (line.Length > maxArray.Length)
                 {
-                    throw Log.ErrorAndCreateException<ArgumentException>("Records in CSV have to contain the same number of fields");
+                    throw Logger.LogErrorAndCreateException<ArgumentException>("Records in CSV have to contain the same number of fields");
 
                 }
 

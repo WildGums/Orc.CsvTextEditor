@@ -4,32 +4,26 @@
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Input;
-    using Catel.IoC;
     using Catel.Logging;
-    using Controls;
     using ICSharpCode.AvalonEdit;
+    using Microsoft.Extensions.Logging;
     using Operations;
 
     [TemplatePart(Name = "PART_TextEditor", Type = typeof(TextEditor))]
     public class CsvTextEditorControl : Control
     {
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger Logger = LogManager.GetLogger(typeof(CsvTextEditorControl));
 
-        private readonly ITypeFactory _typeFactory;
-        private readonly ICsvTextSynchronizationService _synchronizationService;
+        private readonly ICsvTextSynchronizationService _csvTextSynchronizationService;
 
         private TextEditor? _textEditor;
         private bool _isPendingAttach = false;
 
-        public CsvTextEditorControl()
+        public CsvTextEditorControl(ICsvTextSynchronizationService csvTextSynchronizationService,
+            ICsvTextEditorInstance csvTextEditorInstance)
         {
-#pragma warning disable IDISP001 // Dispose created
-            var serviceLocator = this.GetServiceLocator();
-#pragma warning restore IDISP001 // Dispose created
-            _typeFactory = serviceLocator.ResolveRequiredType<ITypeFactory>();
-
-            _synchronizationService = _typeFactory.CreateRequiredInstanceWithParametersAndAutoCompletion<CsvTextSynchronizationService>();
-            serviceLocator.RegisterInstance(_synchronizationService, this);
+            _csvTextSynchronizationService = csvTextSynchronizationService;
+            CsvTextEditorInstance = csvTextEditorInstance;
 
             CreateRoutedCommandBinding(Paste, () => CsvTextEditorInstance?.Paste());
             CreateRoutedCommandBinding(Cut, () => CsvTextEditorInstance?.Cut());
@@ -112,7 +106,7 @@
             var textEditor = GetTemplateChild("PART_TextEditor") as TextEditor;
             if (textEditor is null)
             {
-                throw Log.ErrorAndCreateException<InvalidOperationException>("Can't find template part 'PART_TextEditor'");
+                throw Logger.LogErrorAndCreateException<InvalidOperationException>("Can't find template part 'PART_TextEditor'");
             }
 
             _textEditor = textEditor;
@@ -164,7 +158,7 @@
 
         private void OnTextEditorTextChanged(object? sender, EventArgs e)
         {
-            if (_synchronizationService?.IsSynchronizing ?? true)
+            if (_csvTextSynchronizationService.IsSynchronizing)
             {
                 return;
             }
@@ -175,7 +169,7 @@
                 return;
             }
 
-            using (_synchronizationService.SynchronizeInScope())
+            using (_csvTextSynchronizationService.SynchronizeInScope())
             {
                 SetCurrentValue(TextProperty, textEditor.Text);
             }
@@ -201,33 +195,29 @@
 
             if (!typeof(ICsvTextEditorInstance).IsAssignableFrom(wrapperInstanceType))
             {
-                Log.Error($"Cannot use type {wrapperInstanceType} because it not implemented ICsvTextEditorInstance");
+                Logger.LogError($"Cannot use type {wrapperInstanceType} because it not implemented ICsvTextEditorInstance");
             }
 
-            if (CsvTextEditorInstance is null || forceCreate)
-            {
-                var csvTextEditorInstance = (ICsvTextEditorInstance)_typeFactory.CreateRequiredInstanceWithParametersAndAutoCompletion(wrapperInstanceType);
-                SetCurrentValue(CsvTextEditorInstanceProperty, csvTextEditorInstance);
-            }
+            CsvTextEditorInstance?.AttachEditor(wrapperInstanceType);
         }
 
         private void UpdateInitialization()
         {
             try
             {
-                if (_synchronizationService?.IsSynchronizing ?? true)
+                if (_csvTextSynchronizationService.IsSynchronizing)
                 {
                     return;
                 }
 
-                using (_synchronizationService.SynchronizeInScope())
+                using (_csvTextSynchronizationService.SynchronizeInScope())
                 {
                     CsvTextEditorInstance?.Initialize(Text ?? string.Empty);
                 }
             }
             catch (Exception ex)
             {
-                Log.Error(ex, "Failed to update initialization");
+                Logger.LogError(ex, "Failed to update initialization");
             }
         }
 

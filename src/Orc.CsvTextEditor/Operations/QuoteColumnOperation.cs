@@ -1,10 +1,11 @@
 ﻿namespace Orc.CsvTextEditor.Operations
 {
     using Catel.Logging;
+    using Microsoft.Extensions.Logging;
 
     internal class QuoteColumnOperation : OperationBase
     {
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger Logger = LogManager.GetLogger(typeof(QuoteColumnOperation));
 
         public QuoteColumnOperation(ICsvTextEditorInstance csvTextEditorInstance)
             : base(csvTextEditorInstance)
@@ -44,7 +45,7 @@
             _csvTextEditorInstance.SetText(text);
             _csvTextEditorInstance.GotoPosition(location.Offset + offsetDelta);
 
-            Log.Debug($"{nameof(QuoteColumnOperation)} executed; quotes were {(quotesRemoved ? "removed" : "added")}");
+            Logger.LogDebug($"{nameof(QuoteColumnOperation)} executed; quotes were {(quotesRemoved ? "removed" : "added")}");
         }
 
         private static bool TryRemoveQuoteFromPosition(int symbolPosition, string inputText, out string outputText)

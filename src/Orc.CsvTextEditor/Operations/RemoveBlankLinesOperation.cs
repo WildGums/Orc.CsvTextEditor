@@ -2,10 +2,11 @@
 {
     using System.Linq;
     using Catel.Logging;
+    using Microsoft.Extensions.Logging;
 
     public class RemoveBlankLinesOperation : OperationBase
     {
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger Logger = LogManager.GetLogger(typeof(RemoveBlankLinesOperation));
 
         public RemoveBlankLinesOperation(ICsvTextEditorInstance csvTextEditorInstance)
             : base(csvTextEditorInstance)
@@ -14,7 +15,7 @@
 
         public override void Execute()
         {
-            Log.Debug("Removing blank lines");
+            Logger.LogDebug("Removing blank lines");
 
             var text = _csvTextEditorInstance.GetText();
             var lines = text.GetLines(out string newLineSymbol);

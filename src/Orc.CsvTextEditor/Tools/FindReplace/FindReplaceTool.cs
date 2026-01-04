@@ -1,25 +1,19 @@
 ﻿namespace Orc.CsvTextEditor
 {
     using System;
-    using Catel;
-    using Catel.IoC;
     using Catel.Services;
     using Controls;
     using ICSharpCode.AvalonEdit;
+    using Microsoft.Extensions.DependencyInjection;
 
     public class FindReplaceTool : FindReplaceTool<FindReplaceService>
     {
-        private readonly IServiceLocator _serviceLocator;
-        private readonly ITypeFactory _typeFactory;
+        private readonly IServiceProvider _serviceProvider;
 
-        public FindReplaceTool(IUIVisualizerService uiVisualizerService, ITypeFactory typeFactory, IServiceLocator serviceLocator)
-            : base(uiVisualizerService, typeFactory, serviceLocator)
+        public FindReplaceTool(IServiceProvider serviceProvider, IUIVisualizerService uiVisualizerService)
+            : base(serviceProvider, uiVisualizerService)
         {
-            ArgumentNullException.ThrowIfNull(typeFactory);
-            ArgumentNullException.ThrowIfNull(serviceLocator);
-
-            _typeFactory = typeFactory;
-            _serviceLocator = serviceLocator;
+            _serviceProvider = serviceProvider;
         }
 
         protected override FindReplaceService? CreateFindReplaceService(object target)
@@ -40,7 +34,7 @@
                 return null;
             }
 
-            var findReplaceService = _typeFactory.CreateInstanceWithParametersAndAutoCompletion<FindReplaceService>(textEditor, csvTextEditorInstance);
+            var findReplaceService = ActivatorUtilities.CreateInstance<FindReplaceService>(_serviceProvider, textEditor, csvTextEditorInstance);
 
             return findReplaceService;
         }

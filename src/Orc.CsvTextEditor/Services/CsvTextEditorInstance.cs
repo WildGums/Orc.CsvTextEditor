@@ -9,7 +9,6 @@
     using System.Xml;
     using Catel;
     using Catel.Collections;
-    using Catel.IoC;
     using Catel.Logging;
     using Catel.MVVM;
     using Catel.Services;
@@ -21,20 +20,21 @@
     using ICSharpCode.AvalonEdit.Document;
     using ICSharpCode.AvalonEdit.Highlighting;
     using ICSharpCode.AvalonEdit.Highlighting.Xshd;
+    using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.Logging;
     using Operations;
-    using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
     public class CsvTextEditorInstance : Disposable, ICsvTextEditorInstance
     {
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger Logger = LogManager.GetLogger(typeof(CsvTextEditorInstance));
 
         private static readonly string QuoteString = Symbols.Quote.ToString();
 
         private readonly ICommandManager _commandManager;
         private readonly IDispatcherService _dispatcherService;
+        private readonly IServiceProvider _serviceProvider;
         private readonly ICsvTextEditorInitializer _initializer;
         private readonly DispatcherTimer _refreshViewTimer;
-        private readonly ITypeFactory _typeFactory;
 
         private TabSpaceElementGenerator? _elementGenerator;
         private CompletionWindow? _completionWindow;
@@ -53,8 +53,8 @@
         private CsvTextEditorControl? _csvTextEditorControl;
 
         public CsvTextEditorInstance(TextEditor textEditor, ICommandManager commandManager, ICsvTextEditorInitializer initializer,
-            IDispatcherService dispatcherService, ITypeFactory typeFactory)
-            : this(commandManager, initializer, dispatcherService, typeFactory)
+            IDispatcherService dispatcherService, IServiceProvider serviceProvider)
+            : this(commandManager, initializer, dispatcherService, serviceProvider)
         {
             ArgumentNullException.ThrowIfNull(textEditor);
 
@@ -62,17 +62,12 @@
         }
 
         public CsvTextEditorInstance(ICommandManager commandManager, ICsvTextEditorInitializer initializer,
-            IDispatcherService dispatcherService, ITypeFactory typeFactory)
+            IDispatcherService dispatcherService, IServiceProvider serviceProvider)
         {
-            ArgumentNullException.ThrowIfNull(commandManager);
-            ArgumentNullException.ThrowIfNull(initializer);
-            ArgumentNullException.ThrowIfNull(dispatcherService);
-            ArgumentNullException.ThrowIfNull(typeFactory);
-
             _commandManager = commandManager;
             _initializer = initializer;
             _dispatcherService = dispatcherService;
-            _typeFactory = typeFactory;
+            _serviceProvider = serviceProvider;
 
             _refreshViewTimer = new DispatcherTimer();
             _refreshViewTimer.Tick += (sender, e) =>
@@ -97,7 +92,7 @@
                 var manager = _csvTextEditorControl?.GetControlToolManager();
                 if (manager is null)
                 {
-                    throw Log.ErrorAndCreateException<InvalidOperationException>("Manager is null");
+                    throw Logger.LogErrorAndCreateException<InvalidOperationException>("Manager is null");
                 }
 
                 return manager;
@@ -146,7 +141,7 @@
             textEditor.Options.EnableHyperlinks = false;
             textEditor.Options.AllowScrollBelowDocument = false;
 
-            _elementGenerator = _typeFactory.CreateInstance<TabSpaceElementGenerator>();
+            _elementGenerator = ActivatorUtilities.CreateInstance<TabSpaceElementGenerator>(_serviceProvider);
 
             textEditor.TextArea.TextView.ElementGenerators.Add(_elementGenerator);
 
@@ -335,7 +330,7 @@
             {
                 if (customHighlightings is null)
                 {
-                    throw Log.ErrorAndCreateException<InvalidOperationException>("Could not find embedded resource");
+                    throw Logger.LogErrorAndCreateException<InvalidOperationException>("Could not find embedded resource");
                 }
 
                 using (var reader = new XmlTextReader(customHighlightings))
@@ -627,7 +622,7 @@
             var textEditor = _textEditor;
             if (textEditor is null)
             {
-                throw Log.ErrorAndCreateException<InvalidOperationException>("No editor has been registered");
+                throw Logger.LogErrorAndCreateException<InvalidOperationException>("No editor has been registered");
             }
 
             return textEditor;
@@ -762,7 +757,7 @@
 
         public void ExecuteOperation<TOperation>() where TOperation : IOperation
         {
-            var operation = (TOperation)_typeFactory.CreateRequiredInstanceWithParametersAndAutoCompletion(typeof(TOperation), this);
+            var operation = ActivatorUtilities.CreateInstance<TOperation>(_serviceProvider, this);
             operation.Execute();
         }
 
