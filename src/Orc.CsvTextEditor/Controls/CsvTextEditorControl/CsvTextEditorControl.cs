@@ -10,7 +10,7 @@
     using Operations;
 
     [TemplatePart(Name = "PART_TextEditor", Type = typeof(TextEditor))]
-    public class CsvTextEditorControl : Control
+    public partial class CsvTextEditorControl : Control
     {
         private static readonly ILogger Logger = LogManager.GetLogger(typeof(CsvTextEditorControl));
 
