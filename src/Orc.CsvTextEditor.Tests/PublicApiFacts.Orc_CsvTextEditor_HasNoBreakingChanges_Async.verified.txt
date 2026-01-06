@@ -38,6 +38,7 @@ namespace Orc.CsvTextEditor
         public static readonly System.Windows.DependencyProperty CsvTextEditorInstanceProperty;
         public static readonly System.Windows.DependencyProperty EditorInstanceTypeProperty;
         public static readonly System.Windows.DependencyProperty TextProperty;
+        public CsvTextEditorControl() { }
         public CsvTextEditorControl(Orc.CsvTextEditor.ICsvTextSynchronizationService csvTextSynchronizationService, Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance) { }
         public Orc.CsvTextEditor.ICsvTextEditorInstance? CsvTextEditorInstance { get; set; }
         public System.Type? EditorInstanceType { get; set; }
@@ -252,10 +253,6 @@ namespace Orc.CsvTextEditor
     {
         public static int GetOffsetInLine(this Orc.CsvTextEditor.Location location) { }
     }
-    public static class OrcCsvTextEditorModule
-    {
-        public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddOrcCsvTextEditor(this Microsoft.Extensions.DependencyInjection.IServiceCollection serviceCollection) { }
-    }
     public class ReplaceCommandBindingBehavior : Catel.Windows.Interactivity.BehaviorBase<ICSharpCode.AvalonEdit.TextEditor>
     {
         public static readonly System.Windows.DependencyProperty CommandProperty;
@@ -373,5 +370,12 @@ namespace Orc.CsvTextEditor.Operations
     {
         public TrimWhitespacesOperation(Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance) { }
         public override void Execute() { }
+    }
+}
+namespace Orc
+{
+    public static class OrcCsvTextEditorModule
+    {
+        public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddOrcCsvTextEditor(this Microsoft.Extensions.DependencyInjection.IServiceCollection serviceCollection) { }
     }
 }
