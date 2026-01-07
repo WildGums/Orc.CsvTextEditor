@@ -5,9 +5,9 @@
 
     public class CsvTextSynchronizationScope : Disposable
     {
-        private readonly CsvTextSynchronizationService _csvTextSynchronizationService;
+        private readonly ICsvTextSynchronizationService _csvTextSynchronizationService;
 
-        public CsvTextSynchronizationScope(CsvTextSynchronizationService csvTextSynchronizationService)
+        public CsvTextSynchronizationScope(ICsvTextSynchronizationService csvTextSynchronizationService)
         {
             ArgumentNullException.ThrowIfNull(csvTextSynchronizationService);
 

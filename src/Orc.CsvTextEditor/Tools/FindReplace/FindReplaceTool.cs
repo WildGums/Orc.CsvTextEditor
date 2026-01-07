@@ -9,11 +9,14 @@
     public class FindReplaceTool : FindReplaceTool<FindReplaceService>
     {
         private readonly IServiceProvider _serviceProvider;
+        private readonly ICsvTextEditorInstanceManager _csvTextEditorInstanceManager;
 
-        public FindReplaceTool(IServiceProvider serviceProvider, IUIVisualizerService uiVisualizerService)
+        public FindReplaceTool(IServiceProvider serviceProvider, IUIVisualizerService uiVisualizerService,
+            ICsvTextEditorInstanceManager csvTextEditorInstanceManager)
             : base(serviceProvider, uiVisualizerService)
         {
             _serviceProvider = serviceProvider;
+            _csvTextEditorInstanceManager = csvTextEditorInstanceManager;
         }
 
         protected override FindReplaceService? CreateFindReplaceService(object target)
@@ -23,7 +26,7 @@
                 return null;
             }
 
-            var csvTextEditorInstance = csvTextEditorControl.CsvTextEditorInstance;
+            var csvTextEditorInstance = _csvTextEditorInstanceManager.GetInstance(csvTextEditorControl.Id);
             if (csvTextEditorInstance is null)
             {
                 return null;

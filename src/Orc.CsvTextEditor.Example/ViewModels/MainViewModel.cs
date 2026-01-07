@@ -6,22 +6,28 @@
 
     public class MainViewModel : ViewModelBase
     {
-        public MainViewModel(IServiceProvider serviceProvider)
+        private readonly ICsvTextEditorInstanceManager _csvTextEditorInstanceManager;
+
+        public MainViewModel(IServiceProvider serviceProvider, ICsvTextEditorInstanceManager csvTextEditorInstanceManager)
             : base(serviceProvider)
         {
-            EditorInstanceType = typeof(CsvTextEditorInstance);
+            _csvTextEditorInstanceManager = csvTextEditorInstanceManager;
+
             Title = "Orc.CsvTextEditor example";
 
             FindAndReplace = new Command(serviceProvider, OnFindAndReplace);
         }
 
         public Command FindAndReplace { get; }
-        public Type EditorInstanceType { get; private set; }
+
+        public string EditorId { get; set; }
 
         private void OnFindAndReplace()
         {
-            //var csvTextEditorInstance = _serviceLocator.TryResolveType<ICsvTextEditorInstance>(Scope);
-            //csvTextEditorInstance?.ShowTool<FindReplaceTool>();
+#pragma warning disable IDISP001 // Dispose created
+            var csvTextEditorInstance = _csvTextEditorInstanceManager.GetInstance(EditorId);
+#pragma warning restore IDISP001 // Dispose created
+            csvTextEditorInstance?.ShowTool<FindReplaceTool>();
         }
     }
 }

@@ -64,6 +64,8 @@
         public CsvTextEditorInstance(ICommandManager commandManager, ICsvTextEditorInitializer initializer,
             IDispatcherService dispatcherService, IServiceProvider serviceProvider)
         {
+            Id = Guid.NewGuid().ToString();
+
             _commandManager = commandManager;
             _initializer = initializer;
             _dispatcherService = dispatcherService;
@@ -84,7 +86,9 @@
             _refreshViewTimer.Interval = TimeSpan.FromMilliseconds(50);
         }
 
-        public IEnumerable<IControlTool> Tools => _csvTextEditorControl?.GetControlToolManager().Tools ?? new List<IControlTool>();
+        public string Id { get; private set; }
+
+        public IReadOnlyList<IControlTool> Tools => _csvTextEditorControl?.GetControlToolManager().Tools.ToArray() ?? Array.Empty<IControlTool>();
         public IControlToolManager ToolManager
         {
             get

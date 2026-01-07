@@ -4,7 +4,7 @@
 
     public interface ICsvTextSynchronizationService
     {
-        bool IsSynchronizing { get; }
+        bool IsSynchronizing { get; set; }
 
         IDisposable SynchronizeInScope();
     }

@@ -8,7 +8,9 @@
 
     public interface ICsvTextEditorInstance : IDisposable
     {
-        IEnumerable<IControlTool> Tools { get; }
+        string Id { get; }
+
+        IReadOnlyList<IControlTool> Tools { get; }
         IControlToolManager ToolManager { get; }
         int LinesCount { get; }
         int ColumnsCount { get; }

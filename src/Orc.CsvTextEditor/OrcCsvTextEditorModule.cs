@@ -15,7 +15,7 @@
         {
             serviceCollection.TryAddSingleton<ICsvTextEditorInitializer, CsvTextEditorInitializer>();
 
-            serviceCollection.TryAddTransient<ICsvTextEditorInstance, CsvTextEditorInstance>();
+            serviceCollection.TryAddTransient<ICsvTextEditorInstanceManager, CsvTextEditorInstanceManager>();
             serviceCollection.TryAddTransient<ICsvTextSynchronizationService, CsvTextSynchronizationService>();
 
             serviceCollection.AddSingleton<ILanguageSource>(new LanguageResourceSource("Orc.CsvTextEditor", "Orc.CsvTextEditor.Properties", "Resources"));
