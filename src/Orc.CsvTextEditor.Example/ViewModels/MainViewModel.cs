@@ -1,6 +1,7 @@
 ﻿namespace Orc.CsvTextEditor.ViewModels
 {
     using System;
+    using System.Threading.Tasks;
     using Catel.MVVM;
     using Orc.CsvTextEditor;
 
@@ -15,19 +16,19 @@
 
             Title = "Orc.CsvTextEditor example";
 
-            FindAndReplace = new Command(serviceProvider, OnFindAndReplace);
+            FindAndReplace = new TaskCommand(serviceProvider, OnFindAndReplaceAsync);
         }
 
-        public Command FindAndReplace { get; }
+        public TaskCommand FindAndReplace { get; }
 
         public string EditorId { get; set; }
 
-        private void OnFindAndReplace()
+        private async Task OnFindAndReplaceAsync()
         {
 #pragma warning disable IDISP001 // Dispose created
             var csvTextEditorInstance = _csvTextEditorInstanceManager.GetInstance(EditorId);
 #pragma warning restore IDISP001 // Dispose created
-            csvTextEditorInstance?.ShowTool<FindReplaceTool>();
+            await csvTextEditorInstance?.ShowToolAsync<FindReplaceTool>();
         }
     }
 }

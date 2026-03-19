@@ -231,11 +231,6 @@ namespace Orc.CsvTextEditor
     public static class ICsvTextEditorInstanceExtensions
     {
         public static Orc.Controls.IControlTool? GetToolByName(this Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance, string toolName) { }
-        [System.Obsolete("Use ShowToolAsync instead. Will be removed in version 6.0.0.", true)]
-        public static void ShowTool(this Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance, string toolName, object? parameter = null) { }
-        [System.Obsolete("Use ShowToolAsync instead. Will be removed in version 6.0.0.", true)]
-        public static void ShowTool<T>(this Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance, object? parameter = null)
-            where T :  class, Orc.Controls.IControlTool { }
         public static System.Threading.Tasks.Task ShowToolAsync(this Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance, string toolName, object? parameter = null) { }
         public static System.Threading.Tasks.Task ShowToolAsync<T>(this Orc.CsvTextEditor.ICsvTextEditorInstance csvTextEditorInstance, object? parameter = null)
             where T :  class, Orc.Controls.IControlTool { }
