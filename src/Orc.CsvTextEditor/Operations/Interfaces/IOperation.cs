@@ -1,7 +1,6 @@
-﻿namespace Orc.CsvTextEditor.Operations
+﻿namespace Orc.CsvTextEditor.Operations;
+
+public interface IOperation
 {
-    public interface IOperation
-    {
-        void Execute();
-    }
+    void Execute();
 }

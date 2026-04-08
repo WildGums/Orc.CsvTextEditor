@@ -1,16 +1,15 @@
-﻿namespace Orc.CsvTextEditor
+﻿namespace Orc.CsvTextEditor;
+
+using System;
+using ICSharpCode.AvalonEdit;
+
+public class CsvTextEditorInitializer : ICsvTextEditorInitializer
 {
-    using System;
-    using ICSharpCode.AvalonEdit;
-
-    public class CsvTextEditorInitializer : ICsvTextEditorInitializer
+    public virtual void Initialize(TextEditor textEditor, ICsvTextEditorInstance csvTextEditorInstance)
     {
-        public virtual void Initialize(TextEditor textEditor, ICsvTextEditorInstance csvTextEditorInstance)
-        {
-            ArgumentNullException.ThrowIfNull(textEditor);
-            ArgumentNullException.ThrowIfNull(csvTextEditorInstance);
+        ArgumentNullException.ThrowIfNull(textEditor);
+        ArgumentNullException.ThrowIfNull(csvTextEditorInstance);
 
-            //this place are reserved for CsvTextEditor initialization
-        }
+        //this place are reserved for CsvTextEditor initialization
     }
 }

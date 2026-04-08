@@ -1,14 +1,13 @@
-﻿namespace Orc.CsvTextEditor
+﻿namespace Orc.CsvTextEditor;
+
+using System;
+
+public static class LocationExtensions
 {
-    using System;
-
-    public static class LocationExtensions
+    public static int GetOffsetInLine(this Location location)
     {
-        public static int GetOffsetInLine(this Location location)
-        {
-            ArgumentNullException.ThrowIfNull(location);
+        ArgumentNullException.ThrowIfNull(location);
 
-            return location.Offset - location.Line.Offset;
-        }
+        return location.Offset - location.Line.Offset;
     }
 }

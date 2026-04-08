@@ -1,25 +1,24 @@
-﻿namespace Orc.CsvTextEditor
+﻿namespace Orc.CsvTextEditor;
+
+using System;
+using Catel;
+
+public class CsvTextSynchronizationScope : Disposable
 {
-    using System;
-    using Catel;
+    private readonly ICsvTextSynchronizationService _csvTextSynchronizationService;
 
-    public class CsvTextSynchronizationScope : Disposable
+    public CsvTextSynchronizationScope(ICsvTextSynchronizationService csvTextSynchronizationService)
     {
-        private readonly ICsvTextSynchronizationService _csvTextSynchronizationService;
+        ArgumentNullException.ThrowIfNull(csvTextSynchronizationService);
 
-        public CsvTextSynchronizationScope(ICsvTextSynchronizationService csvTextSynchronizationService)
-        {
-            ArgumentNullException.ThrowIfNull(csvTextSynchronizationService);
+        _csvTextSynchronizationService = csvTextSynchronizationService;
+        _csvTextSynchronizationService.IsSynchronizing = true;
+    }
 
-            _csvTextSynchronizationService = csvTextSynchronizationService;
-            _csvTextSynchronizationService.IsSynchronizing = true;
-        }
+    protected override void DisposeManaged()
+    {
+        base.DisposeManaged();
 
-        protected override void DisposeManaged()
-        {
-            base.DisposeManaged();
-
-            _csvTextSynchronizationService.IsSynchronizing = false;
-        }
+        _csvTextSynchronizationService.IsSynchronizing = false;
     }
 }

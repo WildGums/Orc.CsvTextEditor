@@ -1,59 +1,58 @@
-﻿namespace Orc.CsvTextEditor
+﻿namespace Orc.CsvTextEditor;
+
+using System;
+using System.Windows.Media;
+using ICSharpCode.AvalonEdit.Document;
+using ICSharpCode.AvalonEdit.Editing;
+using ICSharpCode.AvalonEdit.Rendering;
+
+/// <summary>
+///
+/// </summary>
+/// <remarks>
+/// This code originally comes from http://stackoverflow.com/questions/9223674/highlight-all-occurrences-of-selected-word-in-avalonedit.
+/// </remarks>
+public class HighlightAllOccurencesOfSelectedWordTransformer : DocumentColorizingTransformer
 {
-    using System;
-    using System.Windows.Media;
-    using ICSharpCode.AvalonEdit.Document;
-    using ICSharpCode.AvalonEdit.Editing;
-    using ICSharpCode.AvalonEdit.Rendering;
+    public string? SelectedWord { private get; set; }
+    public Selection? Selection { private get; set; }
 
-    /// <summary>
-    ///
-    /// </summary>
-    /// <remarks>
-    /// This code originally comes from http://stackoverflow.com/questions/9223674/highlight-all-occurrences-of-selected-word-in-avalonedit.
-    /// </remarks>
-    public class HighlightAllOccurencesOfSelectedWordTransformer : DocumentColorizingTransformer
+    protected override void ColorizeLine(DocumentLine line)
     {
-        public string? SelectedWord { private get; set; }
-        public Selection? Selection { private get; set; }
+        ArgumentNullException.ThrowIfNull(line);
 
-        protected override void ColorizeLine(DocumentLine line)
+        var selectedWord = SelectedWord;
+        if (string.IsNullOrEmpty(selectedWord))
         {
-            ArgumentNullException.ThrowIfNull(line);
+            return;
+        }
 
-            var selectedWord = SelectedWord;
-            if (string.IsNullOrEmpty(selectedWord))
+        var lineStartOffset = line.Offset;
+        var text = CurrentContext.Document.GetText(line);
+        var start = 0;
+        int index;
+
+        while ((index = text.IndexOf(selectedWord, start, StringComparison.Ordinal)) >= 0)
+        {
+            // Don't highlight the current selection
+            if (Selection is not null && Selection.StartPosition.Column == index + 1 && Selection.StartPosition.Line == line.LineNumber)
             {
-                return;
-            }
+                start = Selection.EndPosition.Column;
 
-            var lineStartOffset = line.Offset;
-            var text = CurrentContext.Document.GetText(line);
-            var start = 0;
-            int index;
-
-            while ((index = text.IndexOf(selectedWord, start, StringComparison.Ordinal)) >= 0)
-            {
-                // Don't highlight the current selection
-                if (Selection is not null && Selection.StartPosition.Column == index + 1 && Selection.StartPosition.Line == line.LineNumber)
+                if (start >= text.Length)
                 {
-                    start = Selection.EndPosition.Column;
-
-                    if (start >= text.Length)
-                    {
-                        break;
-                    }
-
-                    continue;
+                    break;
                 }
 
-                ChangeLinePart(
-                    lineStartOffset + index, // startOffset
-                    lineStartOffset + index + selectedWord.Length, // endOffset
-                    element => { element.TextRunProperties.SetBackgroundBrush(Brushes.PaleGreen); });
-
-                start = index + 1; // search for next occurrence
+                continue;
             }
+
+            ChangeLinePart(
+                lineStartOffset + index, // startOffset
+                lineStartOffset + index + selectedWord.Length, // endOffset
+                element => { element.TextRunProperties.SetBackgroundBrush(Brushes.PaleGreen); });
+
+            start = index + 1; // search for next occurrence
         }
     }
 }

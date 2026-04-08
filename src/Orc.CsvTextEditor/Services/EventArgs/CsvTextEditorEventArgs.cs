@@ -1,14 +1,13 @@
-﻿namespace Orc.CsvTextEditor
+﻿namespace Orc.CsvTextEditor;
+
+using System;
+
+public class CsvTextEditorEventArgs : EventArgs
 {
-    using System;
-
-    public class CsvTextEditorEventArgs : EventArgs
+    public CsvTextEditorEventArgs(ICsvTextEditorInstance instance)
     {
-        public CsvTextEditorEventArgs(ICsvTextEditorInstance instance)
-        {
-            Instance = instance;
-        }
-
-        public ICsvTextEditorInstance Instance { get; }
+        Instance = instance;
     }
+
+    public ICsvTextEditorInstance Instance { get; }
 }
