@@ -1,48 +1,47 @@
-﻿namespace Orc.CsvTextEditor
+﻿namespace Orc.CsvTextEditor;
+
+using System.Windows;
+using Catel.Windows.Interactivity;
+using ICSharpCode.AvalonEdit;
+
+public class DisableTextDragDropBehavior : BehaviorBase<TextEditor>
 {
-    using System.Windows;
-    using Catel.Windows.Interactivity;
-    using ICSharpCode.AvalonEdit;
+    private bool _originalAllowDrop;
 
-    public class DisableTextDragDropBehavior : BehaviorBase<TextEditor>
+    protected override void OnAssociatedObjectLoaded()
     {
-        private bool _originalAllowDrop;
+        base.OnAssociatedObjectLoaded();
 
-        protected override void OnAssociatedObjectLoaded()
+        _originalAllowDrop = (bool)AssociatedObject.TextArea.GetValue(UIElement.AllowDropProperty);
+        AssociatedObject.TextArea.SetCurrentValue(UIElement.AllowDropProperty, true);
+
+        AssociatedObject.TextArea.PreviewDragEnter += OnPreviewDragEnter;
+        AssociatedObject.TextArea.PreviewDragOver += OnPreviewDragEnter;
+        AssociatedObject.TextArea.PreviewDrop += OnPreviewDrop;
+    }
+
+    protected override void OnAssociatedObjectUnloaded()
+    {
+        AssociatedObject.TextArea.SetCurrentValue(UIElement.AllowDropProperty, _originalAllowDrop);
+
+        AssociatedObject.TextArea.PreviewDragEnter -= OnPreviewDragEnter;
+        AssociatedObject.TextArea.PreviewDragOver -= OnPreviewDragEnter;
+        AssociatedObject.TextArea.PreviewDrop -= OnPreviewDrop;
+    }
+
+    private static void OnPreviewDragEnter(object? sender, DragEventArgs e)
+    {
+        if (e.Data.GetDataPresent(DataFormats.FileDrop, true))
         {
-            base.OnAssociatedObjectLoaded();
-
-            _originalAllowDrop = (bool)AssociatedObject.TextArea.GetValue(UIElement.AllowDropProperty);
-            AssociatedObject.TextArea.SetCurrentValue(UIElement.AllowDropProperty, true);
-
-            AssociatedObject.TextArea.PreviewDragEnter += OnPreviewDragEnter;
-            AssociatedObject.TextArea.PreviewDragOver += OnPreviewDragEnter;
-            AssociatedObject.TextArea.PreviewDrop += OnPreviewDrop;
+            return;
         }
 
-        protected override void OnAssociatedObjectUnloaded()
-        {
-            AssociatedObject.TextArea.SetCurrentValue(UIElement.AllowDropProperty, _originalAllowDrop);
+        e.Effects = DragDropEffects.None;
+        e.Handled = true;
+    }
 
-            AssociatedObject.TextArea.PreviewDragEnter -= OnPreviewDragEnter;
-            AssociatedObject.TextArea.PreviewDragOver -= OnPreviewDragEnter;
-            AssociatedObject.TextArea.PreviewDrop -= OnPreviewDrop;
-        }
-
-        private static void OnPreviewDragEnter(object? sender, DragEventArgs e)
-        {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop, true))
-            {
-                return;
-            }
-
-            e.Effects = DragDropEffects.None;
-            e.Handled = true;
-        }
-
-        private void OnPreviewDrop(object? sender, DragEventArgs e)
-        {
-            e.Handled = !e.Data.GetDataPresent(DataFormats.FileDrop, true);
-        }
+    private void OnPreviewDrop(object? sender, DragEventArgs e)
+    {
+        e.Handled = !e.Data.GetDataPresent(DataFormats.FileDrop, true);
     }
 }

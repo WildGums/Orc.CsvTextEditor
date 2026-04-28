@@ -5,9 +5,11 @@
               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
               xmlns:catel="http://schemas.catelproject.com"
               xmlns:orccontrols="http://schemas.wildgums.com/orc/controls"
-              xmlns:orccsvtexteditor="http://schemas.wildgums.com/orc/csvtexteditor" 
+              xmlns:orccsvtexteditor="http://schemas.wildgums.com/orc/csvtexteditor"
               xmlns:orctheming="http://schemas.wildgums.com/orc/theming"
-              mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="400">
+              mc:Ignorable="d"
+              d:DesignHeight="300"
+              d:DesignWidth="400">
 
     <orccontrols:StackGrid>
         <Grid.RowDefinitions>
@@ -18,10 +20,11 @@
 
         <orctheming:ThemeSwitcherView />
 
-        <orccsvtexteditor:CsvTextEditorControl EditorInstanceType="{Binding EditorInstanceType}" 
-                                               Text="one,two,three,four,five"/>
+        <orccsvtexteditor:CsvTextEditorControl x:Name="editor"
+                                               Text="one,two,three,four,five" />
 
-        <Button Command="{orccontrols:OpenToolCommand {x:Type orccsvtexteditor:FindReplaceTool}, {x:Type orccsvtexteditor:CsvTextEditorControl}}" Content="Find and Replace"/>
+        <Button Command="{orccontrols:OpenToolCommand {x:Type orccsvtexteditor:FindReplaceTool}, {x:Type orccsvtexteditor:CsvTextEditorControl}}"
+                Content="Find and Replace" />
 
     </orccontrols:StackGrid>
 

@@ -1,18 +1,17 @@
-﻿namespace Orc.CsvTextEditor.Operations
+﻿namespace Orc.CsvTextEditor.Operations;
+
+using System;
+
+public abstract class OperationBase : IOperation
 {
-    using System;
+    protected readonly ICsvTextEditorInstance _csvTextEditorInstance;
 
-    public abstract class OperationBase : IOperation
+    protected OperationBase(ICsvTextEditorInstance csvTextEditorInstance)
     {
-        protected readonly ICsvTextEditorInstance _csvTextEditorInstance;
+        ArgumentNullException.ThrowIfNull(csvTextEditorInstance);
 
-        protected OperationBase(ICsvTextEditorInstance csvTextEditorInstance)
-        {
-            ArgumentNullException.ThrowIfNull(csvTextEditorInstance);
-
-            _csvTextEditorInstance = csvTextEditorInstance;
-        }
-
-        public abstract void Execute();
+        _csvTextEditorInstance = csvTextEditorInstance;
     }
+
+    public abstract void Execute();
 }

@@ -1,11 +1,10 @@
-﻿namespace Orc.CsvTextEditor
+﻿namespace Orc.CsvTextEditor;
+
+using System;
+
+public interface ICsvTextSynchronizationService
 {
-    using System;
+    bool IsSynchronizing { get; set; }
 
-    internal interface ICsvTextSynchronizationService
-    {
-        bool IsSynchronizing { get; }
-
-        IDisposable SynchronizeInScope();
-    }
+    IDisposable SynchronizeInScope();
 }

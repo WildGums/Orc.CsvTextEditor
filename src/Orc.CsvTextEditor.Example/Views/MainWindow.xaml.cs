@@ -1,10 +1,17 @@
-﻿namespace Orc.CsvTextEditor.Views
+﻿namespace Orc.CsvTextEditor.Views;
+
+using Orc.CsvTextEditor.ViewModels;
+
+public partial class MainWindow
 {
-    public partial class MainWindow
+    protected override void OnViewModelChanged()
     {
-        public MainWindow()
+        base.OnViewModelChanged();
+
+        var vm = ViewModel as MainViewModel;
+        if (vm is not null)
         {
-            InitializeComponent();
+            vm.EditorId = editor.Id; 
         }
     }
 }

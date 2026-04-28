@@ -1,48 +1,44 @@
-﻿namespace Orc.CsvTextEditor
+﻿namespace Orc.CsvTextEditor;
+
+using System;
+using Catel.Services;
+using Controls;
+using ICSharpCode.AvalonEdit;
+using Microsoft.Extensions.DependencyInjection;
+
+public class FindReplaceTool : FindReplaceTool<FindReplaceService>
 {
-    using System;
-    using Catel;
-    using Catel.IoC;
-    using Catel.Services;
-    using Controls;
-    using ICSharpCode.AvalonEdit;
+    private readonly IServiceProvider _serviceProvider;
+    private readonly ICsvTextEditorInstanceManager _csvTextEditorInstanceManager;
 
-    public class FindReplaceTool : FindReplaceTool<FindReplaceService>
+    public FindReplaceTool(IServiceProvider serviceProvider, IUIVisualizerService uiVisualizerService,
+        ICsvTextEditorInstanceManager csvTextEditorInstanceManager)
+        : base(serviceProvider, uiVisualizerService)
     {
-        private readonly IServiceLocator _serviceLocator;
-        private readonly ITypeFactory _typeFactory;
+        _serviceProvider = serviceProvider;
+        _csvTextEditorInstanceManager = csvTextEditorInstanceManager;
+    }
 
-        public FindReplaceTool(IUIVisualizerService uiVisualizerService, ITypeFactory typeFactory, IServiceLocator serviceLocator)
-            : base(uiVisualizerService, typeFactory, serviceLocator)
+    protected override FindReplaceService? CreateFindReplaceService(object target)
+    {
+        if (target is not CsvTextEditorControl csvTextEditorControl)
         {
-            ArgumentNullException.ThrowIfNull(typeFactory);
-            ArgumentNullException.ThrowIfNull(serviceLocator);
-
-            _typeFactory = typeFactory;
-            _serviceLocator = serviceLocator;
+            return null;
         }
 
-        protected override FindReplaceService? CreateFindReplaceService(object target)
+        var csvTextEditorInstance = _csvTextEditorInstanceManager.GetInstance(csvTextEditorControl.Id);
+        if (csvTextEditorInstance is null)
         {
-            if (target is not CsvTextEditorControl csvTextEditorControl)
-            {
-                return null;
-            }
-
-            var csvTextEditorInstance = csvTextEditorControl.CsvTextEditorInstance;
-            if (csvTextEditorInstance is null)
-            {
-                return null;
-            }
-
-            if (csvTextEditorInstance.GetEditor() is not TextEditor textEditor)
-            {
-                return null;
-            }
-
-            var findReplaceService = _typeFactory.CreateInstanceWithParametersAndAutoCompletion<FindReplaceService>(textEditor, csvTextEditorInstance);
-
-            return findReplaceService;
+            return null;
         }
+
+        if (csvTextEditorInstance.GetEditor() is not TextEditor textEditor)
+        {
+            return null;
+        }
+
+        var findReplaceService = ActivatorUtilities.CreateInstance<FindReplaceService>(_serviceProvider, textEditor, csvTextEditorInstance);
+
+        return findReplaceService;
     }
 }

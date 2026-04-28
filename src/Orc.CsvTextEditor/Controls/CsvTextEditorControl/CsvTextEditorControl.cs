@@ -1,247 +1,209 @@
-﻿namespace Orc.CsvTextEditor
+﻿namespace Orc.CsvTextEditor;
+
+using System;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using Catel.Logging;
+using ICSharpCode.AvalonEdit;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Operations;
+
+[TemplatePart(Name = "PART_TextEditor", Type = typeof(TextEditor))]
+public partial class CsvTextEditorControl : Control
 {
-    using System;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Input;
-    using Catel.IoC;
-    using Catel.Logging;
-    using Controls;
-    using ICSharpCode.AvalonEdit;
-    using Operations;
+    private static readonly ILogger Logger = LogManager.GetLogger(typeof(CsvTextEditorControl));
 
-    [TemplatePart(Name = "PART_TextEditor", Type = typeof(TextEditor))]
-    public class CsvTextEditorControl : Control
+    private readonly ICsvTextSynchronizationService _csvTextSynchronizationService;
+    private readonly ICsvTextEditorInstanceManager _csvTextEditInstanceManager;
+    private readonly IServiceProvider _serviceProvider;
+
+    private TextEditor? _textEditor;
+
+    private ICsvTextEditorInstance? _csvTextEditorInstance;
+
+    public CsvTextEditorControl(ICsvTextSynchronizationService csvTextSynchronizationService,
+        ICsvTextEditorInstanceManager csvTextEditInstanceManager, IServiceProvider serviceProvider)
     {
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+        _csvTextSynchronizationService = csvTextSynchronizationService;
+        _csvTextEditInstanceManager = csvTextEditInstanceManager;
+        _serviceProvider = serviceProvider;
+        CreateRoutedCommandBinding(Paste, () => _csvTextEditorInstance?.Paste());
+        CreateRoutedCommandBinding(Cut, () => _csvTextEditorInstance?.Cut());
+        CreateRoutedCommandBinding(Copy, () => _csvTextEditorInstance?.Copy());
 
-        private readonly ITypeFactory _typeFactory;
-        private readonly ICsvTextSynchronizationService _synchronizationService;
+        CreateRoutedCommandBinding(GotoNextColumn, () => _csvTextEditorInstance?.ExecuteOperation<GotoNextColumnOperation>());
+        CreateRoutedCommandBinding(GotoPreviousColumn, () => _csvTextEditorInstance?.ExecuteOperation<GotoPreviousColumnOperation>());
 
-        private TextEditor? _textEditor;
-        private bool _isPendingAttach = false;
+        CreateRoutedCommandBinding(Undo, () => _csvTextEditorInstance?.Undo(), () => _csvTextEditorInstance?.CanUndo == true);
+        CreateRoutedCommandBinding(Redo, () => _csvTextEditorInstance?.Redo(), () => _csvTextEditorInstance?.CanRedo == true);
 
-        public CsvTextEditorControl()
+        CreateRoutedCommandBinding(AddLine, () => _csvTextEditorInstance?.ExecuteOperation<AddLineOperation>());
+        CreateRoutedCommandBinding(RemoveLine, () => _csvTextEditorInstance?.ExecuteOperation<RemoveLineOperation>());
+        CreateRoutedCommandBinding(DuplicateLine, () => _csvTextEditorInstance?.ExecuteOperation<DuplicateLineOperation>());
+        CreateRoutedCommandBinding(RemoveColumn, () => _csvTextEditorInstance?.ExecuteOperation<RemoveColumnOperation>());
+        CreateRoutedCommandBinding(AddColumn, () => _csvTextEditorInstance?.ExecuteOperation<AddColumnOperation>());
+        CreateRoutedCommandBinding(QuoteColumn, () => _csvTextEditorInstance?.ExecuteOperation<QuoteColumnOperation>());
+
+        CreateRoutedCommandBinding(DeleteNextSelectedText, () => _csvTextEditorInstance?.DeleteNextSelectedText());
+        CreateRoutedCommandBinding(DeletePreviousSelectedText, () => _csvTextEditorInstance?.DeletePreviousSelectedText());
+
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
+    }
+
+    public static RoutedCommand Paste { get; } = new(nameof(Paste), typeof(CsvTextEditorControl));
+    public static RoutedCommand Cut { get; } = new(nameof(Cut), typeof(CsvTextEditorControl));
+    public static RoutedCommand Copy { get; } = new(nameof(Copy), typeof(CsvTextEditorControl));
+
+    public static RoutedCommand GotoNextColumn { get; } = new(nameof(GotoNextColumn), typeof(CsvTextEditorControl));
+    public static RoutedCommand GotoPreviousColumn { get; } = new(nameof(GotoPreviousColumn), typeof(CsvTextEditorControl));
+
+    public static RoutedCommand Undo { get; } = new(nameof(Undo), typeof(CsvTextEditorControl));
+    public static RoutedCommand Redo { get; } = new(nameof(Redo), typeof(CsvTextEditorControl));
+
+    public static RoutedCommand AddLine { get; } = new(nameof(AddLine), typeof(CsvTextEditorControl));
+    public static RoutedCommand RemoveLine { get; } = new(nameof(RemoveLine), typeof(CsvTextEditorControl));
+    public static RoutedCommand DuplicateLine { get; } = new(nameof(DuplicateLine), typeof(CsvTextEditorControl));
+    public static RoutedCommand RemoveColumn { get; } = new(nameof(RemoveColumn), typeof(CsvTextEditorControl));
+    public static RoutedCommand AddColumn { get; } = new(nameof(AddColumn), typeof(CsvTextEditorControl));
+    public static RoutedCommand QuoteColumn { get; } = new(nameof(QuoteColumn), typeof(CsvTextEditorControl));
+
+    public static RoutedCommand DeleteNextSelectedText { get; } = new(nameof(DeleteNextSelectedText), typeof(CsvTextEditorControl));
+    public static RoutedCommand DeletePreviousSelectedText { get; } = new(nameof(DeletePreviousSelectedText), typeof(CsvTextEditorControl));
+
+    public string Id { get { return _csvTextEditorInstance?.Id ?? string.Empty; } }
+
+    public string? Text
+    {
+        get => (string?)GetValue(TextProperty);
+        set => SetValue(TextProperty, value);
+    }
+
+    public static readonly DependencyProperty TextProperty = DependencyProperty.Register(nameof(Text),
+        typeof(string), typeof(CsvTextEditorControl), new PropertyMetadata(default(string),
+            (sender, args) => ((CsvTextEditorControl)sender).OnTextChanged(args)));
+
+    public override void OnApplyTemplate()
+    {
+        base.OnApplyTemplate();
+
+        var textEditor = GetTemplateChild("PART_TextEditor") as TextEditor;
+        if (textEditor is null)
         {
-#pragma warning disable IDISP001 // Dispose created
-            var serviceLocator = this.GetServiceLocator();
-#pragma warning restore IDISP001 // Dispose created
-            _typeFactory = serviceLocator.ResolveRequiredType<ITypeFactory>();
-
-            _synchronizationService = _typeFactory.CreateRequiredInstanceWithParametersAndAutoCompletion<CsvTextSynchronizationService>();
-            serviceLocator.RegisterInstance(_synchronizationService, this);
-
-            CreateRoutedCommandBinding(Paste, () => CsvTextEditorInstance?.Paste());
-            CreateRoutedCommandBinding(Cut, () => CsvTextEditorInstance?.Cut());
-            CreateRoutedCommandBinding(Copy, () => CsvTextEditorInstance?.Copy());
-
-            CreateRoutedCommandBinding(GotoNextColumn, () => CsvTextEditorInstance?.ExecuteOperation<GotoNextColumnOperation>());
-            CreateRoutedCommandBinding(GotoPreviousColumn, () => CsvTextEditorInstance?.ExecuteOperation<GotoPreviousColumnOperation>());
-
-            CreateRoutedCommandBinding(Undo, () => CsvTextEditorInstance?.Undo(), () => CsvTextEditorInstance?.CanUndo == true);
-            CreateRoutedCommandBinding(Redo, () => CsvTextEditorInstance?.Redo(), () => CsvTextEditorInstance?.CanRedo == true);
-
-            CreateRoutedCommandBinding(AddLine, () => CsvTextEditorInstance?.ExecuteOperation<AddLineOperation>());
-            CreateRoutedCommandBinding(RemoveLine, () => CsvTextEditorInstance?.ExecuteOperation<RemoveLineOperation>());
-            CreateRoutedCommandBinding(DuplicateLine, () => CsvTextEditorInstance?.ExecuteOperation<DuplicateLineOperation>());
-            CreateRoutedCommandBinding(RemoveColumn, () => CsvTextEditorInstance?.ExecuteOperation<RemoveColumnOperation>());
-            CreateRoutedCommandBinding(AddColumn, () => CsvTextEditorInstance?.ExecuteOperation<AddColumnOperation>());
-            CreateRoutedCommandBinding(QuoteColumn, () => CsvTextEditorInstance?.ExecuteOperation<QuoteColumnOperation>());
-
-            CreateRoutedCommandBinding(DeleteNextSelectedText, () => CsvTextEditorInstance?.DeleteNextSelectedText());
-            CreateRoutedCommandBinding(DeletePreviousSelectedText, () => CsvTextEditorInstance?.DeletePreviousSelectedText());
+            throw Logger.LogErrorAndCreateException<InvalidOperationException>("Can't find template part 'PART_TextEditor'");
         }
 
-        public static RoutedCommand Paste { get; } = new(nameof(Paste), typeof(CsvTextEditorControl));
-        public static RoutedCommand Cut { get; } = new(nameof(Cut), typeof(CsvTextEditorControl));
-        public static RoutedCommand Copy { get; } = new(nameof(Copy), typeof(CsvTextEditorControl));
+        _textEditor = textEditor;
+        _textEditor.TextChanged += OnTextEditorTextChanged;
+    }
 
-        public static RoutedCommand GotoNextColumn { get; } = new(nameof(GotoNextColumn), typeof(CsvTextEditorControl));
-        public static RoutedCommand GotoPreviousColumn { get; } = new(nameof(GotoPreviousColumn), typeof(CsvTextEditorControl));
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        AttachCsvTextEditorInstance();
+    }
 
-        public static RoutedCommand Undo { get; } = new(nameof(Undo), typeof(CsvTextEditorControl));
-        public static RoutedCommand Redo { get; } = new(nameof(Redo), typeof(CsvTextEditorControl));
-
-        public static RoutedCommand AddLine { get; } = new(nameof(AddLine), typeof(CsvTextEditorControl));
-        public static RoutedCommand RemoveLine { get; } = new(nameof(RemoveLine), typeof(CsvTextEditorControl));
-        public static RoutedCommand DuplicateLine { get; } = new(nameof(DuplicateLine), typeof(CsvTextEditorControl));
-        public static RoutedCommand RemoveColumn { get; } = new(nameof(RemoveColumn), typeof(CsvTextEditorControl));
-        public static RoutedCommand AddColumn { get; } = new(nameof(AddColumn), typeof(CsvTextEditorControl));
-        public static RoutedCommand QuoteColumn { get; } = new(nameof(QuoteColumn), typeof(CsvTextEditorControl));
-
-        public static RoutedCommand DeleteNextSelectedText { get; } = new(nameof(DeleteNextSelectedText), typeof(CsvTextEditorControl));
-        public static RoutedCommand DeletePreviousSelectedText { get; } = new(nameof(DeletePreviousSelectedText), typeof(CsvTextEditorControl));
-        
-        /// <summary>
-        /// Customize Type of wrapper used for underlying TextEditor
-        /// </summary>
-        public Type? EditorInstanceType
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        var textEditor = _textEditor;
+        if (textEditor is not null)
         {
-            get { return (Type?)GetValue(EditorInstanceTypeProperty); }
-            set { SetValue(EditorInstanceTypeProperty, value); }
+            textEditor.TextChanged -= OnTextEditorTextChanged;
         }
 
-        public static readonly DependencyProperty EditorInstanceTypeProperty = DependencyProperty.Register(nameof(EditorInstanceType), typeof(Type), typeof(CsvTextEditorControl),
-            new PropertyMetadata(typeof(CsvTextEditorInstance),
-                (sender, e) => ((CsvTextEditorControl)sender).OnEditorInstanceTypeChanged(e)));
+        DetachCsvTextEditorInstance();
+    }
 
-        public string? Text
+    private void AttachCsvTextEditorInstance()
+    {
+        _csvTextEditorInstance = ActivatorUtilities.CreateInstance<CsvTextEditorInstance>(_serviceProvider, _textEditor!);
+
+        if (_textEditor is not null)
         {
-            get => (string?)GetValue(TextProperty);
-            set => SetValue(TextProperty, value);
+            _csvTextEditorInstance.AttachEditor(_textEditor);
         }
 
-        public static readonly DependencyProperty TextProperty = DependencyProperty.Register(nameof(Text),
-            typeof(string), typeof(CsvTextEditorControl), new PropertyMetadata(default(string),
-                (sender, args) => ((CsvTextEditorControl)sender).OnTextChanged(args)));
+        _csvTextEditInstanceManager.RegisterInstance(_csvTextEditorInstance.Id, _csvTextEditorInstance);
 
-        public ICsvTextEditorInstance? CsvTextEditorInstance
+        UpdateInitialization();
+    }
+
+    private void DetachCsvTextEditorInstance()
+    {
+        var instance = _csvTextEditorInstance;
+        if (instance is null)
         {
-            get { return (ICsvTextEditorInstance?)GetValue(CsvTextEditorInstanceProperty); }
-            set { SetValue(CsvTextEditorInstanceProperty, value); }
+            return;
         }
 
-        public static readonly DependencyProperty CsvTextEditorInstanceProperty =
-            DependencyProperty.Register(nameof(CsvTextEditorInstance), typeof(ICsvTextEditorInstance), typeof(CsvTextEditorControl),
-                new PropertyMetadata((sender, args) => ((CsvTextEditorControl)sender).OnCsvTextEditorInstanceChanged(args)));
-
-        public override void OnApplyTemplate()
+        if (_textEditor is not null)
         {
-            base.OnApplyTemplate();
-
-            var textEditor = GetTemplateChild("PART_TextEditor") as TextEditor;
-            if (textEditor is null)
-            {
-                throw Log.ErrorAndCreateException<InvalidOperationException>("Can't find template part 'PART_TextEditor'");
-            }
-
-            _textEditor = textEditor;
-            _textEditor.TextChanged += OnTextEditorTextChanged;
-
-            if (_isPendingAttach)
-            {
-                _isPendingAttach = false;
-
-                AttachCsvTextEditorInstance();
-            }
-            else
-            {
-                UpdateServiceRegistration();
-            }
+            instance.DetachEditor();
         }
 
-        private void OnEditorInstanceTypeChanged(DependencyPropertyChangedEventArgs e)
+        _csvTextEditInstanceManager.UnregisterInstance(instance.Id);
+    }
+
+    private void OnTextEditorTextChanged(object? sender, EventArgs e)
+    {
+        if (_csvTextSynchronizationService.IsSynchronizing)
         {
-            UpdateServiceRegistration();
+            return;
         }
 
-        private void OnCsvTextEditorInstanceChanged(DependencyPropertyChangedEventArgs args)
+        var textEditor = _textEditor;
+        if (textEditor is null)
         {
-            var oldInstance = args.OldValue as ICsvTextEditorInstance;
-            oldInstance?.DetachEditor();
-
-            if (_textEditor is null)
-            {
-                _isPendingAttach = true;
-            }
-            else
-            {
-                AttachCsvTextEditorInstance();
-
-                _isPendingAttach = false;
-            }
+            return;
         }
 
-        private void AttachCsvTextEditorInstance()
+        using (_csvTextSynchronizationService.SynchronizeInScope())
         {
-            if (_textEditor is not null)
-            {
-                CsvTextEditorInstance?.AttachEditor(_textEditor);
-            }
+            SetCurrentValue(TextProperty, textEditor.Text);
+        }
+    }
 
-            UpdateInitialization();
+    private void OnTextChanged(DependencyPropertyChangedEventArgs args)
+    {
+        if (_csvTextEditorInstance is null)
+        {
+            return;
         }
 
-        private void OnTextEditorTextChanged(object? sender, EventArgs e)
+        UpdateInitialization();
+    }
+
+    private void UpdateInitialization()
+    {
+        try
         {
-            if (_synchronizationService?.IsSynchronizing ?? true)
+            if (_csvTextSynchronizationService.IsSynchronizing)
             {
                 return;
             }
 
-            var textEditor = _textEditor;
-            if (textEditor is null)
+            using (_csvTextSynchronizationService.SynchronizeInScope())
             {
-                return;
-            }
-
-            using (_synchronizationService.SynchronizeInScope())
-            {
-                SetCurrentValue(TextProperty, textEditor.Text);
+                _csvTextEditorInstance?.Initialize(Text ?? string.Empty);
             }
         }
-
-        private void OnTextChanged(DependencyPropertyChangedEventArgs args)
+        catch (Exception ex)
         {
-            if (CsvTextEditorInstance is null)
-            {
-                return;
-            }
-
-            UpdateInitialization();
+            Logger.LogError(ex, "Failed to update initialization");
         }
+    }
 
-        private void UpdateServiceRegistration(bool forceCreate = true)
+    private void CreateRoutedCommandBinding(RoutedCommand routedCommand, Action executeAction, Func<bool>? canExecute = null)
+    {
+        var routedCommandBinding = new CommandBinding { Command = routedCommand };
+        routedCommandBinding.Executed += (sender, args) => executeAction?.Invoke();
+
+        if (canExecute is not null)
         {
-            var wrapperInstanceType = EditorInstanceType;
-            if (_textEditor is null || wrapperInstanceType is null)
-            {
-                return;
-            }
-
-            if (!typeof(ICsvTextEditorInstance).IsAssignableFrom(wrapperInstanceType))
-            {
-                Log.Error($"Cannot use type {wrapperInstanceType} because it not implemented ICsvTextEditorInstance");
-            }
-
-            if (CsvTextEditorInstance is null || forceCreate)
-            {
-                var csvTextEditorInstance = (ICsvTextEditorInstance)_typeFactory.CreateRequiredInstanceWithParametersAndAutoCompletion(wrapperInstanceType);
-                SetCurrentValue(CsvTextEditorInstanceProperty, csvTextEditorInstance);
-            }
+            routedCommandBinding.CanExecute += (sender, args) => args.CanExecute = canExecute.Invoke();
         }
 
-        private void UpdateInitialization()
-        {
-            try
-            {
-                if (_synchronizationService?.IsSynchronizing ?? true)
-                {
-                    return;
-                }
-
-                using (_synchronizationService.SynchronizeInScope())
-                {
-                    CsvTextEditorInstance?.Initialize(Text ?? string.Empty);
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "Failed to update initialization");
-            }
-        }
-
-        private void CreateRoutedCommandBinding(RoutedCommand routedCommand, Action executeAction, Func<bool>? canExecute = null)
-        {
-            var routedCommandBinding = new CommandBinding { Command = routedCommand };
-            routedCommandBinding.Executed += (sender, args) => executeAction?.Invoke();
-
-            if (canExecute is not null)
-            {
-                routedCommandBinding.CanExecute += (sender, args) => args.CanExecute = canExecute.Invoke();
-            }
-
-            CommandBindings.Add(routedCommandBinding);
-        }
+        CommandBindings.Add(routedCommandBinding);
     }
 }

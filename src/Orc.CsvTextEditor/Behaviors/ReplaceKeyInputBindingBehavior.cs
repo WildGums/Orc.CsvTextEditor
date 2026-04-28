@@ -1,122 +1,121 @@
-﻿namespace Orc.CsvTextEditor
+﻿namespace Orc.CsvTextEditor;
+
+using System.Linq;
+using System.Windows;
+using System.Windows.Input;
+using Catel.Windows.Interactivity;
+using ICSharpCode.AvalonEdit;
+using Microsoft.Xaml.Behaviors;
+
+public class ReplaceKeyInputBindingBehavior : BehaviorBase<TextEditor>
 {
-    using System.Linq;
-    using System.Windows;
-    using System.Windows.Input;
-    using Catel.Windows.Interactivity;
-    using ICSharpCode.AvalonEdit;
-    using Microsoft.Xaml.Behaviors;
+    private InputBinding? _removedInputBinding;
+    private KeyGesture? _removedKeyGesture;
+    private RoutedCommand? _removedRoutedCommand;
 
-    public class ReplaceKeyInputBindingBehavior : BehaviorBase<TextEditor>
+    public KeyGesture? Gesture
     {
-        private InputBinding? _removedInputBinding;
-        private KeyGesture? _removedKeyGesture;
-        private RoutedCommand? _removedRoutedCommand;
+        get => (KeyGesture?)GetValue(GestureProperty);
+        set => SetValue(GestureProperty, value);
+    }
 
-        public KeyGesture? Gesture
-        {
-            get => (KeyGesture?)GetValue(GestureProperty);
-            set => SetValue(GestureProperty, value);
-        }
+    public static readonly DependencyProperty GestureProperty = DependencyProperty.Register(nameof(Gesture), typeof(KeyGesture),
+        typeof(ReplaceKeyInputBindingBehavior), new PropertyMetadata(default(KeyGesture)));
 
-        public static readonly DependencyProperty GestureProperty = DependencyProperty.Register(nameof(Gesture), typeof(KeyGesture),
-            typeof(ReplaceKeyInputBindingBehavior), new PropertyMetadata(default(KeyGesture)));
+    public ICommand? Command
+    {
+        get => (ICommand?)GetValue(CommandProperty);
+        set => SetValue(CommandProperty, value);
+    }
 
-        public ICommand? Command
-        {
-            get => (ICommand?)GetValue(CommandProperty);
-            set => SetValue(CommandProperty, value);
-        }
-
-        public static readonly DependencyProperty CommandProperty = DependencyProperty.Register(nameof(Command), typeof(ICommand), typeof(ReplaceKeyInputBindingBehavior),
-            new PropertyMetadata(default(ICommand), (o, args) => ((ReplaceKeyInputBindingBehavior)o).OnCommandChanged(args)));
-      
-        protected override void OnAssociatedObjectLoaded()
-        {
-            if (_hasPendingUpdate)
-            {
-                UpdateInputGesture();
-            }
-
-            base.OnAssociatedObjectLoaded();
-        }
-
-        private void OnCommandChanged(DependencyPropertyChangedEventArgs args)
+    public static readonly DependencyProperty CommandProperty = DependencyProperty.Register(nameof(Command), typeof(ICommand), typeof(ReplaceKeyInputBindingBehavior),
+        new PropertyMetadata(default(ICommand), (o, args) => ((ReplaceKeyInputBindingBehavior)o).OnCommandChanged(args)));
+  
+    protected override void OnAssociatedObjectLoaded()
+    {
+        if (_hasPendingUpdate)
         {
             UpdateInputGesture();
         }
 
-        private bool _hasPendingUpdate;
+        base.OnAssociatedObjectLoaded();
+    }
 
-        private void UpdateInputGesture()
+    private void OnCommandChanged(DependencyPropertyChangedEventArgs args)
+    {
+        UpdateInputGesture();
+    }
+
+    private bool _hasPendingUpdate;
+
+    private void UpdateInputGesture()
+    {
+        _hasPendingUpdate = true;
+
+        var textArea = AssociatedObject?.TextArea;
+        if (textArea is null)
         {
-            _hasPendingUpdate = true;
-
-            var textArea = AssociatedObject?.TextArea;
-            if (textArea is null)
-            {
-                return;
-            }
-
-            if (Command is null)
-            {
-                return;
-            }
-
-            if (Gesture is null)
-            {
-                return;
-            }
-
-            var commandBindings = textArea.CommandBindings;
-            _removedRoutedCommand?.InputGestures.Add(_removedKeyGesture);
-
-            for (var i = 0; i < commandBindings.Count; i++)
-            {
-                var commandBinding = commandBindings[i];
-
-                var routedCommand = commandBinding.Command as RoutedCommand;
-                var gesture = routedCommand?.InputGestures.OfType<KeyGesture>().FirstOrDefault(x => x.IsKeyAndModifierEquals(Gesture));
-                if (gesture is null)
-                {
-                    continue;
-                }
-
-                routedCommand?.InputGestures.Remove(gesture);
-
-                _removedKeyGesture = gesture;
-                _removedRoutedCommand = routedCommand;
-                break;
-            }
-
-            var inputBindings = textArea.InputBindings;
-            if (_removedInputBinding is not null)
-            {
-                inputBindings.Add(_removedInputBinding);
-            }
-
-            for (var i = 0; i < inputBindings.Count; i++)
-            {
-                var inputBinding = inputBindings[i];
-                if (!(inputBinding.Gesture is KeyGesture keyGesture))
-                {
-                    continue;
-                }
-
-                if (!keyGesture.IsKeyAndModifierEquals(Gesture))
-                {
-                    continue;
-                }
-
-                inputBindings.Remove(inputBinding);
-
-                _removedInputBinding = inputBinding;
-                break;
-            }
-
-            inputBindings.Add(new InputBinding(Command, Gesture));
-
-            _hasPendingUpdate = false;
+            return;
         }
+
+        if (Command is null)
+        {
+            return;
+        }
+
+        if (Gesture is null)
+        {
+            return;
+        }
+
+        var commandBindings = textArea.CommandBindings;
+        _removedRoutedCommand?.InputGestures.Add(_removedKeyGesture);
+
+        for (var i = 0; i < commandBindings.Count; i++)
+        {
+            var commandBinding = commandBindings[i];
+
+            var routedCommand = commandBinding.Command as RoutedCommand;
+            var gesture = routedCommand?.InputGestures.OfType<KeyGesture>().FirstOrDefault(x => x.IsKeyAndModifierEquals(Gesture));
+            if (gesture is null)
+            {
+                continue;
+            }
+
+            routedCommand?.InputGestures.Remove(gesture);
+
+            _removedKeyGesture = gesture;
+            _removedRoutedCommand = routedCommand;
+            break;
+        }
+
+        var inputBindings = textArea.InputBindings;
+        if (_removedInputBinding is not null)
+        {
+            inputBindings.Add(_removedInputBinding);
+        }
+
+        for (var i = 0; i < inputBindings.Count; i++)
+        {
+            var inputBinding = inputBindings[i];
+            if (!(inputBinding.Gesture is KeyGesture keyGesture))
+            {
+                continue;
+            }
+
+            if (!keyGesture.IsKeyAndModifierEquals(Gesture))
+            {
+                continue;
+            }
+
+            inputBindings.Remove(inputBinding);
+
+            _removedInputBinding = inputBinding;
+            break;
+        }
+
+        inputBindings.Add(new InputBinding(Command, Gesture));
+
+        _hasPendingUpdate = false;
     }
 }

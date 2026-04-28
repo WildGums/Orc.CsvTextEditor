@@ -1,25 +1,25 @@
-﻿namespace Orc.CsvTextEditor.Operations
+﻿namespace Orc.CsvTextEditor.Operations;
+
+using System.Linq;
+using Catel.Logging;
+using Microsoft.Extensions.Logging;
+
+public class RemoveBlankLinesOperation : OperationBase
 {
-    using System.Linq;
-    using Catel.Logging;
+    private static readonly ILogger Logger = LogManager.GetLogger(typeof(RemoveBlankLinesOperation));
 
-    public class RemoveBlankLinesOperation : OperationBase
+    public RemoveBlankLinesOperation(ICsvTextEditorInstance csvTextEditorInstance)
+        : base(csvTextEditorInstance)
     {
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+    }
 
-        public RemoveBlankLinesOperation(ICsvTextEditorInstance csvTextEditorInstance)
-            : base(csvTextEditorInstance)
-        {
-        }
+    public override void Execute()
+    {
+        Logger.LogDebug("Removing blank lines");
 
-        public override void Execute()
-        {
-            Log.Debug("Removing blank lines");
+        var text = _csvTextEditorInstance.GetText();
+        var lines = text.GetLines(out string newLineSymbol);
 
-            var text = _csvTextEditorInstance.GetText();
-            var lines = text.GetLines(out string newLineSymbol);
-
-            _csvTextEditorInstance.SetText(string.Join(newLineSymbol, lines.Where(x => !x.IsEmptyCommaSeparatedLine())));
-        }
+        _csvTextEditorInstance.SetText(string.Join(newLineSymbol, lines.Where(x => !x.IsEmptyCommaSeparatedLine())));
     }
 }

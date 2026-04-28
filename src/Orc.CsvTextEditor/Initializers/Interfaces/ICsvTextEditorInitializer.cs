@@ -1,9 +1,8 @@
-﻿namespace Orc.CsvTextEditor
-{
-    using ICSharpCode.AvalonEdit;
+﻿namespace Orc.CsvTextEditor;
 
-    public interface ICsvTextEditorInitializer
-    {
-        void Initialize(TextEditor textEditor, ICsvTextEditorInstance csvTextEditorInstance);
-    }
+using ICSharpCode.AvalonEdit;
+
+public interface ICsvTextEditorInitializer
+{
+    void Initialize(TextEditor textEditor, ICsvTextEditorInstance csvTextEditorInstance);
 }

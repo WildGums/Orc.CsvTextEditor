@@ -1,16 +1,15 @@
-﻿namespace Orc.CsvTextEditor
+﻿namespace Orc.CsvTextEditor;
+
+using System;
+
+public class CaretTextLocationChangedEventArgs : EventArgs
 {
-    using System;
-
-    public class CaretTextLocationChangedEventArgs : EventArgs
+    public CaretTextLocationChangedEventArgs(Location location)
     {
-        public CaretTextLocationChangedEventArgs(Location location)
-        {
-            ArgumentNullException.ThrowIfNull(location);
+        ArgumentNullException.ThrowIfNull(location);
 
-            Location = location;
-        }
-
-        public Location Location { get; }
+        Location = location;
     }
+
+    public Location Location { get; }
 }

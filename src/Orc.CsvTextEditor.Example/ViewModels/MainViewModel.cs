@@ -1,35 +1,33 @@
-﻿namespace Orc.CsvTextEditor.ViewModels
+﻿namespace Orc.CsvTextEditor.ViewModels;
+
+using System;
+using System.Threading.Tasks;
+using Catel.MVVM;
+using Orc.CsvTextEditor;
+
+public class MainViewModel : ViewModelBase
 {
-    using System;
-    using Catel;
-    using Catel.IoC;
-    using Catel.MVVM;
-    using ICSharpCode.AvalonEdit;
-    using Orc.CsvTextEditor;
+    private readonly ICsvTextEditorInstanceManager _csvTextEditorInstanceManager;
 
-    public class MainViewModel : ViewModelBase
+    public MainViewModel(IServiceProvider serviceProvider, ICsvTextEditorInstanceManager csvTextEditorInstanceManager)
+        : base(serviceProvider)
     {
-        private readonly IServiceLocator _serviceLocator;
+        _csvTextEditorInstanceManager = csvTextEditorInstanceManager;
 
-        public MainViewModel(IServiceLocator serviceLocator)//, ICsvTextEditorInstance csvTextEditorInstance)
-        {
-            ArgumentNullException.ThrowIfNull(serviceLocator);
+        Title = "Orc.CsvTextEditor example";
 
-            _serviceLocator = serviceLocator;
+        FindAndReplace = new TaskCommand(serviceProvider, OnFindAndReplaceAsync);
+    }
 
-            EditorInstanceType = typeof(CsvTextEditorInstance);
-            Title = "Orc.CsvTextEditor example";
+    public TaskCommand FindAndReplace { get; }
 
-            FindAndReplace = new Command(OnFindAndReplace);
-        }
+    public string EditorId { get; set; }
 
-        public Command FindAndReplace { get; }
-        public Type EditorInstanceType { get; private set; }
-
-        private void OnFindAndReplace()
-        {
-            //var csvTextEditorInstance = _serviceLocator.TryResolveType<ICsvTextEditorInstance>(Scope);
-            //csvTextEditorInstance?.ShowTool<FindReplaceTool>();
-        }
+    private async Task OnFindAndReplaceAsync()
+    {
+#pragma warning disable IDISP001 // Dispose created
+        var csvTextEditorInstance = _csvTextEditorInstanceManager.GetInstance(EditorId);
+#pragma warning restore IDISP001 // Dispose created
+        await csvTextEditorInstance?.ShowToolAsync<FindReplaceTool>();
     }
 }
