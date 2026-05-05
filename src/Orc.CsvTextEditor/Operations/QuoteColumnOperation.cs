@@ -45,7 +45,7 @@ internal class QuoteColumnOperation : OperationBase
         _csvTextEditorInstance.SetText(text);
         _csvTextEditorInstance.GotoPosition(location.Offset + offsetDelta);
 
-        Logger.LogDebug($"{nameof(QuoteColumnOperation)} executed; quotes were {(quotesRemoved ? "removed" : "added")}");
+        Logger.LogDebug("{OperationName} executed; quotes were {Action}", nameof(QuoteColumnOperation), quotesRemoved ? "removed" : "added");
     }
 
     private static bool TryRemoveQuoteFromPosition(int symbolPosition, string inputText, out string outputText)
