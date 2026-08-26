@@ -24,7 +24,7 @@
                                                Text="one,two,three,four,five" />
 
         <Button Command="{orccontrols:OpenToolCommand {x:Type orccsvtexteditor:FindReplaceTool}, {x:Type orccsvtexteditor:CsvTextEditorControl}}"
-                Content="Find and Replace" />
+                Content="{catel:LanguageBinding CsvTextEditor_MainWindow_FindAndReplaceButton}" />
 
     </orccontrols:StackGrid>
 
